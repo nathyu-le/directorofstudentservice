@@ -1,6 +1,5 @@
 # UniSupport Team Charter
 
-Cập nhật: 07/10/2026 | Phiên bản nội dung: 3.0 | Trạng thái: Đề nghị nhóm xác nhận áp dụng
 
 ## 1 Mục đích
 

@@ -1,8 +1,5 @@
 # UniSupport PRD và bản đồ tài liệu
 
-PRD 3.0 ngày 07 tháng 10 năm 2026 đặc tả UniSupport gồm 10 module, 35 chức năng, 194 tiêu chí nghiệm thu và 194 kịch bản theo tiêu chí, cùng 12 kịch bản đầu cuối. Đây là baseline đề nghị để PM, developer, QA và Sponsor review trước triển khai. Chưa có kết quả test hoặc phê duyệt Sponsor được ghi nhận.
-
-Mã FR là nguồn liên kết sang Team Charter và Master Plan. Một chức năng có actor, điều kiện, dữ liệu, luồng, rule, lỗi và kết quả riêng; module và workflow không thay mã chức năng. Các mức SLA và giới hạn trường được áp dụng thống nhất, cần xác nhận trong review baseline.
 
 ## Cách đọc
 
