@@ -1,4 +1,3 @@
-```markdown
 # Mô hình Dữ liệu (Data Model / ERD)
 
 Dưới đây là sơ đồ Thực thể - Liên kết (Entity Relationship Diagram) sơ bộ để team Backend thiết kế cơ sở dữ liệu MySQL.
