@@ -1,0 +1,73 @@
+# [FR-RPT-02] Theo dõi yêu cầu quá hạn
+
+**Module:** Quản lý và báo cáo
+
+**Nguồn phạm vi:** Proposal §2.1 — trạng thái, thời gian, vấn đề phổ biến, khối lượng và hài lòng. Hành vi/trường dưới đây là thiết kế prototype suy ra từ năng lực này, chờ review.
+
+## Mô tả
+
+Nhận biết yêu cầu còn mở đã vượt hạn dự kiến.
+
+## Actor
+
+Quản lý. Phân quyền theo IAM-03 và actors-and-roles.md.
+
+## Preconditions
+
+Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+
+## Dữ liệu và giao diện
+
+| Trường | Tính chất | Kiểm tra |
+| --- | --- | --- |
+| from_date / to_date | Tùy chọn | Kỳ có from ≤ to; CFG-06 và quy tắc kỳ BR-08. |
+| department / category | Tùy chọn | Lọc trong phạm vi quản lý. |
+| due_at / status | Nguồn đọc | Quá hạn khi now > due_at và trạng thái thuộc Đã tiếp nhận, Đang xử lý, Chờ bổ sung; không hạn không tính. |
+
+Giao diện cần thể hiện rõ tên hành động, mã yêu cầu/bộ lọc, kết quả hiện hành, lỗi tại trường và trạng thái đang gửi. Nhãn Việt là bản chính; nhãn Anh được xem xét trong thiết kế (OQ-05). Không coi việc ẩn nút là kiểm soát quyền.
+
+## Main flow
+
+1. Quản lý chọn kỳ và phạm vi báo cáo.
+2. Máy chủ kiểm tra quyền và bộ lọc; lấy dữ liệu theo định nghĩa BR-08.
+3. Tính theo công thức của chỉ tiêu; hiển thị kỳ, phạm vi, thời điểm đo, số mẫu cùng kết quả.
+4. Cho kiểm tra danh sách nguồn trong cùng phạm vi để đối chiếu tổng; không sửa nghiệp vụ từ báo cáo.
+
+## Business rules
+
+Áp dụng BR-01, BR-05, BR-06 và quy tắc đặc thù trong business-rules.md. Cấu hình CFG được mô tả riêng; các giới hạn chưa phải yêu cầu nguyên văn proposal. Hành động chỉ ghi dữ liệu mà chức năng này sở hữu; không tự tạo hành động khác.
+
+## Alternative / Error flows
+
+- Bộ lọc không hợp lệ: from_date sau to_date hoặc đơn vị không tồn tại. → Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác.
+- Vượt quyền báo cáo: Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi. → Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
+- now bằng due_at: now bằng due_at → Yêu cầu chưa bị tính quá hạn tại đúng ranh giới.
+- Lỗi máy chủ/kết nối: báo chưa xác nhận thành công, cho tải lại kiểm tra kết quả; không tuyên bố đã lưu khi chưa có xác nhận. Nếu có ghi, rollback toàn bộ khi lỗi trước commit.
+
+## Acceptance criteria
+
+| Mã AC | Tình huống | Điều kiện nghiệm thu |
+| --- | --- | --- |
+| AC-RPT-02-01 | Đối chiếu phép tính | Chỉ yêu cầu mở quá hạn xuất hiện. |
+| AC-RPT-02-02 | Bộ lọc không hợp lệ | Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác. |
+| AC-RPT-02-03 | Vượt quyền báo cáo | Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi. |
+| AC-RPT-02-04 | now bằng due_at | Yêu cầu chưa bị tính quá hạn tại đúng ranh giới. |
+
+## Test và edge cases
+
+| Mã TC | Liên kết AC | Dữ liệu/thao tác trọng tâm |
+| --- | --- | --- |
+| TC-RPT-02-01 | AC-RPT-02-01 | Có một yêu cầu mở quá hạn, một đúng hạn, một không hạn, một Đã giải quyết quá hạn. |
+| TC-RPT-02-02 | AC-RPT-02-02 | from_date sau to_date hoặc đơn vị không tồn tại. |
+| TC-RPT-02-03 | AC-RPT-02-03 | Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi. |
+| TC-RPT-02-04 | AC-RPT-02-04 | now bằng due_at |
+
+Case đầy đủ tại test-cases.md; gồm đúng, sai, vượt quyền và ranh giới/trạng thái cũ. Mỗi case cần ghi actual result và evidence; hiện tất cả Not Run.
+
+## Expected result và liên kết Master
+
+Chỉ yêu cầu mở quá hạn xuất hiện.
+
+Master dùng parent `FR-RPT-02 | Theo dõi yêu cầu quá hạn` và các công việc PM, BE, FE, QA. Mã AC/TC được giữ nguyên trong việc QA; estimate baseline PM 1h / BE 2h / FE 2h / QA 1h là dự toán lập lịch, không là kết quả thực tế. QA 1h dành thực thi 4 case nhỏ; soạn case/bộ dữ liệu, kiểm tra xuyên module và retest thuộc công việc dùng chung riêng.
+
+**Phụ thuộc hành vi/luồng:** FR-DSP-05

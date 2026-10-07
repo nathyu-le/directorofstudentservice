@@ -1,0 +1,2286 @@
+{
+  "project": "UniSupport",
+  "version": "4.0",
+  "status": "Draft for proposal-based review; not stakeholder-approved",
+  "source": {
+    "name": "UniSupport_Project_Proposal.docx",
+    "library_id": "libfile_5b542f78beec81919f674d26569e8ef6",
+    "version": 6
+  },
+  "modules": [
+    {
+      "id": "STU",
+      "name": "Cổng hỗ trợ sinh viên",
+      "directory": "01-student-support"
+    },
+    {
+      "id": "DSP",
+      "name": "Điều phối và xử lý yêu cầu",
+      "directory": "02-dispatch-processing"
+    },
+    {
+      "id": "RPT",
+      "name": "Quản lý và báo cáo",
+      "directory": "03-management-reporting"
+    },
+    {
+      "id": "IAM",
+      "name": "Tài khoản và quyền truy cập",
+      "directory": "04-accounts-permissions"
+    }
+  ],
+  "features": [
+    {
+      "id": "FR-STU-01",
+      "module": "STU",
+      "name": "Gửi yêu cầu hỗ trợ",
+      "actor": "Sinh viên",
+      "purpose": "Tạo yêu cầu có mã để trường tiếp nhận và sinh viên theo dõi.",
+      "preconditions": "Sinh viên đã đăng nhập; danh mục vấn đề giả lập đã được khởi tạo.",
+      "fields": [
+        [
+          "category_id",
+          "Bắt buộc",
+          "Loại vấn đề đang dùng; cho phép giá trị Chưa xác định để điều phối phân loại."
+        ],
+        [
+          "title",
+          "Bắt buộc",
+          "Văn bản không chỉ có khoảng trắng; tối đa CFG-01."
+        ],
+        [
+          "description",
+          "Bắt buộc",
+          "Nội dung vấn đề không rỗng; tối đa CFG-02."
+        ],
+        [
+          "submission_key",
+          "Hệ thống",
+          "Mã của lần gửi để nhận biết gửi lặp cùng thao tác."
+        ]
+      ],
+      "flow": [
+        "Sinh viên mở biểu mẫu và chọn loại vấn đề, nhập tiêu đề cùng mô tả.",
+        "Máy chủ lấy chủ yêu cầu từ phiên, kiểm tra trường và mã lần gửi.",
+        "Lưu yêu cầu, mã duy nhất, thời điểm tạo, trạng thái Đã tiếp nhận và sự kiện tiếp nhận trong cùng giao dịch.",
+        "Trả mã xác nhận và liên kết xem tiến độ; yêu cầu xuất hiện trong hàng chờ điều phối."
+      ],
+      "checks": [
+        [
+          "Đủ trường, loại hợp lệ",
+          "Dữ liệu mẫu: loại Học vụ, tiêu đề Xin xác nhận sinh viên, mô tả Xin hướng dẫn thủ tục.",
+          "Tạo đúng một yêu cầu có mã duy nhất, chủ từ phiên, Đã tiếp nhận; hàng chờ thấy cùng mã."
+        ],
+        [
+          "Thiếu nội dung",
+          "Tiêu đề chỉ có khoảng trắng hoặc mô tả trống.",
+          "Báo tại trường; không tạo yêu cầu hay lịch sử một phần."
+        ],
+        [
+          "Giả mạo chủ yêu cầu",
+          "Phiên SV-A gửi thêm student_id=SV-B.",
+          "Chủ vẫn là SV-A; không chấp nhận student_id từ trình duyệt."
+        ],
+        [
+          "Gửi lặp",
+          "Gửi lại cùng submission_key hai lần.",
+          "Trả cùng mã; tổng số yêu cầu tăng một, không hai."
+        ]
+      ],
+      "depends": [
+        "FR-IAM-03"
+      ],
+      "source": "Proposal §2.1 — gửi yêu cầu, cung cấp thông tin, theo dõi tiến độ, phản hồi kết quả",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-STU-01-01",
+        "AC-STU-01-02",
+        "AC-STU-01-03",
+        "AC-STU-01-04"
+      ],
+      "test_ids": [
+        "TC-STU-01-01",
+        "TC-STU-01-02",
+        "TC-STU-01-03",
+        "TC-STU-01-04"
+      ],
+      "prd_path": "docs/03-modules/01-student-support/requirements/FR-STU-01.md"
+    },
+    {
+      "id": "FR-STU-02",
+      "module": "STU",
+      "name": "Xem danh sách yêu cầu của tôi",
+      "actor": "Sinh viên",
+      "purpose": "Tìm yêu cầu mình đã gửi và biết trạng thái hiện tại.",
+      "preconditions": "Có phiên sinh viên hợp lệ; có thể chưa có yêu cầu.",
+      "fields": [
+        [
+          "keyword",
+          "Tùy chọn",
+          "Tìm mã hoặc tiêu đề; CFG-03."
+        ],
+        [
+          "status",
+          "Tùy chọn",
+          "Một trạng thái hợp lệ hoặc Tất cả."
+        ],
+        [
+          "page",
+          "Tùy chọn",
+          "Số nguyên dương; kích thước trang CFG-04."
+        ]
+      ],
+      "flow": [
+        "Sinh viên mở Yêu cầu của tôi.",
+        "Máy chủ giới hạn theo user_id của phiên rồi áp dụng tìm kiếm, lọc và phân trang.",
+        "Trả mã, tiêu đề, trạng thái, đơn vị/người phụ trách nếu đã có, thời điểm cập nhật; cho mở chi tiết."
+      ],
+      "checks": [
+        [
+          "Có yêu cầu và bộ lọc",
+          "SV-A có hai yêu cầu Đã tiếp nhận và Đang xử lý; lọc Đang xử lý.",
+          "Chỉ trả yêu cầu Đang xử lý của SV-A; tổng số và phân trang dùng cùng điều kiện."
+        ],
+        [
+          "Tham số sai",
+          "page=0 hoặc trạng thái không thuộc danh sách.",
+          "Báo bộ lọc không hợp lệ; không trả tập dữ liệu vượt quyền."
+        ],
+        [
+          "Lọc theo người khác",
+          "SV-A sửa tham số student_id thành SV-B.",
+          "Không trả bất kỳ yêu cầu của SV-B."
+        ],
+        [
+          "Danh sách rỗng",
+          "Tài khoản SV-C chưa có yêu cầu.",
+          "Hiển thị Chưa có yêu cầu và liên kết gửi yêu cầu; không báo lỗi hệ thống."
+        ]
+      ],
+      "depends": [
+        "FR-STU-01"
+      ],
+      "source": "Proposal §2.1 — gửi yêu cầu, cung cấp thông tin, theo dõi tiến độ, phản hồi kết quả",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-STU-02-01",
+        "AC-STU-02-02",
+        "AC-STU-02-03",
+        "AC-STU-02-04"
+      ],
+      "test_ids": [
+        "TC-STU-02-01",
+        "TC-STU-02-02",
+        "TC-STU-02-03",
+        "TC-STU-02-04"
+      ],
+      "prd_path": "docs/03-modules/01-student-support/requirements/FR-STU-02.md"
+    },
+    {
+      "id": "FR-STU-03",
+      "module": "STU",
+      "name": "Xem chi tiết và tiến độ yêu cầu",
+      "actor": "Sinh viên",
+      "purpose": "Biết yêu cầu đã được tiếp nhận, ai chịu trách nhiệm và có cần bổ sung thông tin.",
+      "preconditions": "Yêu cầu tồn tại và thuộc sinh viên đang đăng nhập.",
+      "fields": [
+        [
+          "request_id",
+          "Bắt buộc",
+          "Mã yêu cầu thuộc người dùng."
+        ],
+        [
+          "status / owner / due_at",
+          "Chỉ đọc",
+          "Lấy từ bản ghi hiện hành; hạn có thể chưa xác định."
+        ],
+        [
+          "public_history",
+          "Chỉ đọc",
+          "Các sự kiện và nội dung được công khai cho sinh viên."
+        ]
+      ],
+      "flow": [
+        "Sinh viên mở mã yêu cầu.",
+        "Máy chủ kiểm tra quyền trên yêu cầu trước khi đọc nội dung.",
+        "Hiển thị nội dung, trạng thái, trách nhiệm, hạn nếu có và lịch sử công khai.",
+        "Nếu Chờ bổ sung, hiển thị câu hỏi đang mở và thao tác bổ sung; nếu có kết quả, hiển thị kết quả và phản hồi."
+      ],
+      "checks": [
+        [
+          "Tiến độ đã cập nhật",
+          "Yêu cầu được phân công rồi chuyển Đang xử lý.",
+          "Chi tiết và danh sách cùng hiển thị trạng thái/người phụ trách hiện hành sau tải lại."
+        ],
+        [
+          "Mã không tồn tại",
+          "Mã yêu cầu không có trong bộ dữ liệu.",
+          "Hiển thị không tìm thấy; không tạo hoặc sửa dữ liệu."
+        ],
+        [
+          "Truy cập ngang",
+          "SV-B mở URL yêu cầu của SV-A.",
+          "Không trả tiêu đề, mô tả, lịch sử hoặc tài liệu của SV-A."
+        ],
+        [
+          "Chưa phân công / chờ bổ sung",
+          "Xem yêu cầu mới, sau đó xem yêu cầu Chờ bổ sung.",
+          "Yêu cầu mới ghi Chưa phân công; yêu cầu chờ bổ sung ghi rõ thông tin cần cung cấp, không lộ ghi chú nội bộ."
+        ]
+      ],
+      "depends": [
+        "FR-STU-01",
+        "FR-IAM-03"
+      ],
+      "source": "Proposal §2.1 — gửi yêu cầu, cung cấp thông tin, theo dõi tiến độ, phản hồi kết quả",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-STU-03-01",
+        "AC-STU-03-02",
+        "AC-STU-03-03",
+        "AC-STU-03-04"
+      ],
+      "test_ids": [
+        "TC-STU-03-01",
+        "TC-STU-03-02",
+        "TC-STU-03-03",
+        "TC-STU-03-04"
+      ],
+      "prd_path": "docs/03-modules/01-student-support/requirements/FR-STU-03.md"
+    },
+    {
+      "id": "FR-STU-04",
+      "module": "STU",
+      "name": "Bổ sung thông tin được yêu cầu",
+      "actor": "Sinh viên",
+      "purpose": "Trả lời yêu cầu bổ sung trên cùng hồ sơ hỗ trợ.",
+      "preconditions": "Đúng chủ yêu cầu; trạng thái Chờ bổ sung; có câu hỏi bổ sung đang mở.",
+      "fields": [
+        [
+          "question_id",
+          "Bắt buộc",
+          "Câu hỏi đang mở thuộc yêu cầu."
+        ],
+        [
+          "content",
+          "Bắt buộc",
+          "Nội dung không rỗng; CFG-02."
+        ],
+        [
+          "record_version",
+          "Hệ thống",
+          "Phiên bản dùng khi gửi để phát hiện dữ liệu đã đổi."
+        ]
+      ],
+      "flow": [
+        "Sinh viên đọc câu hỏi và nhập nội dung trả lời.",
+        "Máy chủ kiểm tra chủ hồ sơ, trạng thái, câu hỏi và phiên bản.",
+        "Lưu câu trả lời vào cùng request_id, đánh dấu câu hỏi đã được trả lời và chuyển về Đang xử lý.",
+        "Giữ người phụ trách; thêm lịch sử công khai để bên xử lý tiếp tục."
+      ],
+      "checks": [
+        [
+          "Trả lời hợp lệ",
+          "Câu hỏi đang mở: cần mã lớp; trả lời Mã lớp TEST-01.",
+          "Cùng mã yêu cầu, chủ và người phụ trách; câu hỏi có trả lời; trạng thái Đang xử lý."
+        ],
+        [
+          "Nội dung trống",
+          "Trả lời chỉ có khoảng trắng.",
+          "Báo lỗi; vẫn Chờ bổ sung; chưa đánh dấu câu hỏi đã trả lời."
+        ],
+        [
+          "Sai chủ",
+          "SV-B gửi câu trả lời cho yêu cầu SV-A.",
+          "Từ chối; nội dung và trạng thái không đổi."
+        ],
+        [
+          "Gửi từ màn hình cũ",
+          "Câu hỏi đã được trả lời hoặc phiên bản hồ sơ đã đổi.",
+          "Báo tải lại/đã xử lý; không tạo hai câu trả lời hay ghi đè cập nhật mới."
+        ]
+      ],
+      "depends": [
+        "FR-DSP-07",
+        "FR-STU-03"
+      ],
+      "source": "Proposal §2.1 — gửi yêu cầu, cung cấp thông tin, theo dõi tiến độ, phản hồi kết quả",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-STU-04-01",
+        "AC-STU-04-02",
+        "AC-STU-04-03",
+        "AC-STU-04-04"
+      ],
+      "test_ids": [
+        "TC-STU-04-01",
+        "TC-STU-04-02",
+        "TC-STU-04-03",
+        "TC-STU-04-04"
+      ],
+      "prd_path": "docs/03-modules/01-student-support/requirements/FR-STU-04.md"
+    },
+    {
+      "id": "FR-STU-05",
+      "module": "STU",
+      "name": "Phản hồi kết quả hỗ trợ",
+      "actor": "Sinh viên",
+      "purpose": "Ghi nhận phản hồi và điểm hài lòng về kết quả.",
+      "preconditions": "Đúng chủ yêu cầu; trạng thái Đã giải quyết hoặc Đã đóng; kết quả xử lý đã có.",
+      "fields": [
+        [
+          "score",
+          "Bắt buộc",
+          "Số nguyên 1–5 theo CFG-05; có nhãn ý nghĩa."
+        ],
+        [
+          "comment",
+          "Tùy chọn",
+          "Nhận xét tối đa CFG-02."
+        ],
+        [
+          "result_id",
+          "Hệ thống",
+          "Kết quả hiện hành của yêu cầu."
+        ]
+      ],
+      "flow": [
+        "Sinh viên đọc kết quả, chọn điểm và nhập nhận xét nếu có.",
+        "Máy chủ kiểm tra chủ hồ sơ, kết quả và điểm.",
+        "Lưu một phản hồi hiện hành cho yêu cầu; gửi lại cập nhật phản hồi đó.",
+        "Hiển thị phản hồi đã lưu; quản lý đọc qua báo cáo hài lòng. Không tự mở lại yêu cầu."
+      ],
+      "checks": [
+        [
+          "Phản hồi hợp lệ",
+          "Yêu cầu đã có kết quả; điểm 4, nhận xét Đã được hướng dẫn.",
+          "Lưu phản hồi gắn đúng yêu cầu và sinh viên; hiển thị lại điểm 4."
+        ],
+        [
+          "Điểm sai / chưa có kết quả",
+          "Điểm 0, 6, 2.5 hoặc yêu cầu Đang xử lý.",
+          "Từ chối; không có phản hồi mới để tính báo cáo."
+        ],
+        [
+          "Không phải chủ",
+          "SV-B gửi đánh giá cho yêu cầu SV-A.",
+          "Từ chối; phản hồi của SV-A không bị sửa."
+        ],
+        [
+          "Cập nhật phản hồi",
+          "SV-A đổi điểm từ 4 thành 3.",
+          "Một phản hồi hiện hành với điểm 3; số lượt phản hồi không tăng; trạng thái xử lý không tự đổi."
+        ]
+      ],
+      "depends": [
+        "FR-DSP-09"
+      ],
+      "source": "Proposal §2.1 — gửi yêu cầu, cung cấp thông tin, theo dõi tiến độ, phản hồi kết quả",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-STU-05-01",
+        "AC-STU-05-02",
+        "AC-STU-05-03",
+        "AC-STU-05-04"
+      ],
+      "test_ids": [
+        "TC-STU-05-01",
+        "TC-STU-05-02",
+        "TC-STU-05-03",
+        "TC-STU-05-04"
+      ],
+      "prd_path": "docs/03-modules/01-student-support/requirements/FR-STU-05.md"
+    },
+    {
+      "id": "FR-DSP-01",
+      "module": "DSP",
+      "name": "Xem hàng chờ điều phối",
+      "actor": "Điều phối viên",
+      "purpose": "Nhận biết yêu cầu cần phân loại hoặc phân công.",
+      "preconditions": "Có quyền điều phối trong phạm vi được cấu hình.",
+      "fields": [
+        [
+          "category / status / department",
+          "Tùy chọn",
+          "Giá trị danh mục và trạng thái hợp lệ."
+        ],
+        [
+          "unassigned",
+          "Tùy chọn",
+          "Lọc chưa có người phụ trách."
+        ],
+        [
+          "page",
+          "Tùy chọn",
+          "Theo CFG-04."
+        ]
+      ],
+      "flow": [
+        "Điều phối viên mở hàng chờ và chọn bộ lọc.",
+        "Máy chủ giới hạn phạm vi điều phối rồi lọc yêu cầu.",
+        "Hiển thị mã, loại, trạng thái, đơn vị, người phụ trách và hạn; cho mở chi tiết nghiệp vụ."
+      ],
+      "checks": [
+        [
+          "Yêu cầu mới",
+          "Tạo yêu cầu Chưa xác định bằng STU-01.",
+          "Yêu cầu xuất hiện trong hàng chờ chưa phân loại/chưa phân công với đúng mã."
+        ],
+        [
+          "Lọc sai",
+          "category_id không tồn tại.",
+          "Báo tham số sai; không áp dụng loại khác âm thầm."
+        ],
+        [
+          "Vai trò không được phép",
+          "Sinh viên gọi trang/điểm truy cập hàng chờ.",
+          "Từ chối; không lộ danh sách toàn trường."
+        ],
+        [
+          "Sau phân công",
+          "Phân công yêu cầu rồi lọc unassigned=true.",
+          "Yêu cầu rời tập chưa phân công nhưng vẫn nằm trong Tất cả nếu thuộc phạm vi."
+        ]
+      ],
+      "depends": [
+        "FR-STU-01",
+        "FR-IAM-03"
+      ],
+      "source": "Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-DSP-01-01",
+        "AC-DSP-01-02",
+        "AC-DSP-01-03",
+        "AC-DSP-01-04"
+      ],
+      "test_ids": [
+        "TC-DSP-01-01",
+        "TC-DSP-01-02",
+        "TC-DSP-01-03",
+        "TC-DSP-01-04"
+      ],
+      "prd_path": "docs/03-modules/02-dispatch-processing/requirements/FR-DSP-01.md"
+    },
+    {
+      "id": "FR-DSP-02",
+      "module": "DSP",
+      "name": "Xem hồ sơ xử lý và lịch sử nghiệp vụ",
+      "actor": "Điều phối viên / Nhân viên xử lý",
+      "purpose": "Đọc thông tin cần xử lý và truy vết thao tác theo trách nhiệm.",
+      "preconditions": "Có quyền trên yêu cầu theo vai trò và phạm vi công việc.",
+      "fields": [
+        [
+          "request_id",
+          "Bắt buộc",
+          "Yêu cầu thuộc phạm vi được xem."
+        ],
+        [
+          "history",
+          "Chỉ đọc",
+          "Người, thời gian, hành động và thay đổi; phân biệt nội bộ/công khai."
+        ]
+      ],
+      "flow": [
+        "Người dùng mở hồ sơ từ hàng chờ hoặc danh sách được giao.",
+        "Máy chủ kiểm tra vai trò và phạm vi yêu cầu.",
+        "Hiển thị thông tin sinh viên tối thiểu phục vụ xử lý, nội dung yêu cầu, trách nhiệm và lịch sử có thứ tự.",
+        "Giao diện chỉ đưa thao tác phù hợp trạng thái và quyền; máy chủ vẫn kiểm tra khi thực hiện."
+      ],
+      "checks": [
+        [
+          "Có lịch sử",
+          "Yêu cầu đã tiếp nhận, phân loại, phân công.",
+          "Hiển thị ba loại sự kiện đúng người, thời điểm và giá trị thay đổi."
+        ],
+        [
+          "Mã không có",
+          "Mở mã không tồn tại.",
+          "Không tìm thấy; không sinh dữ liệu."
+        ],
+        [
+          "Ngoài phạm vi",
+          "Nhân viên phòng ban B đọc hồ sơ không được giao ở phòng ban A.",
+          "Từ chối, không trả nội dung sinh viên."
+        ],
+        [
+          "Ghi chú nội bộ",
+          "Thêm tiến độ nội bộ qua DSP-08 rồi SV xem STU-03.",
+          "Người xử lý có quyền thấy nội bộ; sinh viên không thấy cả qua API trực tiếp."
+        ]
+      ],
+      "depends": [
+        "FR-STU-01",
+        "FR-IAM-03"
+      ],
+      "source": "Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-DSP-02-01",
+        "AC-DSP-02-02",
+        "AC-DSP-02-03",
+        "AC-DSP-02-04"
+      ],
+      "test_ids": [
+        "TC-DSP-02-01",
+        "TC-DSP-02-02",
+        "TC-DSP-02-03",
+        "TC-DSP-02-04"
+      ],
+      "prd_path": "docs/03-modules/02-dispatch-processing/requirements/FR-DSP-02.md"
+    },
+    {
+      "id": "FR-DSP-03",
+      "module": "DSP",
+      "name": "Phân loại yêu cầu",
+      "actor": "Điều phối viên",
+      "purpose": "Gán loại vấn đề để định tuyến và tổng hợp báo cáo.",
+      "preconditions": "Yêu cầu chưa kết thúc, thuộc phạm vi điều phối; danh mục giả lập đang dùng.",
+      "fields": [
+        [
+          "category_id",
+          "Bắt buộc",
+          "Một loại đang dùng; không nhận ID giả."
+        ],
+        [
+          "reason",
+          "Khi đổi loại",
+          "Lý do không rỗng."
+        ],
+        [
+          "record_version",
+          "Hệ thống",
+          "Kiểm tra phiên bản hiện hành."
+        ]
+      ],
+      "flow": [
+        "Điều phối viên mở hồ sơ và chọn loại vấn đề.",
+        "Máy chủ kiểm tra danh mục, quyền và phiên bản.",
+        "Lưu loại, lý do nếu đổi, lịch sử loại cũ/mới.",
+        "Không tự thay người hoặc phòng ban đang phụ trách; phân công qua DSP-04."
+      ],
+      "checks": [
+        [
+          "Gán loại",
+          "Yêu cầu Chưa xác định được gán Học vụ.",
+          "Loại hiện hành là Học vụ; ghi lịch sử; báo cáo nhóm dùng loại này."
+        ],
+        [
+          "Danh mục sai",
+          "Gửi loại đã ngừng dùng hoặc ID không có.",
+          "Từ chối; loại và lịch sử không thay đổi."
+        ],
+        [
+          "Không có quyền",
+          "Nhân viên thường hoặc sinh viên tự đổi loại.",
+          "Từ chối; loại hiện hành giữ nguyên."
+        ],
+        [
+          "Đã phân công / thao tác đồng thời",
+          "Đổi loại hồ sơ có người; một lần lưu khác đã tăng phiên bản.",
+          "Đổi loại hợp lệ giữ trách nhiệm; bản gửi dùng phiên bản cũ bị yêu cầu tải lại."
+        ]
+      ],
+      "depends": [
+        "FR-DSP-02"
+      ],
+      "source": "Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-DSP-03-01",
+        "AC-DSP-03-02",
+        "AC-DSP-03-03",
+        "AC-DSP-03-04"
+      ],
+      "test_ids": [
+        "TC-DSP-03-01",
+        "TC-DSP-03-02",
+        "TC-DSP-03-03",
+        "TC-DSP-03-04"
+      ],
+      "prd_path": "docs/03-modules/02-dispatch-processing/requirements/FR-DSP-03.md"
+    },
+    {
+      "id": "FR-DSP-04",
+      "module": "DSP",
+      "name": "Phân công trách nhiệm xử lý",
+      "actor": "Điều phối viên",
+      "purpose": "Đặt một đơn vị và một người chịu trách nhiệm hiện tại, kể cả khi phối hợp đổi đơn vị.",
+      "preconditions": "Yêu cầu chưa kết thúc; người nhận đang dùng và thuộc đơn vị được chọn.",
+      "fields": [
+        [
+          "department_id",
+          "Bắt buộc",
+          "Đơn vị mẫu đang dùng."
+        ],
+        [
+          "assignee_id",
+          "Bắt buộc",
+          "Nhân viên hoạt động thuộc đơn vị."
+        ],
+        [
+          "reason",
+          "Khi đổi",
+          "Lý do đổi trách nhiệm không rỗng."
+        ],
+        [
+          "record_version",
+          "Hệ thống",
+          "Khóa kiểm soát cập nhật đồng thời."
+        ]
+      ],
+      "flow": [
+        "Điều phối viên chọn đơn vị và nhân viên phụ trách.",
+        "Nếu đổi đơn vị/người, nhập lý do phối hợp và xác nhận.",
+        "Máy chủ kiểm tra quyền, quan hệ người–đơn vị và phiên bản.",
+        "Thay bộ trách nhiệm trong một giao dịch, giữ trạng thái và ghi người/đơn vị cũ–mới; quyền xử lý chuyển sang người mới."
+      ],
+      "checks": [
+        [
+          "Phân công lần đầu",
+          "Giao yêu cầu cho NV-A thuộc PB-A.",
+          "Có đúng một đơn vị/người hiện hành, giữ trạng thái; SV thấy trách nhiệm mới."
+        ],
+        [
+          "Người không thuộc đơn vị",
+          "Chọn PB-A với nhân viên PB-B.",
+          "Từ chối; không tạo trách nhiệm không nhất quán."
+        ],
+        [
+          "Tự chiếm yêu cầu",
+          "Nhân viên không có quyền điều phối gửi assignee_id của mình.",
+          "Từ chối; không thay trách nhiệm."
+        ],
+        [
+          "Đổi trách nhiệm đồng thời",
+          "Đổi PB-A/NV-A sang PB-B/NV-B với lý do; NV-A sửa từ màn hình cũ.",
+          "Lịch sử giữ bộ cũ/mới; NV-A mất quyền sửa; cập nhật cũ bị chặn; không có hai người hiện hành."
+        ]
+      ],
+      "depends": [
+        "FR-DSP-03",
+        "FR-IAM-03"
+      ],
+      "source": "Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-DSP-04-01",
+        "AC-DSP-04-02",
+        "AC-DSP-04-03",
+        "AC-DSP-04-04"
+      ],
+      "test_ids": [
+        "TC-DSP-04-01",
+        "TC-DSP-04-02",
+        "TC-DSP-04-03",
+        "TC-DSP-04-04"
+      ],
+      "prd_path": "docs/03-modules/02-dispatch-processing/requirements/FR-DSP-04.md"
+    },
+    {
+      "id": "FR-DSP-05",
+      "module": "DSP",
+      "name": "Đặt hạn xử lý dự kiến",
+      "actor": "Điều phối viên",
+      "purpose": "Cung cấp mốc theo dõi quá hạn cho yêu cầu; không tự áp SLA thực tế.",
+      "preconditions": "Yêu cầu chưa kết thúc và thuộc phạm vi điều phối.",
+      "fields": [
+        [
+          "due_at",
+          "Bắt buộc khi đặt hạn",
+          "Ngày giờ không trước created_at; cấu hình múi giờ CFG-06."
+        ],
+        [
+          "reason",
+          "Khi đổi hạn",
+          "Lý do không rỗng."
+        ],
+        [
+          "record_version",
+          "Hệ thống",
+          "Phiên bản hiện hành."
+        ]
+      ],
+      "flow": [
+        "Điều phối viên chọn hạn dự kiến; nếu đổi hạn thì ghi lý do.",
+        "Kiểm tra hạn, quyền và phiên bản.",
+        "Lưu hạn và lịch sử thay đổi, không đổi trạng thái hoặc người phụ trách.",
+        "Chi tiết và báo cáo quá hạn sử dụng hạn hiện hành."
+      ],
+      "checks": [
+        [
+          "Hạn hợp lệ",
+          "Hạn hai ngày sau created_at.",
+          "Lưu đúng thời điểm; hiện ở tiến độ; giữ trách nhiệm và trạng thái."
+        ],
+        [
+          "Hạn trước khi tạo",
+          "due_at nhỏ hơn created_at.",
+          "Từ chối; hạn cũ giữ nguyên."
+        ],
+        [
+          "Sai quyền",
+          "Sinh viên hoặc nhân viên không điều phối sửa hạn.",
+          "Từ chối; không thay hạn."
+        ],
+        [
+          "Không hạn / đúng ranh giới",
+          "Hồ sơ không hạn, rồi hồ sơ có due_at bằng thời điểm đo.",
+          "Không hạn không tính quá hạn; đúng bằng hạn chưa quá hạn; chỉ now > due_at và còn mở mới quá hạn."
+        ]
+      ],
+      "depends": [
+        "FR-DSP-04"
+      ],
+      "source": "Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-DSP-05-01",
+        "AC-DSP-05-02",
+        "AC-DSP-05-03",
+        "AC-DSP-05-04"
+      ],
+      "test_ids": [
+        "TC-DSP-05-01",
+        "TC-DSP-05-02",
+        "TC-DSP-05-03",
+        "TC-DSP-05-04"
+      ],
+      "prd_path": "docs/03-modules/02-dispatch-processing/requirements/FR-DSP-05.md"
+    },
+    {
+      "id": "FR-DSP-06",
+      "module": "DSP",
+      "name": "Bắt đầu xử lý yêu cầu",
+      "actor": "Nhân viên được giao",
+      "purpose": "Xác nhận bắt đầu xử lý yêu cầu đã tiếp nhận.",
+      "preconditions": "Đã tiếp nhận, có người phụ trách; người thao tác chính là người được giao.",
+      "fields": [
+        [
+          "request_id",
+          "Bắt buộc",
+          "Hồ sơ được giao cho người thao tác."
+        ],
+        [
+          "record_version",
+          "Hệ thống",
+          "Phiên bản hiện hành."
+        ]
+      ],
+      "flow": [
+        "Nhân viên mở yêu cầu được giao và chọn Bắt đầu xử lý.",
+        "Máy chủ kiểm tra trách nhiệm và trạng thái.",
+        "Chuyển Đã tiếp nhận → Đang xử lý, ghi thời điểm bắt đầu và lịch sử công khai."
+      ],
+      "checks": [
+        [
+          "Bắt đầu đúng",
+          "NV-A bắt đầu yêu cầu Đã tiếp nhận được giao cho mình.",
+          "Đang xử lý, có started_at và lịch sử; sinh viên thấy tiến độ."
+        ],
+        [
+          "Trạng thái sai",
+          "Bắt đầu hồ sơ Đã đóng.",
+          "Từ chối; không thay trạng thái và thời điểm."
+        ],
+        [
+          "Người khác thao tác",
+          "NV-B bắt đầu hồ sơ giao NV-A.",
+          "Từ chối; trách nhiệm giữ nguyên."
+        ],
+        [
+          "Bấm hai lần",
+          "Gửi lặp lần bắt đầu.",
+          "Không tạo hai lần bắt đầu; started_at ban đầu giữ nguyên."
+        ]
+      ],
+      "depends": [
+        "FR-DSP-04"
+      ],
+      "source": "Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-DSP-06-01",
+        "AC-DSP-06-02",
+        "AC-DSP-06-03",
+        "AC-DSP-06-04"
+      ],
+      "test_ids": [
+        "TC-DSP-06-01",
+        "TC-DSP-06-02",
+        "TC-DSP-06-03",
+        "TC-DSP-06-04"
+      ],
+      "prd_path": "docs/03-modules/02-dispatch-processing/requirements/FR-DSP-06.md"
+    },
+    {
+      "id": "FR-DSP-07",
+      "module": "DSP",
+      "name": "Yêu cầu sinh viên bổ sung thông tin",
+      "actor": "Nhân viên được giao",
+      "purpose": "Nêu thông tin còn thiếu và đặt yêu cầu vào trạng thái chờ trả lời.",
+      "preconditions": "Đang xử lý; người thao tác được giao; chưa có câu hỏi bổ sung đang mở.",
+      "fields": [
+        [
+          "question",
+          "Bắt buộc",
+          "Câu hỏi cụ thể không rỗng; CFG-02."
+        ],
+        [
+          "record_version",
+          "Hệ thống",
+          "Phiên bản hiện hành."
+        ]
+      ],
+      "flow": [
+        "Nhân viên ghi rõ thông tin còn thiếu và chọn Yêu cầu bổ sung.",
+        "Máy chủ kiểm tra quyền, trạng thái và không có câu hỏi mở khác.",
+        "Lưu câu hỏi, chuyển Chờ bổ sung và thêm sự kiện công khai.",
+        "Sinh viên thấy câu hỏi trong STU-03 và trả lời qua STU-04."
+      ],
+      "checks": [
+        [
+          "Câu hỏi hợp lệ",
+          "Đang xử lý, hỏi Vui lòng cung cấp mã lớp.",
+          "Có một câu hỏi mở; Chờ bổ sung; SV thấy đúng câu hỏi."
+        ],
+        [
+          "Câu hỏi rỗng",
+          "Nội dung chỉ có khoảng trắng.",
+          "Không lưu câu hỏi hoặc chuyển trạng thái."
+        ],
+        [
+          "Ngoài trách nhiệm",
+          "NV-B yêu cầu bổ sung hồ sơ giao NV-A.",
+          "Từ chối; không lộ thêm dữ liệu."
+        ],
+        [
+          "Đã có câu hỏi mở",
+          "Gửi lần thứ hai khi Chờ bổ sung.",
+          "Từ chối/nhắc câu hỏi hiện hành; không có hai câu hỏi mở."
+        ]
+      ],
+      "depends": [
+        "FR-DSP-06"
+      ],
+      "source": "Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-DSP-07-01",
+        "AC-DSP-07-02",
+        "AC-DSP-07-03",
+        "AC-DSP-07-04"
+      ],
+      "test_ids": [
+        "TC-DSP-07-01",
+        "TC-DSP-07-02",
+        "TC-DSP-07-03",
+        "TC-DSP-07-04"
+      ],
+      "prd_path": "docs/03-modules/02-dispatch-processing/requirements/FR-DSP-07.md"
+    },
+    {
+      "id": "FR-DSP-08",
+      "module": "DSP",
+      "name": "Ghi cập nhật tiến độ xử lý",
+      "actor": "Nhân viên được giao",
+      "purpose": "Ghi công việc đã thực hiện để phối hợp và theo dõi.",
+      "preconditions": "Đang xử lý hoặc Chờ bổ sung; người thao tác được giao.",
+      "fields": [
+        [
+          "content",
+          "Bắt buộc",
+          "Không rỗng; CFG-02."
+        ],
+        [
+          "visibility",
+          "Bắt buộc",
+          "public hoặc internal; mặc định internal."
+        ],
+        [
+          "record_version",
+          "Hệ thống",
+          "Phiên bản hiện hành."
+        ]
+      ],
+      "flow": [
+        "Nhân viên nhập tiến độ và chọn công khai hoặc nội bộ.",
+        "Máy chủ kiểm tra quyền, trạng thái và nội dung.",
+        "Thêm sự kiện tiến độ có người ghi, thời gian và mức hiển thị.",
+        "Giữ trạng thái/trách nhiệm; chỉ nội dung công khai hiện cho sinh viên."
+      ],
+      "checks": [
+        [
+          "Tiến độ công khai",
+          "Ghi Đang kiểm tra thủ tục, visibility=public.",
+          "Lịch sử xử lý và lịch sử SV có nội dung, người và thời điểm phù hợp; trạng thái không đổi."
+        ],
+        [
+          "Giá trị sai",
+          "Nội dung trống hoặc visibility=secret.",
+          "Từ chối; không thêm lịch sử."
+        ],
+        [
+          "Mất trách nhiệm",
+          "NV-A gửi cập nhật sau khi yêu cầu đã giao NV-B.",
+          "Từ chối; không ghi nội dung mới."
+        ],
+        [
+          "Tiến độ nội bộ",
+          "Ghi ghi chú internal có dấu TEST-INTERNAL.",
+          "Người có quyền nghiệp vụ đọc được; STU-03/API SV không có dấu TEST-INTERNAL."
+        ]
+      ],
+      "depends": [
+        "FR-DSP-06"
+      ],
+      "source": "Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-DSP-08-01",
+        "AC-DSP-08-02",
+        "AC-DSP-08-03",
+        "AC-DSP-08-04"
+      ],
+      "test_ids": [
+        "TC-DSP-08-01",
+        "TC-DSP-08-02",
+        "TC-DSP-08-03",
+        "TC-DSP-08-04"
+      ],
+      "prd_path": "docs/03-modules/02-dispatch-processing/requirements/FR-DSP-08.md"
+    },
+    {
+      "id": "FR-DSP-09",
+      "module": "DSP",
+      "name": "Ghi kết quả giải quyết",
+      "actor": "Nhân viên được giao",
+      "purpose": "Ghi kết quả để sinh viên nhận và phản hồi.",
+      "preconditions": "Đang xử lý; không còn câu hỏi bổ sung mở; người thao tác được giao.",
+      "fields": [
+        [
+          "resolution",
+          "Bắt buộc",
+          "Kết quả/hướng dẫn không rỗng; CFG-02."
+        ],
+        [
+          "record_version",
+          "Hệ thống",
+          "Phiên bản hiện hành."
+        ]
+      ],
+      "flow": [
+        "Nhân viên nhập kết quả và xác nhận Đã giải quyết.",
+        "Máy chủ kiểm tra quyền, trạng thái và câu hỏi bổ sung.",
+        "Lưu kết quả công khai, resolved_at, chuyển Đã giải quyết và ghi lịch sử cùng giao dịch.",
+        "Sinh viên thấy kết quả và có thể phản hồi qua STU-05."
+      ],
+      "checks": [
+        [
+          "Có kết quả",
+          "Đang xử lý; ghi Đã hướng dẫn thủ tục xác nhận.",
+          "Đã giải quyết, có kết quả và resolved_at; STU-03 hiển thị đúng nội dung."
+        ],
+        [
+          "Còn thiếu thông tin / kết quả trống",
+          "Chờ bổ sung hoặc resolution rỗng.",
+          "Từ chối; không chuyển Đã giải quyết hay ghi kết quả một phần."
+        ],
+        [
+          "Sai người xử lý",
+          "NV-B ghi kết quả cho hồ sơ NV-A.",
+          "Từ chối; không thay kết quả."
+        ],
+        [
+          "Gửi lại / dữ liệu cũ",
+          "Gửi lại cùng thao tác hoặc dùng record_version cũ.",
+          "Không tạo hai kết quả; bản cũ không ghi đè kết quả mới."
+        ]
+      ],
+      "depends": [
+        "FR-DSP-06",
+        "FR-DSP-07"
+      ],
+      "source": "Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-DSP-09-01",
+        "AC-DSP-09-02",
+        "AC-DSP-09-03",
+        "AC-DSP-09-04"
+      ],
+      "test_ids": [
+        "TC-DSP-09-01",
+        "TC-DSP-09-02",
+        "TC-DSP-09-03",
+        "TC-DSP-09-04"
+      ],
+      "prd_path": "docs/03-modules/02-dispatch-processing/requirements/FR-DSP-09.md"
+    },
+    {
+      "id": "FR-DSP-10",
+      "module": "DSP",
+      "name": "Đóng yêu cầu đã giải quyết",
+      "actor": "Điều phối viên",
+      "purpose": "Kết thúc hồ sơ đã có kết quả sau kiểm tra; bảo toàn lịch sử.",
+      "preconditions": "Đã giải quyết và có kết quả; điều phối viên có quyền trên hồ sơ.",
+      "fields": [
+        [
+          "request_id",
+          "Bắt buộc",
+          "Hồ sơ đã giải quyết."
+        ],
+        [
+          "record_version",
+          "Hệ thống",
+          "Phiên bản hiện hành."
+        ]
+      ],
+      "flow": [
+        "Điều phối viên kiểm tra kết quả và chọn Đóng yêu cầu.",
+        "Máy chủ kiểm tra quyền và trạng thái Đã giải quyết.",
+        "Chuyển Đã đóng, ghi closed_at và lịch sử; giữ kết quả, trách nhiệm và phản hồi.",
+        "Ngừng thao tác xử lý; vẫn cho người có quyền xem và sinh viên phản hồi kết quả."
+      ],
+      "checks": [
+        [
+          "Đóng đúng",
+          "Điều phối viên đóng yêu cầu Đã giải quyết có kết quả.",
+          "Đã đóng; có closed_at; kết quả và lịch sử giữ nguyên."
+        ],
+        [
+          "Đóng trước khi giải quyết",
+          "Hồ sơ Đang xử lý chưa có kết quả.",
+          "Từ chối; không bỏ qua bước giải quyết."
+        ],
+        [
+          "Sai vai trò",
+          "Sinh viên hoặc nhân viên thường gọi thao tác đóng.",
+          "Từ chối; trạng thái không đổi."
+        ],
+        [
+          "Đóng lặp",
+          "Gửi lại thao tác đóng; sau đó thử ghi tiến độ.",
+          "Không tạo hai lần đóng; tiến độ mới bị từ chối; phản hồi kết quả vẫn được phép."
+        ]
+      ],
+      "depends": [
+        "FR-DSP-09"
+      ],
+      "source": "Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-DSP-10-01",
+        "AC-DSP-10-02",
+        "AC-DSP-10-03",
+        "AC-DSP-10-04"
+      ],
+      "test_ids": [
+        "TC-DSP-10-01",
+        "TC-DSP-10-02",
+        "TC-DSP-10-03",
+        "TC-DSP-10-04"
+      ],
+      "prd_path": "docs/03-modules/02-dispatch-processing/requirements/FR-DSP-10.md"
+    },
+    {
+      "id": "FR-RPT-01",
+      "module": "RPT",
+      "name": "Tổng hợp trạng thái yêu cầu",
+      "actor": "Quản lý",
+      "purpose": "Đếm yêu cầu theo trạng thái để theo dõi tổng thể.",
+      "preconditions": "Có quyền quản lý trong phạm vi báo cáo được cấu hình.",
+      "fields": [
+        [
+          "from_date / to_date",
+          "Tùy chọn",
+          "Kỳ có from ≤ to; CFG-06 và quy tắc kỳ BR-08."
+        ],
+        [
+          "department / category",
+          "Tùy chọn",
+          "Lọc trong phạm vi quản lý."
+        ],
+        [
+          "status",
+          "Nguồn đọc",
+          "Mỗi yêu cầu thuộc đúng một trong năm trạng thái; tổng nhóm bằng tổng tập lọc."
+        ]
+      ],
+      "flow": [
+        "Quản lý chọn kỳ và phạm vi báo cáo.",
+        "Máy chủ kiểm tra quyền và bộ lọc; lấy dữ liệu theo định nghĩa BR-08.",
+        "Tính theo công thức của chỉ tiêu; hiển thị kỳ, phạm vi, thời điểm đo, số mẫu cùng kết quả.",
+        "Cho kiểm tra danh sách nguồn trong cùng phạm vi để đối chiếu tổng; không sửa nghiệp vụ từ báo cáo."
+      ],
+      "checks": [
+        [
+          "Đối chiếu phép tính",
+          "Tạo 10 yêu cầu: 2 mỗi trạng thái.",
+          "Mỗi nhóm bằng 2, tổng bằng 10."
+        ],
+        [
+          "Bộ lọc không hợp lệ",
+          "from_date sau to_date hoặc đơn vị không tồn tại.",
+          "Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác."
+        ],
+        [
+          "Vượt quyền báo cáo",
+          "Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi.",
+          "Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi."
+        ],
+        [
+          "Không có yêu cầu",
+          "Không có yêu cầu",
+          "Mỗi nhóm bằng 0; không chia cho 0; hiển thị bộ lọc đang áp dụng."
+        ]
+      ],
+      "depends": [
+        "FR-STU-01",
+        "FR-DSP-10"
+      ],
+      "source": "Proposal §2.1 — trạng thái, thời gian, vấn đề phổ biến, khối lượng và hài lòng",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-RPT-01-01",
+        "AC-RPT-01-02",
+        "AC-RPT-01-03",
+        "AC-RPT-01-04"
+      ],
+      "test_ids": [
+        "TC-RPT-01-01",
+        "TC-RPT-01-02",
+        "TC-RPT-01-03",
+        "TC-RPT-01-04"
+      ],
+      "prd_path": "docs/03-modules/03-management-reporting/requirements/FR-RPT-01.md"
+    },
+    {
+      "id": "FR-RPT-02",
+      "module": "RPT",
+      "name": "Theo dõi yêu cầu quá hạn",
+      "actor": "Quản lý",
+      "purpose": "Nhận biết yêu cầu còn mở đã vượt hạn dự kiến.",
+      "preconditions": "Có quyền quản lý trong phạm vi báo cáo được cấu hình.",
+      "fields": [
+        [
+          "from_date / to_date",
+          "Tùy chọn",
+          "Kỳ có from ≤ to; CFG-06 và quy tắc kỳ BR-08."
+        ],
+        [
+          "department / category",
+          "Tùy chọn",
+          "Lọc trong phạm vi quản lý."
+        ],
+        [
+          "due_at / status",
+          "Nguồn đọc",
+          "Quá hạn khi now > due_at và trạng thái thuộc Đã tiếp nhận, Đang xử lý, Chờ bổ sung; không hạn không tính."
+        ]
+      ],
+      "flow": [
+        "Quản lý chọn kỳ và phạm vi báo cáo.",
+        "Máy chủ kiểm tra quyền và bộ lọc; lấy dữ liệu theo định nghĩa BR-08.",
+        "Tính theo công thức của chỉ tiêu; hiển thị kỳ, phạm vi, thời điểm đo, số mẫu cùng kết quả.",
+        "Cho kiểm tra danh sách nguồn trong cùng phạm vi để đối chiếu tổng; không sửa nghiệp vụ từ báo cáo."
+      ],
+      "checks": [
+        [
+          "Đối chiếu phép tính",
+          "Có một yêu cầu mở quá hạn, một đúng hạn, một không hạn, một Đã giải quyết quá hạn.",
+          "Chỉ yêu cầu mở quá hạn xuất hiện."
+        ],
+        [
+          "Bộ lọc không hợp lệ",
+          "from_date sau to_date hoặc đơn vị không tồn tại.",
+          "Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác."
+        ],
+        [
+          "Vượt quyền báo cáo",
+          "Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi.",
+          "Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi."
+        ],
+        [
+          "now bằng due_at",
+          "now bằng due_at",
+          "Yêu cầu chưa bị tính quá hạn tại đúng ranh giới."
+        ]
+      ],
+      "depends": [
+        "FR-DSP-05"
+      ],
+      "source": "Proposal §2.1 — trạng thái, thời gian, vấn đề phổ biến, khối lượng và hài lòng",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-RPT-02-01",
+        "AC-RPT-02-02",
+        "AC-RPT-02-03",
+        "AC-RPT-02-04"
+      ],
+      "test_ids": [
+        "TC-RPT-02-01",
+        "TC-RPT-02-02",
+        "TC-RPT-02-03",
+        "TC-RPT-02-04"
+      ],
+      "prd_path": "docs/03-modules/03-management-reporting/requirements/FR-RPT-02.md"
+    },
+    {
+      "id": "FR-RPT-03",
+      "module": "RPT",
+      "name": "Thống kê thời gian xử lý",
+      "actor": "Quản lý",
+      "purpose": "Đo thời gian từ gửi đến giải quyết bằng dữ liệu mẫu.",
+      "preconditions": "Có quyền quản lý trong phạm vi báo cáo được cấu hình.",
+      "fields": [
+        [
+          "from_date / to_date",
+          "Tùy chọn",
+          "Kỳ có from ≤ to; CFG-06 và quy tắc kỳ BR-08."
+        ],
+        [
+          "department / category",
+          "Tùy chọn",
+          "Lọc trong phạm vi quản lý."
+        ],
+        [
+          "created_at / resolved_at",
+          "Nguồn đọc",
+          "Thời gian = resolved_at − created_at; chỉ hồ sơ có resolved_at trong kỳ; báo số mẫu và trung bình, không tự trừ thời gian chờ."
+        ]
+      ],
+      "flow": [
+        "Quản lý chọn kỳ và phạm vi báo cáo.",
+        "Máy chủ kiểm tra quyền và bộ lọc; lấy dữ liệu theo định nghĩa BR-08.",
+        "Tính theo công thức của chỉ tiêu; hiển thị kỳ, phạm vi, thời điểm đo, số mẫu cùng kết quả.",
+        "Cho kiểm tra danh sách nguồn trong cùng phạm vi để đối chiếu tổng; không sửa nghiệp vụ từ báo cáo."
+      ],
+      "checks": [
+        [
+          "Đối chiếu phép tính",
+          "Hai hồ sơ có thời gian 2 giờ và 4 giờ; một hồ sơ còn mở.",
+          "Cỡ mẫu 2, trung bình 3 giờ; hồ sơ mở bị loại."
+        ],
+        [
+          "Bộ lọc không hợp lệ",
+          "from_date sau to_date hoặc đơn vị không tồn tại.",
+          "Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác."
+        ],
+        [
+          "Vượt quyền báo cáo",
+          "Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi.",
+          "Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi."
+        ],
+        [
+          "Không hồ sơ đã giải quyết",
+          "Không hồ sơ đã giải quyết",
+          "Hiện Không có dữ liệu, cỡ mẫu 0; không biểu diễn trung bình là 0 giờ."
+        ]
+      ],
+      "depends": [
+        "FR-DSP-09"
+      ],
+      "source": "Proposal §2.1 — trạng thái, thời gian, vấn đề phổ biến, khối lượng và hài lòng",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-RPT-03-01",
+        "AC-RPT-03-02",
+        "AC-RPT-03-03",
+        "AC-RPT-03-04"
+      ],
+      "test_ids": [
+        "TC-RPT-03-01",
+        "TC-RPT-03-02",
+        "TC-RPT-03-03",
+        "TC-RPT-03-04"
+      ],
+      "prd_path": "docs/03-modules/03-management-reporting/requirements/FR-RPT-03.md"
+    },
+    {
+      "id": "FR-RPT-04",
+      "module": "RPT",
+      "name": "Thống kê vấn đề phổ biến",
+      "actor": "Quản lý",
+      "purpose": "Biết nhóm vấn đề nào có nhiều yêu cầu.",
+      "preconditions": "Có quyền quản lý trong phạm vi báo cáo được cấu hình.",
+      "fields": [
+        [
+          "from_date / to_date",
+          "Tùy chọn",
+          "Kỳ có from ≤ to; CFG-06 và quy tắc kỳ BR-08."
+        ],
+        [
+          "department / category",
+          "Tùy chọn",
+          "Lọc trong phạm vi quản lý."
+        ],
+        [
+          "category_id",
+          "Nguồn đọc",
+          "Một yêu cầu tính vào loại hiện hành đúng một lần; Chưa xác định là một nhóm riêng."
+        ]
+      ],
+      "flow": [
+        "Quản lý chọn kỳ và phạm vi báo cáo.",
+        "Máy chủ kiểm tra quyền và bộ lọc; lấy dữ liệu theo định nghĩa BR-08.",
+        "Tính theo công thức của chỉ tiêu; hiển thị kỳ, phạm vi, thời điểm đo, số mẫu cùng kết quả.",
+        "Cho kiểm tra danh sách nguồn trong cùng phạm vi để đối chiếu tổng; không sửa nghiệp vụ từ báo cáo."
+      ],
+      "checks": [
+        [
+          "Đối chiếu phép tính",
+          "Ba Học vụ, hai CNTT và một Chưa xác định.",
+          "Các nhóm 3, 2, 1; tổng 6; sắp số lượng giảm dần."
+        ],
+        [
+          "Bộ lọc không hợp lệ",
+          "from_date sau to_date hoặc đơn vị không tồn tại.",
+          "Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác."
+        ],
+        [
+          "Vượt quyền báo cáo",
+          "Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi.",
+          "Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi."
+        ],
+        [
+          "Hai nhóm bằng số lượng",
+          "Hai nhóm bằng số lượng",
+          "Thứ tự phụ theo tên nhóm ổn định; không bỏ nhóm chưa xác định."
+        ]
+      ],
+      "depends": [
+        "FR-DSP-03"
+      ],
+      "source": "Proposal §2.1 — trạng thái, thời gian, vấn đề phổ biến, khối lượng và hài lòng",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-RPT-04-01",
+        "AC-RPT-04-02",
+        "AC-RPT-04-03",
+        "AC-RPT-04-04"
+      ],
+      "test_ids": [
+        "TC-RPT-04-01",
+        "TC-RPT-04-02",
+        "TC-RPT-04-03",
+        "TC-RPT-04-04"
+      ],
+      "prd_path": "docs/03-modules/03-management-reporting/requirements/FR-RPT-04.md"
+    },
+    {
+      "id": "FR-RPT-05",
+      "module": "RPT",
+      "name": "Thống kê khối lượng theo phòng ban",
+      "actor": "Quản lý",
+      "purpose": "Biết trách nhiệm hiện hành và lượng việc còn mở của các đơn vị.",
+      "preconditions": "Có quyền quản lý trong phạm vi báo cáo được cấu hình.",
+      "fields": [
+        [
+          "from_date / to_date",
+          "Tùy chọn",
+          "Kỳ có from ≤ to; CFG-06 và quy tắc kỳ BR-08."
+        ],
+        [
+          "department / category",
+          "Tùy chọn",
+          "Lọc trong phạm vi quản lý."
+        ],
+        [
+          "department_id / status",
+          "Nguồn đọc",
+          "Đếm toàn bộ và còn mở theo đơn vị hiện hành; chưa phân công là nhóm riêng; không cộng hai đơn vị sau chuyển trách nhiệm."
+        ]
+      ],
+      "flow": [
+        "Quản lý chọn kỳ và phạm vi báo cáo.",
+        "Máy chủ kiểm tra quyền và bộ lọc; lấy dữ liệu theo định nghĩa BR-08.",
+        "Tính theo công thức của chỉ tiêu; hiển thị kỳ, phạm vi, thời điểm đo, số mẫu cùng kết quả.",
+        "Cho kiểm tra danh sách nguồn trong cùng phạm vi để đối chiếu tổng; không sửa nghiệp vụ từ báo cáo."
+      ],
+      "checks": [
+        [
+          "Đối chiếu phép tính",
+          "PB-A có hai mở, một kết thúc; PB-B có một mở; một chưa phân công.",
+          "PB-A tổng 3/mở 2; PB-B 1/1; chưa phân công 1/1."
+        ],
+        [
+          "Bộ lọc không hợp lệ",
+          "from_date sau to_date hoặc đơn vị không tồn tại.",
+          "Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác."
+        ],
+        [
+          "Vượt quyền báo cáo",
+          "Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi.",
+          "Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi."
+        ],
+        [
+          "Chuyển một hồ sơ PB-A sang PB-B",
+          "Chuyển một hồ sơ PB-A sang PB-B",
+          "Sau chuyển, tổng toàn hệ thống giữ nguyên; chỉ nhóm hiện hành tăng/giảm tương ứng."
+        ]
+      ],
+      "depends": [
+        "FR-DSP-04"
+      ],
+      "source": "Proposal §2.1 — trạng thái, thời gian, vấn đề phổ biến, khối lượng và hài lòng",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-RPT-05-01",
+        "AC-RPT-05-02",
+        "AC-RPT-05-03",
+        "AC-RPT-05-04"
+      ],
+      "test_ids": [
+        "TC-RPT-05-01",
+        "TC-RPT-05-02",
+        "TC-RPT-05-03",
+        "TC-RPT-05-04"
+      ],
+      "prd_path": "docs/03-modules/03-management-reporting/requirements/FR-RPT-05.md"
+    },
+    {
+      "id": "FR-RPT-06",
+      "module": "RPT",
+      "name": "Tổng hợp mức hài lòng",
+      "actor": "Quản lý",
+      "purpose": "Tổng hợp phản hồi kết quả để đánh giá chất lượng hỗ trợ.",
+      "preconditions": "Có quyền quản lý trong phạm vi báo cáo được cấu hình.",
+      "fields": [
+        [
+          "from_date / to_date",
+          "Tùy chọn",
+          "Kỳ có from ≤ to; CFG-06 và quy tắc kỳ BR-08."
+        ],
+        [
+          "department / category",
+          "Tùy chọn",
+          "Lọc trong phạm vi quản lý."
+        ],
+        [
+          "score / feedback",
+          "Nguồn đọc",
+          "Một phản hồi hiện hành mỗi yêu cầu; điểm trung bình = tổng điểm / số phản hồi; kèm phân bố 1–5 và số phản hồi."
+        ]
+      ],
+      "flow": [
+        "Quản lý chọn kỳ và phạm vi báo cáo.",
+        "Máy chủ kiểm tra quyền và bộ lọc; lấy dữ liệu theo định nghĩa BR-08.",
+        "Tính theo công thức của chỉ tiêu; hiển thị kỳ, phạm vi, thời điểm đo, số mẫu cùng kết quả.",
+        "Cho kiểm tra danh sách nguồn trong cùng phạm vi để đối chiếu tổng; không sửa nghiệp vụ từ báo cáo."
+      ],
+      "checks": [
+        [
+          "Đối chiếu phép tính",
+          "Có điểm 5 và 3; yêu cầu chưa đánh giá không tính.",
+          "Cỡ mẫu 2, trung bình 4, một mức 5 và một mức 3."
+        ],
+        [
+          "Bộ lọc không hợp lệ",
+          "from_date sau to_date hoặc đơn vị không tồn tại.",
+          "Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác."
+        ],
+        [
+          "Vượt quyền báo cáo",
+          "Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi.",
+          "Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi."
+        ],
+        [
+          "Chưa có phản hồi hoặc đổi điểm",
+          "Chưa có phản hồi hoặc đổi điểm",
+          "Không phản hồi: Không có dữ liệu; đổi điểm: số mẫu giữ nguyên, tổng điểm đổi."
+        ]
+      ],
+      "depends": [
+        "FR-STU-05"
+      ],
+      "source": "Proposal §2.1 — trạng thái, thời gian, vấn đề phổ biến, khối lượng và hài lòng",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-RPT-06-01",
+        "AC-RPT-06-02",
+        "AC-RPT-06-03",
+        "AC-RPT-06-04"
+      ],
+      "test_ids": [
+        "TC-RPT-06-01",
+        "TC-RPT-06-02",
+        "TC-RPT-06-03",
+        "TC-RPT-06-04"
+      ],
+      "prd_path": "docs/03-modules/03-management-reporting/requirements/FR-RPT-06.md"
+    },
+    {
+      "id": "FR-IAM-01",
+      "module": "IAM",
+      "name": "Đăng nhập",
+      "actor": "Sinh viên / Điều phối viên / Nhân viên / Quản lý",
+      "purpose": "Xác thực tài khoản mẫu trước khi sử dụng chức năng.",
+      "preconditions": "Tài khoản giả lập đã khởi tạo với mật khẩu băm; chưa có phiên hợp lệ.",
+      "fields": [
+        [
+          "email",
+          "Bắt buộc",
+          "Định dạng email; tối đa CFG-07."
+        ],
+        [
+          "password",
+          "Bắt buộc",
+          "Không rỗng; không ghi log hay lưu dạng thô."
+        ],
+        [
+          "session",
+          "Hệ thống",
+          "Sinh phiên mới khi xác thực thành công; CFG-08."
+        ]
+      ],
+      "flow": [
+        "Người dùng nhập email và mật khẩu.",
+        "Máy chủ kiểm tra đầu vào và đối chiếu mật khẩu băm của tài khoản đang dùng.",
+        "Nếu đúng, thay mã phiên và mở khu vực phù hợp quyền; nếu sai trả thông báo chung."
+      ],
+      "checks": [
+        [
+          "Đúng tài khoản",
+          "Lần lượt đăng nhập bốn vai trò bằng tài khoản giả lập.",
+          "Có phiên mới cho đúng người, đúng khu vực; không sử dụng vai trò do trình duyệt tự khai."
+        ],
+        [
+          "Sai thông tin",
+          "Sai mật khẩu hoặc email không có.",
+          "Thông báo chung; không tạo phiên được phép nghiệp vụ."
+        ],
+        [
+          "Chưa xác thực",
+          "Mở trang nghiệp vụ hoặc gọi API trực tiếp không phiên.",
+          "Yêu cầu xác thực; không trả dữ liệu nghiệp vụ."
+        ],
+        [
+          "Cố định phiên / hết hạn",
+          "Dùng mã phiên trước đăng nhập hoặc phiên hết hạn CFG-08.",
+          "Mã phiên cũ không có quyền; phiên hết hạn không ghi nghiệp vụ; yêu cầu đăng nhập lại."
+        ]
+      ],
+      "depends": [],
+      "source": "Proposal §2.1 — xác thực, phân quyền, hạn chế truy cập thông tin và tài liệu liên quan",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-IAM-01-01",
+        "AC-IAM-01-02",
+        "AC-IAM-01-03",
+        "AC-IAM-01-04"
+      ],
+      "test_ids": [
+        "TC-IAM-01-01",
+        "TC-IAM-01-02",
+        "TC-IAM-01-03",
+        "TC-IAM-01-04"
+      ],
+      "prd_path": "docs/03-modules/04-accounts-permissions/requirements/FR-IAM-01.md"
+    },
+    {
+      "id": "FR-IAM-02",
+      "module": "IAM",
+      "name": "Đăng xuất",
+      "actor": "Mọi vai trò đã đăng nhập",
+      "purpose": "Kết thúc phiên sử dụng hiện tại.",
+      "preconditions": "Đã đăng nhập hợp lệ.",
+      "fields": [
+        [
+          "session",
+          "Hệ thống",
+          "Phiên hiện tại trên máy chủ."
+        ]
+      ],
+      "flow": [
+        "Người dùng chọn Đăng xuất.",
+        "Máy chủ vô hiệu phiên hiện tại và xóa thông tin phiên phía trình duyệt.",
+        "Chuyển về đăng nhập; mọi thao tác với phiên cũ phải bị chặn."
+      ],
+      "checks": [
+        [
+          "Đăng xuất đúng",
+          "Đăng nhập rồi chọn Đăng xuất.",
+          "Trở về đăng nhập; phiên máy chủ bị vô hiệu."
+        ],
+        [
+          "Không có phiên",
+          "Gọi đăng xuất khi đã thoát.",
+          "Kết quả an toàn về đăng nhập, không lỗi hệ thống hay ảnh hưởng tài khoản khác."
+        ],
+        [
+          "Dùng lại phiên",
+          "Gọi cập nhật nghiệp vụ bằng phiên đã đăng xuất.",
+          "Bị chặn; dữ liệu không thay đổi."
+        ],
+        [
+          "Back / đăng nhập lại",
+          "Back trang trước rồi đăng nhập lại.",
+          "Back không khôi phục quyền; đăng nhập mới tạo phiên mới hợp lệ."
+        ]
+      ],
+      "depends": [
+        "FR-IAM-01"
+      ],
+      "source": "Proposal §2.1 — xác thực, phân quyền, hạn chế truy cập thông tin và tài liệu liên quan",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-IAM-02-01",
+        "AC-IAM-02-02",
+        "AC-IAM-02-03",
+        "AC-IAM-02-04"
+      ],
+      "test_ids": [
+        "TC-IAM-02-01",
+        "TC-IAM-02-02",
+        "TC-IAM-02-03",
+        "TC-IAM-02-04"
+      ],
+      "prd_path": "docs/03-modules/04-accounts-permissions/requirements/FR-IAM-02.md"
+    },
+    {
+      "id": "FR-IAM-03",
+      "module": "IAM",
+      "name": "Kiểm soát quyền theo vai trò và hồ sơ",
+      "actor": "Máy chủ cho mọi vai trò",
+      "purpose": "Chỉ cho truy cập thông tin và thao tác trong trách nhiệm được cấp.",
+      "preconditions": "Có phiên; vai trò và phạm vi mẫu được quản lý phía máy chủ.",
+      "fields": [
+        [
+          "user / role / scope",
+          "Hệ thống",
+          "Lấy từ phiên và tài khoản, không từ body hoặc URL tự khai."
+        ],
+        [
+          "object_id / action",
+          "Bắt buộc theo API",
+          "Kiểm tra cả quyền hành động và quyền trên đối tượng."
+        ]
+      ],
+      "flow": [
+        "Mọi điểm truy cập nghiệp vụ xác thực phiên.",
+        "Kiểm tra vai trò cho hành động và phạm vi hồ sơ hoặc báo cáo.",
+        "Nếu cho phép mới đọc/ghi; nếu từ chối không trả nội dung nhạy cảm và không tạo tác dụng phụ.",
+        "Giao diện phản ánh quyền nhưng không thay kiểm tra máy chủ; thay trách nhiệm có hiệu lực ngay ở thao tác tiếp theo."
+      ],
+      "checks": [
+        [
+          "Quyền phù hợp",
+          "SV đọc hồ sơ mình; NV đọc/sửa được giao; điều phối phân công trong phạm vi; quản lý xem báo cáo trong phạm vi.",
+          "Mỗi hành động hợp lệ thành công theo ma trận; vai trò không được cấp không có hành động đó."
+        ],
+        [
+          "Vai trò giả",
+          "Gửi role=manager hoặc scope=all trong dữ liệu.",
+          "Máy chủ bỏ qua; không nâng quyền từ dữ liệu trình duyệt."
+        ],
+        [
+          "Đối tượng của người khác",
+          "SV thay request_id; NV đọc ngoài trách nhiệm; quản lý đổi department ngoài phạm vi.",
+          "Đều bị chặn; không lộ nội dung, số liệu hoặc tài liệu liên quan."
+        ],
+        [
+          "Thay trách nhiệm / dữ liệu nội bộ",
+          "Giao lại hồ sơ, thử từ phiên NV cũ; SV đọc nội bộ trực tiếp.",
+          "NV cũ không sửa được; SV không nhận ghi chú nội bộ trong HTML/JSON hay tài liệu nếu sau này được bổ sung."
+        ]
+      ],
+      "depends": [
+        "FR-IAM-01"
+      ],
+      "source": "Proposal §2.1 — xác thực, phân quyền, hạn chế truy cập thông tin và tài liệu liên quan",
+      "effort": {
+        "PM": 1,
+        "BE": 2,
+        "FE": 2,
+        "QA": 1
+      },
+      "acceptance_ids": [
+        "AC-IAM-03-01",
+        "AC-IAM-03-02",
+        "AC-IAM-03-03",
+        "AC-IAM-03-04"
+      ],
+      "test_ids": [
+        "TC-IAM-03-01",
+        "TC-IAM-03-02",
+        "TC-IAM-03-03",
+        "TC-IAM-03-04"
+      ],
+      "prd_path": "docs/03-modules/04-accounts-permissions/requirements/FR-IAM-03.md"
+    }
+  ],
+  "plan": {
+    "weeks": 15,
+    "proposed_start": "2026-10-12",
+    "proposed_end": "2027-01-22",
+    "calendar": "Monday–Friday; holidays not confirmed",
+    "roles": [
+      "PM",
+      "BE",
+      "FE",
+      "QA"
+    ],
+    "planned_hours": {
+      "PM": 56,
+      "BE": 92,
+      "FE": 76,
+      "QA": 64
+    },
+    "reserve_hours": {
+      "PM": 8,
+      "BE": 8,
+      "FE": 8,
+      "QA": 8
+    }
+  },
+  "traceability": [
+    {
+      "feature_id": "FR-STU-01",
+      "source": "Proposal §2.1 — gửi yêu cầu, cung cấp thông tin, theo dõi tiến độ, phản hồi kết quả",
+      "path": "docs/03-modules/01-student-support/requirements/FR-STU-01.md",
+      "acceptance_ids": [
+        "AC-STU-01-01",
+        "AC-STU-01-02",
+        "AC-STU-01-03",
+        "AC-STU-01-04"
+      ],
+      "test_ids": [
+        "TC-STU-01-01",
+        "TC-STU-01-02",
+        "TC-STU-01-03",
+        "TC-STU-01-04"
+      ],
+      "master_prefix": "FR-STU-01"
+    },
+    {
+      "feature_id": "FR-STU-02",
+      "source": "Proposal §2.1 — gửi yêu cầu, cung cấp thông tin, theo dõi tiến độ, phản hồi kết quả",
+      "path": "docs/03-modules/01-student-support/requirements/FR-STU-02.md",
+      "acceptance_ids": [
+        "AC-STU-02-01",
+        "AC-STU-02-02",
+        "AC-STU-02-03",
+        "AC-STU-02-04"
+      ],
+      "test_ids": [
+        "TC-STU-02-01",
+        "TC-STU-02-02",
+        "TC-STU-02-03",
+        "TC-STU-02-04"
+      ],
+      "master_prefix": "FR-STU-02"
+    },
+    {
+      "feature_id": "FR-STU-03",
+      "source": "Proposal §2.1 — gửi yêu cầu, cung cấp thông tin, theo dõi tiến độ, phản hồi kết quả",
+      "path": "docs/03-modules/01-student-support/requirements/FR-STU-03.md",
+      "acceptance_ids": [
+        "AC-STU-03-01",
+        "AC-STU-03-02",
+        "AC-STU-03-03",
+        "AC-STU-03-04"
+      ],
+      "test_ids": [
+        "TC-STU-03-01",
+        "TC-STU-03-02",
+        "TC-STU-03-03",
+        "TC-STU-03-04"
+      ],
+      "master_prefix": "FR-STU-03"
+    },
+    {
+      "feature_id": "FR-STU-04",
+      "source": "Proposal §2.1 — gửi yêu cầu, cung cấp thông tin, theo dõi tiến độ, phản hồi kết quả",
+      "path": "docs/03-modules/01-student-support/requirements/FR-STU-04.md",
+      "acceptance_ids": [
+        "AC-STU-04-01",
+        "AC-STU-04-02",
+        "AC-STU-04-03",
+        "AC-STU-04-04"
+      ],
+      "test_ids": [
+        "TC-STU-04-01",
+        "TC-STU-04-02",
+        "TC-STU-04-03",
+        "TC-STU-04-04"
+      ],
+      "master_prefix": "FR-STU-04"
+    },
+    {
+      "feature_id": "FR-STU-05",
+      "source": "Proposal §2.1 — gửi yêu cầu, cung cấp thông tin, theo dõi tiến độ, phản hồi kết quả",
+      "path": "docs/03-modules/01-student-support/requirements/FR-STU-05.md",
+      "acceptance_ids": [
+        "AC-STU-05-01",
+        "AC-STU-05-02",
+        "AC-STU-05-03",
+        "AC-STU-05-04"
+      ],
+      "test_ids": [
+        "TC-STU-05-01",
+        "TC-STU-05-02",
+        "TC-STU-05-03",
+        "TC-STU-05-04"
+      ],
+      "master_prefix": "FR-STU-05"
+    },
+    {
+      "feature_id": "FR-DSP-01",
+      "source": "Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử",
+      "path": "docs/03-modules/02-dispatch-processing/requirements/FR-DSP-01.md",
+      "acceptance_ids": [
+        "AC-DSP-01-01",
+        "AC-DSP-01-02",
+        "AC-DSP-01-03",
+        "AC-DSP-01-04"
+      ],
+      "test_ids": [
+        "TC-DSP-01-01",
+        "TC-DSP-01-02",
+        "TC-DSP-01-03",
+        "TC-DSP-01-04"
+      ],
+      "master_prefix": "FR-DSP-01"
+    },
+    {
+      "feature_id": "FR-DSP-02",
+      "source": "Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử",
+      "path": "docs/03-modules/02-dispatch-processing/requirements/FR-DSP-02.md",
+      "acceptance_ids": [
+        "AC-DSP-02-01",
+        "AC-DSP-02-02",
+        "AC-DSP-02-03",
+        "AC-DSP-02-04"
+      ],
+      "test_ids": [
+        "TC-DSP-02-01",
+        "TC-DSP-02-02",
+        "TC-DSP-02-03",
+        "TC-DSP-02-04"
+      ],
+      "master_prefix": "FR-DSP-02"
+    },
+    {
+      "feature_id": "FR-DSP-03",
+      "source": "Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử",
+      "path": "docs/03-modules/02-dispatch-processing/requirements/FR-DSP-03.md",
+      "acceptance_ids": [
+        "AC-DSP-03-01",
+        "AC-DSP-03-02",
+        "AC-DSP-03-03",
+        "AC-DSP-03-04"
+      ],
+      "test_ids": [
+        "TC-DSP-03-01",
+        "TC-DSP-03-02",
+        "TC-DSP-03-03",
+        "TC-DSP-03-04"
+      ],
+      "master_prefix": "FR-DSP-03"
+    },
+    {
+      "feature_id": "FR-DSP-04",
+      "source": "Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử",
+      "path": "docs/03-modules/02-dispatch-processing/requirements/FR-DSP-04.md",
+      "acceptance_ids": [
+        "AC-DSP-04-01",
+        "AC-DSP-04-02",
+        "AC-DSP-04-03",
+        "AC-DSP-04-04"
+      ],
+      "test_ids": [
+        "TC-DSP-04-01",
+        "TC-DSP-04-02",
+        "TC-DSP-04-03",
+        "TC-DSP-04-04"
+      ],
+      "master_prefix": "FR-DSP-04"
+    },
+    {
+      "feature_id": "FR-DSP-05",
+      "source": "Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử",
+      "path": "docs/03-modules/02-dispatch-processing/requirements/FR-DSP-05.md",
+      "acceptance_ids": [
+        "AC-DSP-05-01",
+        "AC-DSP-05-02",
+        "AC-DSP-05-03",
+        "AC-DSP-05-04"
+      ],
+      "test_ids": [
+        "TC-DSP-05-01",
+        "TC-DSP-05-02",
+        "TC-DSP-05-03",
+        "TC-DSP-05-04"
+      ],
+      "master_prefix": "FR-DSP-05"
+    },
+    {
+      "feature_id": "FR-DSP-06",
+      "source": "Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử",
+      "path": "docs/03-modules/02-dispatch-processing/requirements/FR-DSP-06.md",
+      "acceptance_ids": [
+        "AC-DSP-06-01",
+        "AC-DSP-06-02",
+        "AC-DSP-06-03",
+        "AC-DSP-06-04"
+      ],
+      "test_ids": [
+        "TC-DSP-06-01",
+        "TC-DSP-06-02",
+        "TC-DSP-06-03",
+        "TC-DSP-06-04"
+      ],
+      "master_prefix": "FR-DSP-06"
+    },
+    {
+      "feature_id": "FR-DSP-07",
+      "source": "Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử",
+      "path": "docs/03-modules/02-dispatch-processing/requirements/FR-DSP-07.md",
+      "acceptance_ids": [
+        "AC-DSP-07-01",
+        "AC-DSP-07-02",
+        "AC-DSP-07-03",
+        "AC-DSP-07-04"
+      ],
+      "test_ids": [
+        "TC-DSP-07-01",
+        "TC-DSP-07-02",
+        "TC-DSP-07-03",
+        "TC-DSP-07-04"
+      ],
+      "master_prefix": "FR-DSP-07"
+    },
+    {
+      "feature_id": "FR-DSP-08",
+      "source": "Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử",
+      "path": "docs/03-modules/02-dispatch-processing/requirements/FR-DSP-08.md",
+      "acceptance_ids": [
+        "AC-DSP-08-01",
+        "AC-DSP-08-02",
+        "AC-DSP-08-03",
+        "AC-DSP-08-04"
+      ],
+      "test_ids": [
+        "TC-DSP-08-01",
+        "TC-DSP-08-02",
+        "TC-DSP-08-03",
+        "TC-DSP-08-04"
+      ],
+      "master_prefix": "FR-DSP-08"
+    },
+    {
+      "feature_id": "FR-DSP-09",
+      "source": "Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử",
+      "path": "docs/03-modules/02-dispatch-processing/requirements/FR-DSP-09.md",
+      "acceptance_ids": [
+        "AC-DSP-09-01",
+        "AC-DSP-09-02",
+        "AC-DSP-09-03",
+        "AC-DSP-09-04"
+      ],
+      "test_ids": [
+        "TC-DSP-09-01",
+        "TC-DSP-09-02",
+        "TC-DSP-09-03",
+        "TC-DSP-09-04"
+      ],
+      "master_prefix": "FR-DSP-09"
+    },
+    {
+      "feature_id": "FR-DSP-10",
+      "source": "Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử",
+      "path": "docs/03-modules/02-dispatch-processing/requirements/FR-DSP-10.md",
+      "acceptance_ids": [
+        "AC-DSP-10-01",
+        "AC-DSP-10-02",
+        "AC-DSP-10-03",
+        "AC-DSP-10-04"
+      ],
+      "test_ids": [
+        "TC-DSP-10-01",
+        "TC-DSP-10-02",
+        "TC-DSP-10-03",
+        "TC-DSP-10-04"
+      ],
+      "master_prefix": "FR-DSP-10"
+    },
+    {
+      "feature_id": "FR-RPT-01",
+      "source": "Proposal §2.1 — trạng thái, thời gian, vấn đề phổ biến, khối lượng và hài lòng",
+      "path": "docs/03-modules/03-management-reporting/requirements/FR-RPT-01.md",
+      "acceptance_ids": [
+        "AC-RPT-01-01",
+        "AC-RPT-01-02",
+        "AC-RPT-01-03",
+        "AC-RPT-01-04"
+      ],
+      "test_ids": [
+        "TC-RPT-01-01",
+        "TC-RPT-01-02",
+        "TC-RPT-01-03",
+        "TC-RPT-01-04"
+      ],
+      "master_prefix": "FR-RPT-01"
+    },
+    {
+      "feature_id": "FR-RPT-02",
+      "source": "Proposal §2.1 — trạng thái, thời gian, vấn đề phổ biến, khối lượng và hài lòng",
+      "path": "docs/03-modules/03-management-reporting/requirements/FR-RPT-02.md",
+      "acceptance_ids": [
+        "AC-RPT-02-01",
+        "AC-RPT-02-02",
+        "AC-RPT-02-03",
+        "AC-RPT-02-04"
+      ],
+      "test_ids": [
+        "TC-RPT-02-01",
+        "TC-RPT-02-02",
+        "TC-RPT-02-03",
+        "TC-RPT-02-04"
+      ],
+      "master_prefix": "FR-RPT-02"
+    },
+    {
+      "feature_id": "FR-RPT-03",
+      "source": "Proposal §2.1 — trạng thái, thời gian, vấn đề phổ biến, khối lượng và hài lòng",
+      "path": "docs/03-modules/03-management-reporting/requirements/FR-RPT-03.md",
+      "acceptance_ids": [
+        "AC-RPT-03-01",
+        "AC-RPT-03-02",
+        "AC-RPT-03-03",
+        "AC-RPT-03-04"
+      ],
+      "test_ids": [
+        "TC-RPT-03-01",
+        "TC-RPT-03-02",
+        "TC-RPT-03-03",
+        "TC-RPT-03-04"
+      ],
+      "master_prefix": "FR-RPT-03"
+    },
+    {
+      "feature_id": "FR-RPT-04",
+      "source": "Proposal §2.1 — trạng thái, thời gian, vấn đề phổ biến, khối lượng và hài lòng",
+      "path": "docs/03-modules/03-management-reporting/requirements/FR-RPT-04.md",
+      "acceptance_ids": [
+        "AC-RPT-04-01",
+        "AC-RPT-04-02",
+        "AC-RPT-04-03",
+        "AC-RPT-04-04"
+      ],
+      "test_ids": [
+        "TC-RPT-04-01",
+        "TC-RPT-04-02",
+        "TC-RPT-04-03",
+        "TC-RPT-04-04"
+      ],
+      "master_prefix": "FR-RPT-04"
+    },
+    {
+      "feature_id": "FR-RPT-05",
+      "source": "Proposal §2.1 — trạng thái, thời gian, vấn đề phổ biến, khối lượng và hài lòng",
+      "path": "docs/03-modules/03-management-reporting/requirements/FR-RPT-05.md",
+      "acceptance_ids": [
+        "AC-RPT-05-01",
+        "AC-RPT-05-02",
+        "AC-RPT-05-03",
+        "AC-RPT-05-04"
+      ],
+      "test_ids": [
+        "TC-RPT-05-01",
+        "TC-RPT-05-02",
+        "TC-RPT-05-03",
+        "TC-RPT-05-04"
+      ],
+      "master_prefix": "FR-RPT-05"
+    },
+    {
+      "feature_id": "FR-RPT-06",
+      "source": "Proposal §2.1 — trạng thái, thời gian, vấn đề phổ biến, khối lượng và hài lòng",
+      "path": "docs/03-modules/03-management-reporting/requirements/FR-RPT-06.md",
+      "acceptance_ids": [
+        "AC-RPT-06-01",
+        "AC-RPT-06-02",
+        "AC-RPT-06-03",
+        "AC-RPT-06-04"
+      ],
+      "test_ids": [
+        "TC-RPT-06-01",
+        "TC-RPT-06-02",
+        "TC-RPT-06-03",
+        "TC-RPT-06-04"
+      ],
+      "master_prefix": "FR-RPT-06"
+    },
+    {
+      "feature_id": "FR-IAM-01",
+      "source": "Proposal §2.1 — xác thực, phân quyền, hạn chế truy cập thông tin và tài liệu liên quan",
+      "path": "docs/03-modules/04-accounts-permissions/requirements/FR-IAM-01.md",
+      "acceptance_ids": [
+        "AC-IAM-01-01",
+        "AC-IAM-01-02",
+        "AC-IAM-01-03",
+        "AC-IAM-01-04"
+      ],
+      "test_ids": [
+        "TC-IAM-01-01",
+        "TC-IAM-01-02",
+        "TC-IAM-01-03",
+        "TC-IAM-01-04"
+      ],
+      "master_prefix": "FR-IAM-01"
+    },
+    {
+      "feature_id": "FR-IAM-02",
+      "source": "Proposal §2.1 — xác thực, phân quyền, hạn chế truy cập thông tin và tài liệu liên quan",
+      "path": "docs/03-modules/04-accounts-permissions/requirements/FR-IAM-02.md",
+      "acceptance_ids": [
+        "AC-IAM-02-01",
+        "AC-IAM-02-02",
+        "AC-IAM-02-03",
+        "AC-IAM-02-04"
+      ],
+      "test_ids": [
+        "TC-IAM-02-01",
+        "TC-IAM-02-02",
+        "TC-IAM-02-03",
+        "TC-IAM-02-04"
+      ],
+      "master_prefix": "FR-IAM-02"
+    },
+    {
+      "feature_id": "FR-IAM-03",
+      "source": "Proposal §2.1 — xác thực, phân quyền, hạn chế truy cập thông tin và tài liệu liên quan",
+      "path": "docs/03-modules/04-accounts-permissions/requirements/FR-IAM-03.md",
+      "acceptance_ids": [
+        "AC-IAM-03-01",
+        "AC-IAM-03-02",
+        "AC-IAM-03-03",
+        "AC-IAM-03-04"
+      ],
+      "test_ids": [
+        "TC-IAM-03-01",
+        "TC-IAM-03-02",
+        "TC-IAM-03-03",
+        "TC-IAM-03-04"
+      ],
+      "master_prefix": "FR-IAM-03"
+    }
+  ]
+}

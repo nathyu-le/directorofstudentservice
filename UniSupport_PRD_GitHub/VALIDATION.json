@@ -1,0 +1,16 @@
+{
+  "version": "4.0",
+  "modules": 4,
+  "features": 24,
+  "acceptance": 96,
+  "functional_cases": 96,
+  "e2e": 8,
+  "nfr": 6,
+  "metrics": 4,
+  "files": 96,
+  "relative_links_checked": 162,
+  "duplicate_ids": 0,
+  "unknown_fr_dependencies": 0,
+  "test_execution": "Not Run",
+  "proposal_source_version": 6
+}
