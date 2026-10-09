@@ -1,7 +1,4 @@
-# UniSupport — Team Charter v5.1
-
-Trạng thái: dự thảo để nhóm thống nhất áp dụng. Nguồn yêu cầu: Proposal v6 và PRD v5.1. Tài liệu này quy định cách phối hợp và quy trình thực hiện, không thay PRD hoặc Master Plan. Tên thành viên, kênh chat và khung giờ làm việc chưa xác nhận được để trống.
-
+# UniSupport — Team Charter 
 ## 1. Phân vai và đầu mối
 
 | Vai trò theo proposal | Việc chịu trách nhiệm | Người review đầu ra |
