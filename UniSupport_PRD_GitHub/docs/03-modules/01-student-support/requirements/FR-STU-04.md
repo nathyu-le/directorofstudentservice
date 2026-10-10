@@ -1,73 +1,61 @@
-# [FR-STU-04] Bổ sung thông tin được yêu cầu
+### [FR-STU-04] Bổ sung thông tin được yêu cầu
 
-**Module:** Cổng hỗ trợ sinh viên
+**Mô tả**
 
-**Nguồn phạm vi:** Proposal §2.1 — gửi yêu cầu, cung cấp thông tin, theo dõi tiến độ, phản hồi kết quả. Hành vi/trường dưới đây là thiết kế prototype suy ra từ năng lực này, chờ review.
+Trả lời yêu cầu bổ sung trên cùng hồ sơ hỗ trợ. Đặc tả triển khai prototype thuộc Proposal §2.1 — gửi yêu cầu, cung cấp thông tin, theo dõi tiến độ, phản hồi kết quả; các chi tiết trường và quy tắc dưới đây là thiết kế đề xuất v5.0 để review, không phải thông tin vận hành đã được khách hàng xác nhận.
 
-## Mô tả
+**Actor**
 
-Trả lời yêu cầu bổ sung trên cùng hồ sơ hỗ trợ.
+Sinh viên. Quyền cụ thể kiểm ở máy chủ theo [ma trận quyền](../../../02-domain/permissions.md).
 
-## Actor
+**Preconditions**
 
-Sinh viên. Phân quyền theo IAM-03 và actors-and-roles.md.
+- Đúng chủ yêu cầu; trạng thái Chờ bổ sung; có câu hỏi bổ sung đang mở.
+- Seed là dữ liệu giả lập. Trước triển khai, BE/FE/QA review các quyết định liên quan trong danh sách câu hỏi mở; không coi bản dự thảo là đã được duyệt.
 
-## Preconditions
-
-Đúng chủ yêu cầu; trạng thái Chờ bổ sung; có câu hỏi bổ sung đang mở.
-
-## Dữ liệu và giao diện
-
-| Trường | Tính chất | Kiểm tra |
-| --- | --- | --- |
-| question_id | Bắt buộc | Câu hỏi đang mở thuộc yêu cầu. |
-| content | Bắt buộc | Nội dung không rỗng; CFG-02. |
-| record_version | Hệ thống | Phiên bản dùng khi gửi để phát hiện dữ liệu đã đổi. |
-
-Giao diện cần thể hiện rõ tên hành động, mã yêu cầu/bộ lọc, kết quả hiện hành, lỗi tại trường và trạng thái đang gửi. Nhãn Việt là bản chính; nhãn Anh được xem xét trong thiết kế (OQ-05). Không coi việc ẩn nút là kiểm soát quyền.
-
-## Main flow
+**Luồng chính**
 
 1. Sinh viên đọc câu hỏi và nhập nội dung trả lời.
 2. Máy chủ kiểm tra chủ hồ sơ, trạng thái, câu hỏi và phiên bản.
 3. Lưu câu trả lời vào cùng request_id, đánh dấu câu hỏi đã được trả lời và chuyển về Đang xử lý.
 4. Giữ người phụ trách; thêm lịch sử công khai để bên xử lý tiếp tục.
 
-## Business rules
+**Business Rules**
 
-Áp dụng BR-01, BR-05, BR-06 và quy tắc đặc thù trong business-rules.md. Cấu hình CFG được mô tả riêng; các giới hạn chưa phải yêu cầu nguyên văn proposal. Hành động chỉ ghi dữ liệu mà chức năng này sở hữu; không tự tạo hành động khác.
-
-## Alternative / Error flows
-
-- Nội dung trống: Trả lời chỉ có khoảng trắng. → Báo lỗi; vẫn Chờ bổ sung; chưa đánh dấu câu hỏi đã trả lời.
-- Sai chủ: SV-B gửi câu trả lời cho yêu cầu SV-A. → Từ chối; nội dung và trạng thái không đổi.
-- Gửi từ màn hình cũ: Câu hỏi đã được trả lời hoặc phiên bản hồ sơ đã đổi. → Báo tải lại/đã xử lý; không tạo hai câu trả lời hay ghi đè cập nhật mới.
-- Lỗi máy chủ/kết nối: báo chưa xác nhận thành công, cho tải lại kiểm tra kết quả; không tuyên bố đã lưu khi chưa có xác nhận. Nếu có ghi, rollback toàn bộ khi lỗi trước commit.
-
-## Acceptance criteria
-
-| Mã AC | Tình huống | Điều kiện nghiệm thu |
+| Thông tin | Bắt buộc/nguồn | Quy định |
 | --- | --- | --- |
-| AC-STU-04-01 | Trả lời hợp lệ | Cùng mã yêu cầu, chủ và người phụ trách; câu hỏi có trả lời; trạng thái Đang xử lý. |
-| AC-STU-04-02 | Nội dung trống | Báo lỗi; vẫn Chờ bổ sung; chưa đánh dấu câu hỏi đã trả lời. |
-| AC-STU-04-03 | Sai chủ | Từ chối; nội dung và trạng thái không đổi. |
-| AC-STU-04-04 | Gửi từ màn hình cũ | Báo tải lại/đã xử lý; không tạo hai câu trả lời hay ghi đè cập nhật mới. |
+| question_id | Bắt buộc | Câu hỏi đang mở thuộc yêu cầu. |
+| content | Bắt buộc | Nội dung không rỗng; 4000 ký tự. |
+| record_version | Hệ thống | Phiên bản dùng khi gửi để phát hiện dữ liệu đã đổi. |
 
-## Test và edge cases
+- question_id nguyên dương thuộc cùng request_id; content trim 1–4000; record_version nguyên >=1 lấy từ màn hình hiện hành.
+- Khóa request trong transaction; đúng chủ, WaitingInfo, question chưa có answer, record_version khớp. Lưu answer gắn question_id duy nhất, đóng câu hỏi, chuyển Processing, tăng version và history công khai cùng commit.
+- Giữ request_id, student_id, department_id, assignee_id, due_at và started_at ban đầu. Đây là tiếp tục xử lý, không tạo Ticket khác và không đặt lại đồng hồ.
+- Sai chủ:404. Nội dung rỗng:422. Câu hỏi không thuộc request:422 QUESTION_INVALID. Phiên bản cũ/câu hỏi đã trả lời/trạng thái sai:409. Gửi hai lần chỉ lần đầu ghi dữ liệu; lần sau409.
 
-| Mã TC | Liên kết AC | Dữ liệu/thao tác trọng tâm |
-| --- | --- | --- |
-| TC-STU-04-01 | AC-STU-04-01 | Câu hỏi đang mở: cần mã lớp; trả lời Mã lớp TEST-01. |
-| TC-STU-04-02 | AC-STU-04-02 | Trả lời chỉ có khoảng trắng. |
-| TC-STU-04-03 | AC-STU-04-03 | SV-B gửi câu trả lời cho yêu cầu SV-A. |
-| TC-STU-04-04 | AC-STU-04-04 | Câu hỏi đã được trả lời hoặc phiên bản hồ sơ đã đổi. |
+**Alternative / Error Flows**
 
-Case đầy đủ tại test-cases.md; gồm đúng, sai, vượt quyền và ranh giới/trạng thái cũ. Mỗi case cần ghi actual result và evidence; hiện tất cả Not Run.
+- 401: phiên không hợp lệ; điều hướng đăng nhập, không gửi lại thao tác ghi tự động sau login.
+- 403: thiếu capability/CSRF hoặc bộ lọc ngoài scope; không trả dữ liệu trái quyền.
+- 404: request không tồn tại/ngoài quyền đối tượng; không tiết lộ hồ sơ có tồn tại hay không.
+- 422: sai trường/bộ lọc theo Business Rules; hiển thị lỗi tại trường, giữ dữ liệu đang nhập.
+- 409: trạng thái/phiên bản/khóa xung đột theo quy tắc của chức năng; không ghi một phần, yêu cầu tải lại dữ liệu hiện hành.
+- 500 hoặc mất mạng: không đánh thao tác thành công khi chưa có response xác nhận. Riêng STU-01 retry dùng cùng submission_key; các thao tác khác tải lại để xác định lần ghi đã commit, không gửi tự động vô điều kiện.
 
-## Expected result và liên kết Master
+**Acceptance Criteria**
 
-Cùng mã yêu cầu, chủ và người phụ trách; câu hỏi có trả lời; trạng thái Đang xử lý.
+- **AC-STU-04-01:** Khi Câu hỏi đang mở: cần mã lớp; trả lời Mã lớp TEST-01. → Cùng mã yêu cầu, chủ và người phụ trách; câu hỏi có trả lời; trạng thái Đang xử lý.
+- **AC-STU-04-02:** Khi Trả lời chỉ có khoảng trắng. → Báo lỗi; vẫn Chờ bổ sung; chưa đánh dấu câu hỏi đã trả lời.
+- **AC-STU-04-03:** Khi SV-B gửi câu trả lời cho yêu cầu SV-A. → Từ chối; nội dung và trạng thái không đổi.
+- **AC-STU-04-04:** Khi Câu hỏi đã được trả lời hoặc phiên bản hồ sơ đã đổi. → Báo tải lại/đã xử lý; không tạo hai câu trả lời hay ghi đè cập nhật mới.
+- **AC-STU-04-05:** Khi Ghi lại started_at, due_at, owner trước khi trả lời question mở. → Sau bổ sung cả 3 giá trị giữ nguyên, Processing,1answer cho question.
+- **AC-STU-04-06:** Khi Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production. → 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
+- **AC-STU-04-07:** Khi Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ. → TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
 
-Master dùng parent `FR-STU-04 | Bổ sung thông tin được yêu cầu` và các công việc PM, BE, FE, QA. Mã AC/TC được giữ nguyên trong việc QA; estimate baseline PM 1h / BE 2h / FE 2h / QA 1h là dự toán lập lịch, không là kết quả thực tế. QA 1h dành thực thi 4 case nhỏ; soạn case/bộ dữ liệu, kiểm tra xuyên module và retest thuộc công việc dùng chung riêng.
+**Ví dụ Edge Case**
 
-**Phụ thuộc hành vi/luồng:** FR-DSP-07, FR-STU-03
+Cập nhật phiên bản cũ: Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
+
+**Expected Result**
+
+TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại. Kiểm theo TC-STU-04-07; kết quả thực thi ban đầu là Not Run.

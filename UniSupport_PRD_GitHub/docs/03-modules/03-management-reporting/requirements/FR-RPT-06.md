@@ -1,73 +1,61 @@
-# [FR-RPT-06] Tổng hợp mức hài lòng
+### [FR-RPT-06] Tổng hợp mức hài lòng
 
-**Module:** Quản lý và báo cáo
+**Mô tả**
 
-**Nguồn phạm vi:** Proposal §2.1 — trạng thái, thời gian, vấn đề phổ biến, khối lượng và hài lòng. Hành vi/trường dưới đây là thiết kế prototype suy ra từ năng lực này, chờ review.
+Tổng hợp phản hồi kết quả để đánh giá chất lượng hỗ trợ. Đặc tả triển khai prototype thuộc Proposal §2.1 — trạng thái, thời gian, vấn đề phổ biến, khối lượng và hài lòng; các chi tiết trường và quy tắc dưới đây là thiết kế đề xuất v5.0 để review, không phải thông tin vận hành đã được khách hàng xác nhận.
 
-## Mô tả
+**Actor**
 
-Tổng hợp phản hồi kết quả để đánh giá chất lượng hỗ trợ.
+Quản lý. Quyền cụ thể kiểm ở máy chủ theo [ma trận quyền](../../../02-domain/permissions.md).
 
-## Actor
+**Preconditions**
 
-Quản lý. Phân quyền theo IAM-03 và actors-and-roles.md.
+- Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+- Seed là dữ liệu giả lập. Trước triển khai, BE/FE/QA review các quyết định liên quan trong danh sách câu hỏi mở; không coi bản dự thảo là đã được duyệt.
 
-## Preconditions
+**Luồng chính**
 
-Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+1. Quản lý mở báo cáo Tổng hợp mức hài lòng và chọn các bộ lọc được chức năng hỗ trợ.
+2. Máy chủ xác thực reporting scope, kiểm từng tham số; chốt as_of một lần cho response.
+3. Máy chủ tạo tập nguồn và tính kết quả theo Business Rules dưới đây trong cùng snapshot đọc nhất quán.
+4. Giao diện hiển thị scope, as_of, cỡ mẫu và chỉ tiêu; ghi rõ kỳ lọc theo feedback.updated_at. Trung bình NULL hiển thị Không có dữ liệu.
+5. Quản lý đối chiếu danh sách reference nguồn trong scope; không thay đổi hồ sơ từ báo cáo.
 
-## Dữ liệu và giao diện
+**Business Rules**
 
-| Trường | Tính chất | Kiểm tra |
+| Thông tin | Bắt buộc/nguồn | Quy định |
 | --- | --- | --- |
-| from_date / to_date | Tùy chọn | Kỳ có from ≤ to; CFG-06 và quy tắc kỳ BR-08. |
-| department / category | Tùy chọn | Lọc trong phạm vi quản lý. |
-| score / feedback | Nguồn đọc | Một phản hồi hiện hành mỗi yêu cầu; điểm trung bình = tổng điểm / số phản hồi; kèm phân bố 1–5 và số phản hồi. |
+| department_id/category_id | Tùy chọn | ID nguyên dương, hợp lệ và trong reporting scope; omit=mọi đơn vị/loại trong scope. |
+| from_date/to_date | Tùy chọn | Hai ngày YYYY-MM-DD phải đi cùng nhau, from<=to. Omit cả hai=mọi thời gian. Lọc theo feedback.updated_at. |
 
-Giao diện cần thể hiện rõ tên hành động, mã yêu cầu/bộ lọc, kết quả hiện hành, lỗi tại trường và trạng thái đang gửi. Nhãn Việt là bản chính; nhãn Anh được xem xét trong thiết kế (OQ-05). Không coi việc ẩn nút là kiểm soát quyền.
+- Chỉ quản lý có report capability và reporting scope. Sinh viên/handler không quyền report:403. Chọn đơn vị ngoài scope:403, không trả một phần. Scope áp dụng TRƯỚC mọi COUNT/AVG.
+- Feedback hiện hành có updated_at trong kỳ. Một request một feedback; N số feedback, mean=sum(score)/N, phân bố 5 mức. Chưa đánh giá loại khỏi mẫu, không tính0. N=0 mean=null.
+- Kỳ ngày theo múi giờ Asia/Ho_Chi_Minh, từ 00:00 from inclusive đến00:00 ngày sau to exclusive; đổi sang UTC trước query. Omit cả hai không lọc kỳ; gửi một ngày hoặc định dạng sai:422.
+- Request, question, note và history join không được làm nhân bản dòng nguồn. Aggregate trên request_id/feedback_id duy nhất. Response trả filters, as_of, sample_count, metrics, source_references; không có nội dung sinh viên hoặc internal note.
+- Chỉ số được tính từ seed/prototype; không là kết quả vận hành toàn trường. N=0 count=0 là số thật; average=null là chưa có mẫu, không đổi thành0.
+- metrics={mean_score, score_counts:{1,2,3,4,5}}; sample_count=N. Tổng score_counts=N; mean_score hiển thị 2 chữ số thập phân, điểm chưa đánh giá không tính 0.
 
-## Main flow
+**Alternative / Error Flows**
 
-1. Quản lý chọn kỳ và phạm vi báo cáo.
-2. Máy chủ kiểm tra quyền và bộ lọc; lấy dữ liệu theo định nghĩa BR-08.
-3. Tính theo công thức của chỉ tiêu; hiển thị kỳ, phạm vi, thời điểm đo, số mẫu cùng kết quả.
-4. Cho kiểm tra danh sách nguồn trong cùng phạm vi để đối chiếu tổng; không sửa nghiệp vụ từ báo cáo.
+- 401: phiên không hợp lệ, yêu cầu đăng nhập; không có số liệu trong response.
+- 403: thiếu report capability hoặc chọn đơn vị ngoài reporting scope; không trả số liệu một phần.
+- 422: sai hoặc dùng bộ lọc không hỗ trợ theo FR; hiển thị lỗi bộ lọc, không âm thầm thay kỳ.
+- 500/mất mạng: hiển thị Không tải được báo cáo, cho thử tải lại GET; không thay dữ liệu nghiệp vụ.
 
-## Business rules
+**Acceptance Criteria**
 
-Áp dụng BR-01, BR-05, BR-06 và quy tắc đặc thù trong business-rules.md. Cấu hình CFG được mô tả riêng; các giới hạn chưa phải yêu cầu nguyên văn proposal. Hành động chỉ ghi dữ liệu mà chức năng này sở hữu; không tự tạo hành động khác.
+- **AC-RPT-06-01:** Khi Có điểm 5 và 3; yêu cầu chưa đánh giá không tính. → Cỡ mẫu 2, trung bình 4, một mức 5 và một mức 3.
+- **AC-RPT-06-02:** Khi from_date sau to_date hoặc đơn vị không tồn tại. → Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác.
+- **AC-RPT-06-03:** Khi Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi. → Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
+- **AC-RPT-06-04:** Khi Chưa có phản hồi hoặc đổi điểm → Không phản hồi: Không có dữ liệu; đổi điểm: số mẫu giữ nguyên, tổng điểm đổi.
+- **AC-RPT-06-05:** Khi Hai record có feedback.updated_at lần lượt đúng00:00 from và đúng00:00 ngày sau to theo giờ Việt Nam. → Chỉ record tại biên đầu được tính; biên cuối bị loại. Không lệch múi giờ.
+- **AC-RPT-06-06:** Khi Một request có 3 notes,2 questions và 5 history events. → Chỉ tính feedback hiện hành của request đó một lần, không nhân bản bởi dữ liệu con.
+- **AC-RPT-06-07:** Khi Feedback4 tại kỳA đổi thành3 tại kỳB không trùng A. → Cùng feedback_id/request_id; kỳA không còn dòng này, kỳB có điểm3; mẫu toàn thời gian vẫn1.
 
-## Alternative / Error flows
+**Ví dụ Edge Case**
 
-- Bộ lọc không hợp lệ: from_date sau to_date hoặc đơn vị không tồn tại. → Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác.
-- Vượt quyền báo cáo: Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi. → Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
-- Chưa có phản hồi hoặc đổi điểm: Chưa có phản hồi hoặc đổi điểm → Không phản hồi: Không có dữ liệu; đổi điểm: số mẫu giữ nguyên, tổng điểm đổi.
-- Lỗi máy chủ/kết nối: báo chưa xác nhận thành công, cho tải lại kiểm tra kết quả; không tuyên bố đã lưu khi chưa có xác nhận. Nếu có ghi, rollback toàn bộ khi lỗi trước commit.
+Sửa điểm và kỳ cập nhật: Feedback4 tại kỳA đổi thành3 tại kỳB không trùng A.
 
-## Acceptance criteria
+**Expected Result**
 
-| Mã AC | Tình huống | Điều kiện nghiệm thu |
-| --- | --- | --- |
-| AC-RPT-06-01 | Đối chiếu phép tính | Cỡ mẫu 2, trung bình 4, một mức 5 và một mức 3. |
-| AC-RPT-06-02 | Bộ lọc không hợp lệ | Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác. |
-| AC-RPT-06-03 | Vượt quyền báo cáo | Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi. |
-| AC-RPT-06-04 | Chưa có phản hồi hoặc đổi điểm | Không phản hồi: Không có dữ liệu; đổi điểm: số mẫu giữ nguyên, tổng điểm đổi. |
-
-## Test và edge cases
-
-| Mã TC | Liên kết AC | Dữ liệu/thao tác trọng tâm |
-| --- | --- | --- |
-| TC-RPT-06-01 | AC-RPT-06-01 | Có điểm 5 và 3; yêu cầu chưa đánh giá không tính. |
-| TC-RPT-06-02 | AC-RPT-06-02 | from_date sau to_date hoặc đơn vị không tồn tại. |
-| TC-RPT-06-03 | AC-RPT-06-03 | Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi. |
-| TC-RPT-06-04 | AC-RPT-06-04 | Chưa có phản hồi hoặc đổi điểm |
-
-Case đầy đủ tại test-cases.md; gồm đúng, sai, vượt quyền và ranh giới/trạng thái cũ. Mỗi case cần ghi actual result và evidence; hiện tất cả Not Run.
-
-## Expected result và liên kết Master
-
-Cỡ mẫu 2, trung bình 4, một mức 5 và một mức 3.
-
-Master dùng parent `FR-RPT-06 | Tổng hợp mức hài lòng` và các công việc PM, BE, FE, QA. Mã AC/TC được giữ nguyên trong việc QA; estimate baseline PM 1h / BE 2h / FE 2h / QA 1h là dự toán lập lịch, không là kết quả thực tế. QA 1h dành thực thi 4 case nhỏ; soạn case/bộ dữ liệu, kiểm tra xuyên module và retest thuộc công việc dùng chung riêng.
-
-**Phụ thuộc hành vi/luồng:** FR-STU-05
+Cùng feedback_id/request_id; kỳA không còn dòng này, kỳB có điểm3; mẫu toàn thời gian vẫn1. Kiểm theo TC-RPT-06-07; kết quả thực thi ban đầu là Not Run.

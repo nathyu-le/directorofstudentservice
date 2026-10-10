@@ -1,16 +1,13 @@
 {
-  "version": "4.0",
+  "proposal_version": 6,
+  "prd_version": "5.0",
   "modules": 4,
   "features": 24,
-  "acceptance": 96,
-  "functional_cases": 96,
-  "e2e": 8,
-  "nfr": 6,
-  "metrics": 4,
-  "files": 96,
-  "relative_links_checked": 162,
-  "duplicate_ids": 0,
-  "unknown_fr_dependencies": 0,
-  "test_execution": "Not Run",
-  "proposal_source_version": 6
+  "acceptance_criteria": 149,
+  "functional_tests": 149,
+  "system_tests": 18,
+  "form": "9 required sections, checked for every FR",
+  "qa_initial_result": "Not Run",
+  "link_check": "all internal Markdown links resolve",
+  "status": "Artifact structural validation only; product tests not executed"
 }

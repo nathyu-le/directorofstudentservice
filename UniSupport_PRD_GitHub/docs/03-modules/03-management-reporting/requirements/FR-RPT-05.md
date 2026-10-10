@@ -1,73 +1,60 @@
-# [FR-RPT-05] Thống kê khối lượng theo phòng ban
+### [FR-RPT-05] Thống kê khối lượng theo phòng ban
 
-**Module:** Quản lý và báo cáo
+**Mô tả**
 
-**Nguồn phạm vi:** Proposal §2.1 — trạng thái, thời gian, vấn đề phổ biến, khối lượng và hài lòng. Hành vi/trường dưới đây là thiết kế prototype suy ra từ năng lực này, chờ review.
+Biết trách nhiệm hiện hành và lượng việc còn mở của các đơn vị. Đặc tả triển khai prototype thuộc Proposal §2.1 — trạng thái, thời gian, vấn đề phổ biến, khối lượng và hài lòng; các chi tiết trường và quy tắc dưới đây là thiết kế đề xuất v5.0 để review, không phải thông tin vận hành đã được khách hàng xác nhận.
 
-## Mô tả
+**Actor**
 
-Biết trách nhiệm hiện hành và lượng việc còn mở của các đơn vị.
+Quản lý. Quyền cụ thể kiểm ở máy chủ theo [ma trận quyền](../../../02-domain/permissions.md).
 
-## Actor
+**Preconditions**
 
-Quản lý. Phân quyền theo IAM-03 và actors-and-roles.md.
+- Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+- Seed là dữ liệu giả lập. Trước triển khai, BE/FE/QA review các quyết định liên quan trong danh sách câu hỏi mở; không coi bản dự thảo là đã được duyệt.
 
-## Preconditions
+**Luồng chính**
 
-Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+1. Quản lý mở báo cáo Thống kê khối lượng theo phòng ban và chọn các bộ lọc được chức năng hỗ trợ.
+2. Máy chủ xác thực reporting scope, kiểm từng tham số; chốt as_of một lần cho response.
+3. Máy chủ tạo tập nguồn và tính kết quả theo Business Rules dưới đây trong cùng snapshot đọc nhất quán.
+4. Giao diện hiển thị scope, as_of, cỡ mẫu và chỉ tiêu; ghi rõ backlog hiện hành, không lọc theo ngày tạo. Tập nguồn rỗng hiển thị count=0 và danh sách rỗng.
+5. Quản lý đối chiếu danh sách reference nguồn trong scope; không thay đổi hồ sơ từ báo cáo.
 
-## Dữ liệu và giao diện
+**Business Rules**
 
-| Trường | Tính chất | Kiểm tra |
+| Thông tin | Bắt buộc/nguồn | Quy định |
 | --- | --- | --- |
-| from_date / to_date | Tùy chọn | Kỳ có from ≤ to; CFG-06 và quy tắc kỳ BR-08. |
-| department / category | Tùy chọn | Lọc trong phạm vi quản lý. |
-| department_id / status | Nguồn đọc | Đếm toàn bộ và còn mở theo đơn vị hiện hành; chưa phân công là nhóm riêng; không cộng hai đơn vị sau chuyển trách nhiệm. |
+| department_id/category_id | Tùy chọn | ID nguyên dương, hợp lệ và trong reporting scope; omit=mọi đơn vị/loại trong scope. |
+| as_of | Chỉ đọc | Một thời điểm UTC từ server, không từ trình duyệt. Không nhận kỳ ngày tạo. |
 
-Giao diện cần thể hiện rõ tên hành động, mã yêu cầu/bộ lọc, kết quả hiện hành, lỗi tại trường và trạng thái đang gửi. Nhãn Việt là bản chính; nhãn Anh được xem xét trong thiết kế (OQ-05). Không coi việc ẩn nút là kiểm soát quyền.
+- Chỉ quản lý có report capability và reporting scope. Sinh viên/handler không quyền report:403. Chọn đơn vị ngoài scope:403, không trả một phần. Scope áp dụng TRƯỚC mọi COUNT/AVG.
+- Khối lượng CÒN MỞ HIỆN TẠI mọi ngày tạo theo department/assignee hiện hành; chưa giao là nhóm riêng chỉ quản lý toàn trường thấy. Count bao gồm3 trạng thái mở, loại Resolved/Closed; không tính lịch sử chuyển phòng vào phòng cũ.
+- Không chấp nhận from_date/to_date trong endpoint này:422 UNSUPPORTED_FILTER. Không âm thầm lọc theo ngày tạo.
+- Request, question, note và history join không được làm nhân bản dòng nguồn. Aggregate trên request_id/feedback_id duy nhất. Response trả filters, as_of, sample_count, metrics, source_references; không có nội dung sinh viên hoặc internal note.
+- Chỉ số được tính từ seed/prototype; không là kết quả vận hành toàn trường. N=0 count=0 là số thật; average=null là chưa có mẫu, không đổi thành0.
+- metrics={open_total, departments:[{department_id, department_name, open_count, assignees:[{assignee_id, open_count}]}]}; sample_count=open_total. Nhóm chưa giao dùng department_id/assignee_id=NULL và chỉ scope toàn trường thấy.
 
-## Main flow
+**Alternative / Error Flows**
 
-1. Quản lý chọn kỳ và phạm vi báo cáo.
-2. Máy chủ kiểm tra quyền và bộ lọc; lấy dữ liệu theo định nghĩa BR-08.
-3. Tính theo công thức của chỉ tiêu; hiển thị kỳ, phạm vi, thời điểm đo, số mẫu cùng kết quả.
-4. Cho kiểm tra danh sách nguồn trong cùng phạm vi để đối chiếu tổng; không sửa nghiệp vụ từ báo cáo.
+- 401: phiên không hợp lệ, yêu cầu đăng nhập; không có số liệu trong response.
+- 403: thiếu report capability hoặc chọn đơn vị ngoài reporting scope; không trả số liệu một phần.
+- 422: sai hoặc dùng bộ lọc không hỗ trợ theo FR; hiển thị lỗi bộ lọc, không âm thầm thay kỳ.
+- 500/mất mạng: hiển thị Không tải được báo cáo, cho thử tải lại GET; không thay dữ liệu nghiệp vụ.
 
-## Business rules
+**Acceptance Criteria**
 
-Áp dụng BR-01, BR-05, BR-06 và quy tắc đặc thù trong business-rules.md. Cấu hình CFG được mô tả riêng; các giới hạn chưa phải yêu cầu nguyên văn proposal. Hành động chỉ ghi dữ liệu mà chức năng này sở hữu; không tự tạo hành động khác.
+- **AC-RPT-05-01:** Khi PB-A có 2 mở,1Resolved; PB-B có 1 mở;1 chưa giao. → Backlog PB-A=2, PB-B=1, chưa giao=1, tổng4; request Resolved không tính.
+- **AC-RPT-05-02:** Khi Gửi from_date/to_date vào báo cáo backlog hiện hành. → HTTP 422 UNSUPPORTED_FILTER; không lọc sai để giấu hồ sơ cũ.
+- **AC-RPT-05-03:** Khi Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi. → Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
+- **AC-RPT-05-04:** Khi Chuyển một hồ sơ PB-A sang PB-B → Sau chuyển, tổng toàn hệ thống giữ nguyên; chỉ nhóm hiện hành tăng/giảm tương ứng.
+- **AC-RPT-05-05:** Khi Một request từ tháng trước còn mở trong scope; được giao PB-A. → Vẫn được tính trong backlog hiện hành; không loại vì ngày tạo cũ.
+- **AC-RPT-05-06:** Khi Một request có 3 notes,2 questions và 5 history events. → Chỉ tính request đó một lần, không nhân bản bởi dữ liệu con.
 
-## Alternative / Error flows
+**Ví dụ Edge Case**
 
-- Bộ lọc không hợp lệ: from_date sau to_date hoặc đơn vị không tồn tại. → Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác.
-- Vượt quyền báo cáo: Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi. → Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
-- Chuyển một hồ sơ PB-A sang PB-B: Chuyển một hồ sơ PB-A sang PB-B → Sau chuyển, tổng toàn hệ thống giữ nguyên; chỉ nhóm hiện hành tăng/giảm tương ứng.
-- Lỗi máy chủ/kết nối: báo chưa xác nhận thành công, cho tải lại kiểm tra kết quả; không tuyên bố đã lưu khi chưa có xác nhận. Nếu có ghi, rollback toàn bộ khi lỗi trước commit.
+Join không nhân bản: Một request có 3 notes,2 questions và 5 history events.
 
-## Acceptance criteria
+**Expected Result**
 
-| Mã AC | Tình huống | Điều kiện nghiệm thu |
-| --- | --- | --- |
-| AC-RPT-05-01 | Đối chiếu phép tính | PB-A tổng 3/mở 2; PB-B 1/1; chưa phân công 1/1. |
-| AC-RPT-05-02 | Bộ lọc không hợp lệ | Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác. |
-| AC-RPT-05-03 | Vượt quyền báo cáo | Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi. |
-| AC-RPT-05-04 | Chuyển một hồ sơ PB-A sang PB-B | Sau chuyển, tổng toàn hệ thống giữ nguyên; chỉ nhóm hiện hành tăng/giảm tương ứng. |
-
-## Test và edge cases
-
-| Mã TC | Liên kết AC | Dữ liệu/thao tác trọng tâm |
-| --- | --- | --- |
-| TC-RPT-05-01 | AC-RPT-05-01 | PB-A có hai mở, một kết thúc; PB-B có một mở; một chưa phân công. |
-| TC-RPT-05-02 | AC-RPT-05-02 | from_date sau to_date hoặc đơn vị không tồn tại. |
-| TC-RPT-05-03 | AC-RPT-05-03 | Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi. |
-| TC-RPT-05-04 | AC-RPT-05-04 | Chuyển một hồ sơ PB-A sang PB-B |
-
-Case đầy đủ tại test-cases.md; gồm đúng, sai, vượt quyền và ranh giới/trạng thái cũ. Mỗi case cần ghi actual result và evidence; hiện tất cả Not Run.
-
-## Expected result và liên kết Master
-
-PB-A tổng 3/mở 2; PB-B 1/1; chưa phân công 1/1.
-
-Master dùng parent `FR-RPT-05 | Thống kê khối lượng theo phòng ban` và các công việc PM, BE, FE, QA. Mã AC/TC được giữ nguyên trong việc QA; estimate baseline PM 1h / BE 2h / FE 2h / QA 1h là dự toán lập lịch, không là kết quả thực tế. QA 1h dành thực thi 4 case nhỏ; soạn case/bộ dữ liệu, kiểm tra xuyên module và retest thuộc công việc dùng chung riêng.
-
-**Phụ thuộc hành vi/luồng:** FR-DSP-04
+Chỉ tính request đó một lần, không nhân bản bởi dữ liệu con. Kiểm theo TC-RPT-05-06; kết quả thực thi ban đầu là Not Run.
