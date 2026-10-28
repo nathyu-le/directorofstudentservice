@@ -15,3 +15,4 @@ Chỉ cho các cạnh: Received→Processing→WaitingInfo→Processing→Resolv
 Mọi POST sửa request có record_version>=1 trừcreate/login/logout. Với feedback cũng kiểm request.version. Transaction khóa request rồi đọc lại object scope, trạng thái/version, ghi dữ liệu con+history, tăng version và commit. Phiên bản cũ trả 409 STALE_VERSION, không sửa phần còn lại. Server đồng hồ UTC, UI Asia/Ho_Chi_Minh. Lịch sử append-only; không xóa hồ sơ trong baseline.
 
 Các thay đổi no_change ở DSP-03/04/05 kiểm quyền/state/version trước, không tăng version hoặc history. Các chuyển trạng thái gửi lặp trả 409. STU-01 có replay200 theoidempotency; logout204 lặp an toàn. Không thay tất cả hành vi bằng một quy tắc retry mơ hồ.
+

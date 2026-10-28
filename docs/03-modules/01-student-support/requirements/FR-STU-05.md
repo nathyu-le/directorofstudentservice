@@ -61,3 +61,4 @@ Cập nhật phiên bản cũ: Hai tab đọc cùng version; tabA lưu hợp l�
 **Expected Result**
 
 TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại. Kiểm theo TC-STU-05-07; kết quả thực thi ban đầu là Not Run.
+

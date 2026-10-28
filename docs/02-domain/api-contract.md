@@ -34,3 +34,4 @@ Success envelope JSON {data:...}; error envelope {error:{code, message, fields:{
 CREATED history public; CATEGORY_CHANGED public(type cũ/mới); ASSIGNED public(đơn vị/người cũ/mới, lý do phối hợp); DUE_CHANGED public; STARTEDpublic; INFO_REQUESTED/INFO_ANSWEREDpublic; PROGRESS theo visibility; RESOLVED/CLOSEDpublic; FEEDBACK_UPDATEDpublic(chủ SV xem feedback của mình). Error không stacktrace/SQL/password. Internal history không bị trộn vào public projection.
 
 Đồng thời: SELECT request FOR UPDATE, đọc quyền/trạng thái/version lại trongtransaction, validate invariants, ghi tất cả, commit. Idempotency create unique constraint phát hiện race và đọc submission đã commit để replay, không trả generic 500 khi unique violationđãbiết. Conflict versionnêu version hiện hành tùy quyền nhưng không ghi đè. Nếu 500 trước commit rollback; response mất saucommit xử lý theo FR.
+

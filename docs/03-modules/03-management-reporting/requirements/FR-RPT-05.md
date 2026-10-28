@@ -58,3 +58,4 @@ Join không nhân bản: Một request có 3 notes,2 questions và 5 history eve
 **Expected Result**
 
 Chỉ tính request đó một lần, không nhân bản bởi dữ liệu con. Kiểm theo TC-RPT-05-06; kết quả thực thi ban đầu là Not Run.
+

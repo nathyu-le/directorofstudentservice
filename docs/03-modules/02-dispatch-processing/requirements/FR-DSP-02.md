@@ -54,3 +54,4 @@ Ghi chú nội bộ: Thêm tiến độ nội bộ qua DSP-08 rồi SV xem STU-0
 **Expected Result**
 
 Người xử lý có quyền thấy nội bộ; sinh viên không thấy cả qua API trực tiếp. Kiểm theo TC-DSP-02-04; kết quả thực thi ban đầu là Not Run.
+

@@ -56,3 +56,4 @@ Không lộ internal JSON: Ghi internal TEST-INTERNAL rồi SV gọi endpoint tr
 **Expected Result**
 
 JSON không chứa nội dung TEST-INTERNAL hoặc các trường internal_history. Kiểm theo TC-STU-03-05; kết quả thực thi ban đầu là Not Run.
+

@@ -14,3 +14,4 @@ Ba nhóm người dùng theoproposal. Dispatch là quyền được cấp riêng
 Thứ tự:session→active→capability→scope/object→state/version→validatepayload→transaction. 401thiếu phiên;403thiếu capability/CSRF hoặc chọn bộ lọc vượt scope;404object không có/ngoài object scope;422fieldsai;409state/version;500lỗi an toàn. Không trả 403kèm tên hồ sơ để lộ sự tồn tại. Không chấp nhận role/scope/student_id client để nâng quyền.
 
 SV không nhận internal notes, actor/email riêng hoặc thông tin sinh viên khác trongHTML/JSON. Manager báo cáo không mặc định xem nội dung hồ sơ. Quyền được đọc lại mỗi request sauDSP-04. CSRF bắt buộc mọi mutation phiên hợp lệ. No-store nội dung nghiệp vụ. Tài liệu nếu CRbổ sung về sau áp dụng cùng scope, không có upload/tải file trong baseline.
+

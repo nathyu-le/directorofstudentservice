@@ -64,3 +64,4 @@ Rollback giao dịch: Trên môi trường test, ép lỗi ghi history sau khi t
 **Expected Result**
 
 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi. Kiểm theo TC-STU-01-08; kết quả thực thi ban đầu là Not Run.
+

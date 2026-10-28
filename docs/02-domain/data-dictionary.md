@@ -21,3 +21,4 @@ Index:requests(student_id, updated_at, id), requests(assignee_id, status), reque
 Seed có SV-A/SV-B/SV-C, NV-A thuộc PB-A, NV-B thuộc PB-B, DP-All quyền dispatch all, QL-A report PB-A, QL-All report all và 1 inactive user. Mật khẩu test do môi trường seed cấp, không chép secret thật. Fixtures reset mỗi TC hoặc transaction rollback test để case này không đè case khác. Nếu dùng request10–20 làm fixtures thì ghi rõ ID giả lập, không coi là ID vận hành.
 
 Đề xuất cfg:page_size 20, keyword 100, title 150, content 4000, email 254, password 256, idle 30 phút, absolute 8 giờ, login 5 fail/15 phút, email+IP, time UI Asia/Ho_Chi_Minh. Đây không là tham số đã được sponsor chốt; thay tham số phải cập nhật FR, TC và version.
+

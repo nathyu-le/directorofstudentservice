@@ -59,3 +59,4 @@ Sửa điểm và kỳ cập nhật: Feedback4 tại kỳA đổi thành3 tại 
 **Expected Result**
 
 Cùng feedback_id/request_id; kỳA không còn dòng này, kỳB có điểm3; mẫu toàn thời gian vẫn1. Kiểm theo TC-RPT-06-07; kết quả thực thi ban đầu là Not Run.
+

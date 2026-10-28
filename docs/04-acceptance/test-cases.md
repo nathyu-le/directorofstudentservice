@@ -2683,3 +2683,4 @@ Dữ liệu:QL-A chỉ PB-A; gọi report PB-B hoặc scope=all.
 Expected:PB-B403; scope=all không mở rộng quyền; không có source/số liệu ngoài PB-A.
 
 Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+

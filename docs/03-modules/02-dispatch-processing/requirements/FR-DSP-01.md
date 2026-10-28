@@ -54,3 +54,4 @@ Sau phân công: Phân công yêu cầu rồi lọc unassigned=true.
 **Expected Result**
 
 Yêu cầu rời tập chưa phân công nhưng vẫn nằm trong Tất cả nếu thuộc phạm vi. Kiểm theo TC-DSP-01-04; kết quả thực thi ban đầu là Not Run.
+

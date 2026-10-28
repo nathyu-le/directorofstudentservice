@@ -25,7 +25,7 @@ Mẫu cập nhật task: `Task ID / build hoặc PR / đã làm / actual hours /
 
 ### 3.1 Làm rõ và chuẩn bị
 
-PM lấy FR từ `docs/08-project/requirements.json` v5.1, đối chiếu Markdown và proposal. BE/FE/QA review đầu vào, quyền, trạng thái, trường dữ liệu, lỗi và AC. Câu hỏi chưa đủ nguồn ghi vào Open Questions, không coi thiết kế đề xuất là quyết định đã được sponsor duyệt.
+PM lấy FR từ `docs/05-project/requirements.json` v6.0, đối chiếu Markdown và proposal. BE/FE/QA review đầu vào, quyền, trạng thái, trường dữ liệu, lỗi và AC. Câu hỏi chưa đủ nguồn ghi vào Open Questions, không coi thiết kế đề xuất là quyết định đã được sponsor duyệt.
 
 Mỗi FR là parent không tính giờ riêng. Task triển khai gồm:
 
@@ -41,7 +41,7 @@ Mỗi FR là parent không tính giờ riêng. Task triển khai gồm:
 | `.QA.02` | QA | Build tích hợp và fixture | Toàn bộ TC thuộc FR có actual/result/evidence; Fail tạo bug, Blocked có nguyên nhân |
 | `.QA.03` | QA | Kết quả QA.02 | Báo cáo và liên kết bug/retest; lỗi chưa sửa ghi mở, không giả định đã retest |
 
-Các package lịch gom task cùng role/FR theo thứ tự nội bộ. Giờ package là tổng task con, không cộng thêm vào effort. Task cùng package có thể cùng ngày nhưng phải thực hiện tuần tự. Giữa package dùng Finish-to-Start; không bắt QA chạy trước khi build/fixture sẵn sàng. Đầu ra dùng chung như setup, E2E/NFR/MET và handoff nằm riêng trong Master, không tạo module thứ năm.
+Các package lịch gom task cùng role/FR theo thứ tự nội bộ. Giờ package là tổng task con, không cộng thêm vào effort. Task cùng package có thể cùng ngày nhưng phải thực hiện tuần tự. FE.01 thiết kế và QA.01 chuẩn bị fixture có thể song song BE sau contract/seed và đầu vào tương ứng. FE.02 cần backend đã self-check; QA.02 cần build tích hợp và fixture. Giữa package dùng Finish-to-Start; không bắt QA chạy trước khi build/fixture sẵn sàng. Đầu ra dùng chung như setup, E2E/NFR/MET và handoff nằm riêng trong Master, không tạo module thứ năm.
 
 ### 3.2 Triển khai và review
 
@@ -64,7 +64,7 @@ Bug ghi `FR / TC / build / môi trường / dữ liệu / bước tái hiện / 
 
 Task đặc tả/tài liệu cần link phiên bản và review. Task BE/FE cần source/PR, review, build và self-check. Parent FR chỉ hoàn tất khi triển khai tích hợp, mọi AC/TC của FR đã đạt và không còn lỗi chặn. Số TC của mỗi FR lấy từ manifest, không mặc định bốn case.
 
-Mốc W7/W11/W14/W15 có checklist đầu ra và evidence. Hoàn thành nội bộ không đồng nghĩa bên duyệt đã nghiệm thu. Các phép đo MET dùng kịch bản giả lập, không công bố như kết quả vận hành thật của trường.
+Sáu mốc MS-01..06 lần lượt xác nhận truy cập đúng quyền; tiếp nhận/theo dõi; điều phối/phối hợp xử lý; trả kết quả/hoàn tất; báo cáo; kiểm chứng/bàn giao. Mỗi mốc có danh sách FR, task bắt buộc và điều kiện nghiệm thu tại `docs/05-project/master-alignment.md`. Hoàn thành nội bộ không đồng nghĩa bên duyệt đã nghiệm thu. Các phép đo MET dùng kịch bản giả lập, không công bố như kết quả vận hành thật của trường.
 
 ## 4. Xử lý chặn và điều chuyển nhân sự
 
@@ -90,7 +90,7 @@ Thay đổi hành vi có mã `CR-xx`: nguồn yêu cầu, FR/AC/TC liên quan, p
 
 ## 6. Lưu đầu ra và đồng bộ
 
-GitHub giữ PRD/source/Charter và lịch sử review. ClickUp giữ công việc/owner/date/estimate/status; Excel chỉ giữ Master Gantt theo ngày, task/FR, role và estimate; không có cột trạng thái, sheet capacity hoặc tính điều chuyển. QA evidence gắn TC/build/date/result. Chưa push/import không ghi như đã thực hiện.
+GitHub giữ PRD/source/Charter, Issue theo mã task và milestone theo đầu ra. Issue là nơi cập nhật công việc/owner/estimate/evidence; ngày task ghi trong body, due milestone là ngày cổng. ClickUp chỉ dùng khi xuất/import lại cùng revision; CSV v5.1 cũ không đồng bộ lịch v6.0; Excel chỉ giữ Master Gantt theo ngày, task/FR, role và estimate; không có cột trạng thái, sheet capacity hoặc tính điều chuyển. QA evidence gắn TC/build/date/result. Chưa push/import không ghi như đã thực hiện.
 
 CSV có mã parent/task con và predecessor trong mô tả. Sau import phải tạo native dependencies theo predecessor trong PRD `plan.tasks` và mô tả CSV; văn bản ID không phải link dependency. Gán assignee theo thành viên thật, không gán chủ workspace làm cả bốn role. QA Result phải dùng enum/text, không checkbox. Trạng thái workflow đề xuất: Chưa sẵn sàng → Sẵn sàng → Đang làm → Chờ review → Sẵn sàng QA → Đang QA → Hoàn tất; mapping theo statuses mà workspace thực sự có.
 
@@ -104,3 +104,12 @@ CSV có mã parent/task con và predecessor trong mô tả. Sau import phải t�
 | QA/tài liệu |  |  |  |  |
 
 Các ô trên để trống tới khi có xác nhận thật. Trần ngân sách giờ là 288h chính + 32h dự phòng. Giờ dự phòng chưa giao task; chỉ dùng khi PM ghi nhận nguyên nhân, owner, tác động chi phí/mốc và quyết định. Phân bổ giờ theo task và ngày trong Master vẫn là đề xuất cần review, không là giờ thực tế đã làm. Khi thiếu giờ, ghi chênh lệch và xử lý dự phòng/CR; không tự cắt scope hoặc ghi Done/Pass để vừa ngân sách.
+
+## 8. Review cổng kết quả và bàn giao
+
+PM và QA đối chiếu task/FR/AC với checklist từng milestone; demo trên build xác định và lưu actual/evidence. Issue báo cáo được đóng không có nghĩa FR hoặc milestone đã nghiệm thu. Không đóng milestone khi còn lỗi chặn luồng, sai quyền hoặc sai/mất dữ liệu; ngoại lệ khác cần ghi người có thẩm quyền chấp nhận và tác động. Mốc sau kế thừa điều kiện mốc trước; các task độc lập đủ input vẫn được triển khai song song.
+
+QA-04 chạy E2E-01..07; QA-05 chạy 5 NFR trừ NFR-DEP-01; QA-06 đo 4 MET. BE/FE sửa rồi QA-07 retest/regression; BE-08 và FE-07 chuẩn bị gói/hướng dẫn. QA-10 mới kiểm E2E-08 và NFR-DEP-01 trên môi trường sạch; QA-09 chốt test report, QA-08 rà hồ sơ, PM-08 review rồi PM-09 bàn giao. Thay code sau kiểm chứng phải chạy lại test bị ảnh hưởng.
+
+Giữ 288h chính và 32h dự phòng chưa giao task. Lịch nguồn 12/10/2026–22/01/2027 vẫn là dự kiến; 4h/role/ngày là giả định xếp lịch, chưa xác nhận availability. Khi nhóm cung cấp lịch thật, PM phải tính lại lịch và tác động trước khi cam kết hoặc cho mượn người. Không coi thay kế hoạch là đã hoàn tất công việc quá khứ.
+

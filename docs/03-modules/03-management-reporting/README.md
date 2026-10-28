@@ -8,3 +8,4 @@
 | FR-RPT-04 | Thống kê vấn đề phổ biến | [Đọc](requirements/FR-RPT-04.md) |
 | FR-RPT-05 | Thống kê khối lượng theo phòng ban | [Đọc](requirements/FR-RPT-05.md) |
 | FR-RPT-06 | Tổng hợp mức hài lòng | [Đọc](requirements/FR-RPT-06.md) |
+

@@ -7,7 +7,7 @@ Nguồn: UniSupport_Project_Proposal.docx, Library version 6,7trang; proposal đ
 | Proposal §2.1 | Đúng4module: Cổng hỗ trợ sinh viên; Điều phối và xử lý yêu cầu; Quản lý và báo cáo; Tài khoản và quyền truy cập |
 | Người dùng | Sinh viên, nhân viên, quản lý. Quyền điều phối là capability của staff/manager trong thiết kế, không thêm nhóm proposal |
 | Công nghệ | Prototype web PHP/MySQL, desktop/mobile, dữ liệu giả lập; xem xét nhãn Việt/Anh trong thiết kế |
-| Thời gian | 15tuần:W1–3 yêu cầu/thiết kế, W4–6 core, W7giữa kỳ, W8–11 hoàn thiện4module, W12–14test/mục tiêu/tài liệu, W15handoff |
+| Thời gian | Giữ chân trời kế hoạch dự kiến 15 tuần. Revision kế hoạch 6.0 tổ chức milestone theo đầu ra nghiệp vụ và xếp lại task/dependency; không dùng các giai đoạn tuần của proposal làm điều kiện nghiệm thu. Xem docs/05-project/master-alignment.md. |
 | Nhóm | 4người:PM/BA, BE, FE, QA/tài liệu |
 | Mục tiêu | >=90% hồ sơ có người chịu trách nhiệm,>=90% trạng thái theo dõi được,>=30% giảm hỏi lại tiến độ; giảm bỏ sót/trùng không tự đặt tỷ lệ mới |
 | Handoff | Prototype, source, seed, requirements, design, tests, user/setup guide để nhóm khác chạy lại |
@@ -21,3 +21,4 @@ Không làm production toàn trường, tích hợp thật với mọi hệ th�
 ## Trạng thái quyết định
 
 Đã biết từ proposal:phạm vi4module, công nghệ,15tuần,4vai trò, mục tiêu. Chưa xác nhận:ngày khởi động thật, tên người, availability/ngày nghỉ, danh mục phòng/loại, sponsor review kết quả,5trạng thái và tham số prototype. Không tự điền actual, Pass, nghiệm thu hoặc chữ ký.
+

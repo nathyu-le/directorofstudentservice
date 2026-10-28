@@ -57,3 +57,4 @@ Aggregate vượt scope: QL-A chỉ PB-A; gọi report PB-B hoặc scope=all.
 **Expected Result**
 
 PB-B403; scope=all không mở rộng quyền; không có source/số liệu ngoài PB-A. Kiểm theo TC-IAM-03-06; kết quả thực thi ban đầu là Not Run.
+

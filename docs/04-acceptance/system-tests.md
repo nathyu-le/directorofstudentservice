@@ -24,3 +24,4 @@ E2E/NFR/Metric không thay AC chức năng; mọi result ban đầu Not Run. Cá
 | MET-04 | Metric | Giảm bỏ sót/trùng |  | Thiết lập kịch bản giả lập, ghi mẫu/tử số/mẫu số và as_of; đối chiếu nguồn tính, ghi evidence và kết luận. | Đếm intent/request/hàng chờ trước/sau; không tự đặt ngưỡng% mới. | Not Run |
 
 QA ghi riêng Actual, Build, ExecutedAt, Tester, Evidence, Bug, Retest. Pass chỉ khi đã chạy đạt đầy đủ; Fail phải có bug; Blocked có nguyên nhân/ngườigỡ. Trung bình/phần trăm thiếu mẫu không tự coi0 hay đạt. MET kết quả giả lập không suy rộng toàn trường. KiểmTV/Anh là design review nhãn, tínhnăngi18nproduction không tự thêm.
+

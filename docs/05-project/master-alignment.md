@@ -1,68 +1,92 @@
-# Liên kết PRD, Master và Charter — v5.1
+# UniSupport — Milestone và kế hoạch theo đầu ra
 
-requirements.json là manifest của 4 module, 24 FR, 149 AC/TC chức năng và 18 kiểm tra hệ thống. Master dùng nguyên mã và tên FR; không thêm hoặc bỏ chức năng. Form đặc tả của từng FR được giữ nguyên.
+Revision 6.0 · Nguồn PRD: commit `c33c2138ff2a9ba47065efc962c4bbb15d891e23`. Không thêm/bớt 4 module, 24 FR, 149 TC chức năng hoặc 18 kiểm tra hệ thống.
 
-## Liên kết task và kiểm thử
+## Cách đọc kế hoạch
 
-Mỗi FR có parent 0h và 9 task: PM.01; BE.01–03; FE.01–02; QA.01–03. QA.02 chạy đúng TC của FR. Công việc nền, tích hợp, E2E/NFR/MET và bàn giao là task dự án dùng chung, không là module thứ năm. Tổng 256 task chi tiết và 6 mốc đã nằm trong số task đó.
+Milestone là điểm xác nhận kết quả nghiệp vụ, 0h/0 ngày. Task tạo đầu ra có effort và dependency. Các task đủ đầu vào được làm song song; không bắt toàn bộ công việc chờ milestone trước. Milestone kế tiếp kế thừa điều kiện milestone trước. FR có một milestone hoàn tất chính; báo cáo QA không tự chứng minh FR đã đạt mọi AC.
 
-Nguồn task chuẩn là `plan.tasks` trong requirements.json: mã, tên, role, FR, giờ, input/output/DoD, predecessors và ngày. Task theo cùng package tuần tự; dependency liên package Finish-to-Start theo lịch đã lập. Khi thay ngày, PM phải review các task nối tiếp và mốc; bản Gantt gọn không tự reschedule dependency.
+Giữ gốc lịch 12/10/2026–22/01/2027 và cửa sổ triển khai backend từng FR trong repo; không tự hứa rút ngắn dự án. Kiểm chứng cuối bắt đầu trong cửa sổ 28/12/2026 của lịch cũ. Ngày task/mốc tính lại theo dependency và phân bổ giả định 4h/role/ngày; FE thiết kế và QA fixture được làm sớm sau contract. Đây không phải availability/actual hay cam kết được duyệt. Chưa khấu trừ ngày nghỉ. Không dùng khoảng trắng Gantt để kết luận nhân sự rảnh.
 
-## Baseline giờ
+| Mã | Kết quả cần đạt | Ngày dự kiến | FR hoàn tất tại mốc |
+| --- | --- | --- | --- |
+| MS-01 | Truy cập hệ thống đúng quyền | 2026-11-06 | FR-IAM-01, FR-IAM-02, FR-IAM-03 |
+| MS-02 | Tiếp nhận và theo dõi yêu cầu | 2026-11-16 | FR-STU-01, FR-STU-02, FR-STU-03, FR-DSP-01, FR-DSP-02 |
+| MS-03 | Điều phối và phối hợp xử lý | 2026-12-04 | FR-DSP-03, FR-DSP-04, FR-DSP-05, FR-DSP-06, FR-DSP-07, FR-DSP-08, FR-STU-04 |
+| MS-04 | Trả kết quả và hoàn tất hỗ trợ | 2026-12-09 | FR-DSP-09, FR-STU-05, FR-DSP-10 |
+| MS-05 | Theo dõi và báo cáo đúng dữ liệu | 2026-12-18 | FR-RPT-01, FR-RPT-02, FR-RPT-03, FR-RPT-04, FR-RPT-05, FR-RPT-06 |
+| MS-06 | Kiểm chứng và bàn giao chạy lại được | 2027-01-22 | Nghiệm thu xuyên 24 FR |
 
-Trần giờ người dùng chốt: **288h chính + 32h dự phòng = 320h**. Dự phòng chưa giao task, chưa sử dụng, không cộng vào dòng task hoặc FR cha. Chưa có gross/net/actual mới nên không tự tính lại chi phí hoặc lợi nhuận.
+## MS-01 — Truy cập hệ thống đúng quyền
 
-| Vai trò | Giờ chính | Dự phòng chưa dùng | Tổng ngân sách giờ |
-| --- | ---: | ---: | ---: |
-| PM | 53 | 8 | 61 |
-| BE | 97.5 | 8 | 105.5 |
-| FE | 64 | 8 | 72 |
-| QA | 73.5 | 8 | 81.5 |
-| **Tổng** | **288** | **32** | **320** |
+Đăng nhập/đăng xuất hoạt động; phiên hết hiệu lực bị từ chối; kiểm quyền và phạm vi dữ liệu trên máy chủ, không chỉ ẩn nút. Tài khoản/danh mục dùng seed, không có chức năng tạo tài khoản mới.
 
-Giữ nguyên giờ của 24 FR và phạm vi test. Điều chỉnh 34 task nền/dự án dùng chung để không tính lại phần đặc tả, triển khai và báo cáo đã phân cho từng FR. Các con số dưới đây là **phân bổ dự toán trong trần ngân sách để nhóm review**, không là giờ thực tế hoặc chứng minh đủ nguồn lực. Nếu review/triển khai cho thấy thiếu giờ, PM ghi chênh lệch và xét dự phòng/CR; không ép task thành Done để vừa 288h.
+Điều kiện đầu vào/công việc bắt buộc: FR-IAM-01.QA.03, FR-IAM-02.QA.03, FR-IAM-03.QA.03, PM-03, PM-04, BE-03, FE-02, QA-02.
 
-| Task | Giờ phân bổ | Căn cứ và giới hạn |
-| --- | ---: | --- |
-| PM-01 — Rà proposal và chốt phạm vi 4 module | 2 | Rà scope từ proposal/manifest đã có; không soạn lại yêu cầu của 24 FR. |
-| PM-02 — Phân tích vai trò, trạng thái và quy tắc | 1.5 | Rà tập vai trò và trạng thái dùng chung; chi tiết quy tắc từng FR nằm trong PM.01 của FR. |
-| PM-03 — Lập baseline ngày, effort và phụ thuộc | 1.5 | Chốt lịch ngày, giờ và dependency; bỏ mô hình capacity/what-if khỏi Excel theo yêu cầu mới. |
-| PM-04 — Review thiết kế, contract và kế hoạch test | 2 | Review nền tảng và checklist dùng chung; review contract từng FR đã có giờ riêng. |
-| PM-05 — Theo dõi 15 tuần và cập nhật quyết định | 15 | Giữ 15h cho 15 tuần theo dõi nhẹ; khoảng 1h/tuần, không coi là full-time mỗi ngày. |
-| PM-06 — Chuẩn bị nội dung review giữa kỳ W7 | 1.5 | Tổng hợp đầu ra core và chuẩn bị review W7 từ evidence đã có. |
-| PM-07 — Kiểm soát thay đổi và hoàn thiện phạm vi W8–11 | 2 | Theo dõi thay đổi trong baseline; phân tích lớn hoặc thêm scope phải có CR. |
-| PM-08 — Rà hồ sơ nghiệm thu cuối W14 | 1.5 | Rà tính đủ của hồ sơ; không thay thực thi nghiệm thu/test. |
-| PM-09 — Trình bày và bàn giao W15 | 2 | Chuẩn bị và trình bày/handoff từ tài liệu dev/QA đã có. |
-| BE-01 — Thiết lập PHP/MySQL và cấu hình môi trường | 3 | Một cấu hình môi trường PHP/MySQL dùng chung cho prototype. |
-| BE-02 — Thiết kế schema và hợp đồng API | 4 | Thiết kế schema/contract nền; query/projection từng FR có task riêng. |
-| BE-03 — Tạo seed giả lập và script reset | 3 | Seed dùng chung và script reset; fixture từng FR có QA.01 riêng. |
-| BE-04 — Tích hợp backend core W6 | 3 | Nối và rà build core; không tính lại lập trình/test từng endpoint. |
-| BE-05 — Tích hợp backend đủ 4 module W11 | 3 | Nối và rà build đủ 4 module; không tính lại lập trình/test từng endpoint. |
-| BE-06 — Xử lý phát hiện từ test phi chức năng | 3 | Giới hạn 3h xử lý phát hiện NFR; nếu vượt phải xét giờ dự phòng/CR. |
-| BE-07 — Sửa lỗi backend trước regression cuối | 5 | Giữ 5h sửa lỗi backend trước regression; không đảm bảo số lỗi chưa biết. |
-| BE-08 — Đóng gói source, DB và hướng dẫn chạy | 4 | Đóng gói source/DB và hướng dẫn triển khai prototype đã có. |
-| FE-01 — Thiết kế wireframe desktop/mobile và nhãn | 3 | Wireframe và nhãn dùng chung; UI từng FR có FE.01 riêng. |
-| FE-02 — Khởi tạo giao diện và client contract | 3 | Client/layout/error convention dùng chung; kết nối từng FR có FE.02 riêng. |
-| FE-03 — Tích hợp giao diện core W6 | 2 | Rà routing/menu và build core; không làm lại UI từng FR. |
-| FE-04 — Tích hợp giao diện đủ 4 module W11 | 2 | Rà routing/menu và build đủ 4 module; không làm lại UI từng FR. |
-| FE-05 — Rà mobile, bàn phím và lỗi sử dụng | 2 | Rà desktop/mobile/keyboard theo mẫu màn hình dùng chung. |
-| FE-06 — Sửa lỗi giao diện trước regression cuối | 3 | Giữ 3h sửa lỗi FE trước regression; vượt giờ xét dự phòng/CR. |
-| FE-07 — Hoàn thiện hướng dẫn thao tác cho handoff | 1 | Tổng hợp hướng dẫn từ màn hình và luồng đã làm. |
-| QA-01 — Rà AC và ma trận kiểm thử | 2.5 | Rà mapping AC/TC đã có trong PRD; không soạn lại đặc tả từng FR. |
-| QA-02 — Soạn case, fixture và expected cho 24 FR | 6 | Rà và chuẩn hóa 149 TC đã soạn trong PRD cùng fixture nền; chưa thực thi test. |
-| QA-03 — Kiểm tra build và bằng chứng giữa kỳ | 1.5 | Kiểm readiness/evidence build W7; thực thi TC core có task theo FR. |
-| QA-04 — Chạy E2E-01..08 xuyên module | 4 | Giữ đủ 4h thực thi 8 E2E xuyên module, tách khỏi test từng FR. |
-| QA-05 — Chạy 6 kiểm tra NFR | 3 | 3h cho 6 NFR prototype, dùng môi trường/fixture nền; chưa là kiểm định production. |
-| QA-06 — Đo MET-01..04 mục tiêu proposal | 3 | 3h cho 4 phép đo MET theo kịch bản giả lập đã định nghĩa. |
-| QA-07 — Retest và regression bản cuối | 5 | Giữ 5h retest/regression cuối; số bug thực tế có thể cần dự phòng. |
-| QA-08 — Rà bộ nghiệm thu W14 | 1.5 | Rà hồ sơ nghiệm thu từ kết quả test/evidence, không chạy lại toàn bộ TC. |
-| QA-09 — Hoàn thiện test report và hướng dẫn | 2.75 | Tổng hợp báo cáo/hướng dẫn từ báo cáo từng FR; không tạo evidence chưa có. |
-| QA-10 — Kiểm tra người khác chạy lại khi handoff | 1.5 | Kiểm tra chạy lại theo hướng dẫn và seed/reset đã đóng gói. |
+Bằng chứng: build/commit, kết quả test với actual/evidence, PR review và biên bản quyết định. Lỗi chặn khiến mốc chưa đạt dù Issue chuẩn bị báo cáo đã đóng. Không ghi Pass, ngày nghiệm thu hoặc người xác nhận trước khi có thật.
 
-## Excel và ClickUp
+## MS-02 — Tiếp nhận và theo dõi yêu cầu
 
-Excel chỉ còn sheet **Master_Gantt**, không có cột trạng thái/Backlog, capacity, điều chuyển hoặc các sheet phụ. Giữ các khoảng ngày dự kiến và mốc của lịch cũ; effort giảm không tự rút ngắn lịch 15 tuần. Cột G tính giờ task; FR cha 0h. Thanh Gantt cập nhật theo ngày start/due và FR cha lấy MIN/MAX ngày task con, nhưng không tự dịch lịch task nối tiếp.
+Sinh viên gửi yêu cầu hợp lệ, thấy đúng hồ sơ của mình; điều phối thấy cùng mã trong hàng chờ và hồ sơ xử lý. Kiểm gửi lặp, validation, quyền đọc và lịch sử công khai/nội bộ theo AC. Các trạng thái chưa có thao tác sinh dữ liệu được kiểm bằng fixture; không coi đó là bằng chứng E2E đã chạy.
 
-CSV nhập ClickUp dùng cùng 24 FR, 256 task, 167 case con, ngày và estimate. Case con/FR cha 0h để không tính giờ hai lần. Đổi ngày/giờ trong Excel phải cập nhật `plan.tasks` và xuất CSV lại; CSV đã tải không tự cập nhật. Không xuất CSV bằng sheet phụ vì sheet đó đã được bỏ.
+Điều kiện đầu vào/công việc bắt buộc: MS-01, FR-STU-01.QA.03, FR-STU-02.QA.03, FR-STU-03.QA.03, FR-DSP-01.QA.03, FR-DSP-02.QA.03, PM-06, BE-04, FE-03, QA-03.
 
-Predecessors ghi trong `plan.tasks` và mô tả CSV; sau import phải nối native dependencies và kiểm mapping theo mã. ID trong mô tả không phải dependency native đã tạo. Assignee để trống đến khi có thành viên thật. `Status=to do` chỉ dùng để nhập workflow mở vào ClickUp, không là cột trạng thái Excel. QA Result vẫn Not Run đến khi thực thi; không điền Pass/evidence giả.
+Bằng chứng: build/commit, kết quả test với actual/evidence, PR review và biên bản quyết định. Lỗi chặn khiến mốc chưa đạt dù Issue chuẩn bị báo cáo đã đóng. Không ghi Pass, ngày nghiệm thu hoặc người xác nhận trước khi có thật.
+
+## MS-03 — Điều phối và phối hợp xử lý
+
+Phân loại, phân công, đặt hạn, bắt đầu xử lý, cập nhật tiến độ và vòng yêu cầu/bổ sung thông tin hoạt động đúng vai trò, scope, state và version. Kiểm quyền sau đổi người phụ trách, không ghi dữ liệu/lịch sử một phần.
+
+Điều kiện đầu vào/công việc bắt buộc: MS-02, FR-DSP-03.QA.03, FR-DSP-04.QA.03, FR-DSP-05.QA.03, FR-DSP-06.QA.03, FR-DSP-07.QA.03, FR-DSP-08.QA.03, FR-STU-04.QA.03.
+
+Bằng chứng: build/commit, kết quả test với actual/evidence, PR review và biên bản quyết định. Lỗi chặn khiến mốc chưa đạt dù Issue chuẩn bị báo cáo đã đóng. Không ghi Pass, ngày nghiệm thu hoặc người xác nhận trước khi có thật.
+
+## MS-04 — Trả kết quả và hoàn tất hỗ trợ
+
+Ghi kết quả, sinh viên đọc kết quả và phản hồi; đóng yêu cầu theo đúng điều kiện trong PRD. Không thêm email, SMS hay xuất file. Xác nhận đọc tiến độ/lịch sử liên quan không bị hồi quy.
+
+Điều kiện đầu vào/công việc bắt buộc: MS-03, FR-DSP-09.QA.03, FR-STU-05.QA.03, FR-DSP-10.QA.03, PM-07.
+
+Bằng chứng: build/commit, kết quả test với actual/evidence, PR review và biên bản quyết định. Lỗi chặn khiến mốc chưa đạt dù Issue chuẩn bị báo cáo đã đóng. Không ghi Pass, ngày nghiệm thu hoặc người xác nhận trước khi có thật.
+
+## MS-05 — Theo dõi và báo cáo đúng dữ liệu
+
+Sáu báo cáo đúng tập nguồn, phạm vi quyền, bộ lọc, biên thời gian và công thức PRD; đối chiếu với fixture có expected xác định. Bản tích hợp đủ 24 FR; không có chức năng xuất dữ liệu ngoài baseline.
+
+Điều kiện đầu vào/công việc bắt buộc: MS-04, FR-RPT-01.QA.03, FR-RPT-02.QA.03, FR-RPT-03.QA.03, FR-RPT-04.QA.03, FR-RPT-05.QA.03, FR-RPT-06.QA.03, BE-05, FE-04.
+
+Bằng chứng: build/commit, kết quả test với actual/evidence, PR review và biên bản quyết định. Lỗi chặn khiến mốc chưa đạt dù Issue chuẩn bị báo cáo đã đóng. Không ghi Pass, ngày nghiệm thu hoặc người xác nhận trước khi có thật.
+
+## MS-06 — Kiểm chứng và bàn giao chạy lại được
+
+Có kết quả thật của 149 TC chức năng và 18 kiểm tra hệ thống; đối chiếu toàn bộ AC. Không còn lỗi chặn luồng, sai quyền hoặc làm mất/sai dữ liệu; lỗi khác phải có ghi nhận tác động và quyết định chấp nhận. Có build/commit, test report, source/seed/guide và bằng chứng người khác chạy lại. Kết quả MET dưới mục tiêu phải được báo cáo, không tự coi đạt; xác nhận nghiệm thu bởi người có thẩm quyền, không giả chữ ký.
+
+Điều kiện đầu vào/công việc bắt buộc: MS-05, PM-09, PM-05, QA-08, QA-09, QA-10.
+
+Bằng chứng: build/commit, kết quả test với actual/evidence, PR review và biên bản quyết định. Lỗi chặn khiến mốc chưa đạt dù Issue chuẩn bị báo cáo đã đóng. Không ghi Pass, ngày nghiệm thu hoặc người xác nhận trước khi có thật.
+
+## Ngân sách và giới hạn nguồn lực
+
+288h chính: PM 53h; BE 97.5h; FE 64h; QA 73.5h. 32h dự phòng chưa phân task, tổng 320h. Giữ nguyên effort từng chức năng; việc dùng chung được gắn lại đúng đầu ra. PM-05 là 1h/tuần trong 15 tuần, không làm 15h liên tục hoặc full-time cả thanh Gantt. Giờ sửa lỗi giữ nguyên dự toán, không đảm bảo bao phủ mọi lỗi chưa biết; vượt phải xét dự phòng/thay đổi.
+
+## GitHub, Excel và dữ liệu chuẩn
+
+`requirements.json` giữ mã task, FR, milestone, ngày, effort và predecessors. Excel chỉ có Master_Gantt, không có cột Backlog/status hay sheet phụ. Mỗi task công việc có một Issue cùng mã và một milestone đích. Không tạo thêm Issue cha FR tính lại effort. Native GitHub Issue không có start/due mặc định nên ngày task lưu trong body; due của milestone là ngày cổng, không phải due của từng Issue.
+
+Mỗi Issue ghi input/output/DoD, link PRD, AC/TC, role, estimate, start/due và links predecessors. Assignee chưa gán khi chưa biết người thật. Link trong body chỉ là truy vết; không tuyên bố đã tạo native dependency. Tiến độ đóng Issue không thay kiểm tra điều kiện nghiệm thu. Không đưa 167 test case thành 167 task công thêm giờ.
+
+Sau đổi ngày/giờ/dependency: cập nhật manifest, rà task nối tiếp và milestone, xuất lại Excel, cập nhật body Issue và due milestone. Gantt phản ứng theo Start/Due; không tự resource-level hoặc tự đẩy mọi successor khi sửa một ô. Không dùng CSV ClickUp cũ v5.1 với lịch v6.0; ClickUp không tự đồng bộ với GitHub/Excel.
+
+## Kiểm thử và thứ tự bàn giao
+
+Fixture và FE.01 được chuẩn bị sau contract, song song với BE khi đủ đầu vào. FE.02 chỉ tích hợp khi backend tương ứng đã self-check. QA.02 chỉ chạy sau fixture và FE.02. Kiểm quyền/validation/concurrency được kiểm ở từng FR từ sớm, không để tới cuối.
+
+QA-04 chạy E2E-01..07; QA-05 chạy 5 NFR trừ DEP; QA-06 đo 4 MET. BE/FE sửa trước QA-07 retest/regression. BE-08 và FE-07 chuẩn bị gói/hướng dẫn, sau đó QA-10 chạy E2E-08 và NFR-DEP-01 trên môi trường sạch. QA-09 chốt test report sau QA-10; QA-08 rà hồ sơ; PM-08 review rồi PM-09 bàn giao. Không kiểm chạy lại trước khi có gói/hướng dẫn. Thay code sau kiểm chứng phải đánh giá và chạy lại test bị ảnh hưởng.
+
+## Điều kiện cho mượn nhân sự
+
+Cần lịch tham gia thật, effort còn lại, task/nguồn lực đang chặn, hạn quay lại và tính lại ảnh hưởng mọi successor/milestone. 4h/ngày chỉ là giả định lập lịch, không là số giờ rảnh đã xác nhận. Chưa có các dữ liệu đó thì không kết luận cho mượn được.
+
+## Lịch sử thay đổi
+
+Thay MS-01..06 cũ theo tuần bằng sáu cổng kết quả trên; giữ mã milestone để không mất liên kết. Giữ nguyên mã task để truy vết nhưng đổi tên công việc dùng chung còn gắn W6/W7/W11/W14/W15. Không thêm tạo tài khoản, email/SMS hoặc xuất dữ liệu từ ảnh minh họa. Phạm vi chức năng và form đặc tả giữ nguyên.

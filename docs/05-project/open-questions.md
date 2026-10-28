@@ -16,3 +16,4 @@ Thiếu dữ liệu nguồn không bịa để đóng câu hỏi. Nhóm có th�
 ## Review giờ v5.1
 
 Trần 288h chính/32h dự phòng đã được người dùng chốt. Phân bổ giờ theo role/task vẫn là đề xuất. BE/FE/QA cần review theo build/độ phức tạp; chênh lệch ghi rõ và trình PM xử lý dự phòng/CR. Gantt một sheet không đo hoặc chứng minh availability thật.
+

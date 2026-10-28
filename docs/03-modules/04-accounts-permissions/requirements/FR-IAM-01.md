@@ -56,3 +56,4 @@ Giới hạn thử sai: 5 lần sai trong15 phút, sau đó thử lần6 cùng e
 **Expected Result**
 
 Lần6 trả 429 có thời gian thử lại; hết cửa sổ mới được thử, không khóa tài khoản vĩnh viễn. Kiểm theo TC-IAM-01-06; kết quả thực thi ban đầu là Not Run.
+

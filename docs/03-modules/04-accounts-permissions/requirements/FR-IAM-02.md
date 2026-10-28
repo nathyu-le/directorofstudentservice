@@ -49,3 +49,4 @@ Back / đăng nhập lại: Back trang trước rồi đăng nhập lại.
 **Expected Result**
 
 Back không khôi phục quyền; đăng nhập mới tạo phiên mới hợp lệ. Kiểm theo TC-IAM-02-04; kết quả thực thi ban đầu là Not Run.
+
