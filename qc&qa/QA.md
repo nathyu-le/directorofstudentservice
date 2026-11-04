@@ -1,205 +1,145 @@
 # UniSupport — Kế hoạch đảm bảo chất lượng QA
 
-**Phiên bản:** 2.0 · **Ngày soạn:** 04/11/2026 · **Trạng thái:** Đề xuất áp dụng, chờ nhóm và người có thẩm quyền review.
+**Phiên bản 3.0 · 04/11/2026 · Đề xuất quy trình để nhóm và người có thẩm quyền review.**
 
-## 1. Mục đích và căn cứ áp dụng
+## 1. Mục đích và nguyên tắc
 
-QA (Quality Assurance) thiết lập, theo dõi và cải tiến cách nhóm tạo ra sản phẩm đúng yêu cầu. Kế hoạch này quy định tiêu chuẩn đầu vào, review, kiểm tra tuân thủ, quản lý thay đổi và hành động phòng ngừa. [QC.md](QC.md) quy định việc thực thi kiểm thử và kiểm soát lỗi trên sản phẩm. Tách tài liệu không có nghĩa tách rời dòng thông tin: QC cung cấp phát hiện và bằng chứng; QA dùng chúng để sửa nguyên nhân trong quy trình.
+QA quy định cách phòng ngừa sai sót, quản lý đầu ra sản phẩm, giám sát việc tuân thủ và cải tiến quy trình. [QC.md](QC.md) quy định kiểm thử sản phẩm, xử lý lỗi và bằng chứng nghiệm thu. Hai tài liệu dùng cùng PRD/Master Plan v6.0: bốn module STU, DSP, RPT, IAM; 24 FR, 149 TC chức năng và 18 kiểm tra hệ thống.
 
-Phạm vi tham chiếu là UniSupport, web prototype PHP/MySQL với bốn module STU, DSP, RPT và IAM, theo PRD/Master Plan v6.0 tại commit `dfa151a619b914aa77a29fdf05b5675af4e42cf0`. Có 24 FR, 149 TC chức năng và 18 kiểm tra hệ thống. Các con số này là phạm vi thiết kế; không phải số kiểm thử đã đạt.
+Nguyên tắc áp dụng:
 
-Ngày 04/11/2026 đã đối chiếu mã, tên, lịch và phụ thuộc trong manifest với 256 dòng của Master_Gantt, 250 issue task, 24 issue cha FR và sáu milestone. Tại lần đọc này, bộ test nguồn vẫn ghi `Not Run`; repo chưa chứa mã ứng dụng, bộ test tự động hoặc cấu hình CI. Điều đó chỉ phản ánh nội dung repo được kiểm tra, không kết luận về tài sản có thể nằm ngoài repo.
+1. Yêu cầu và AC phải rõ trước khi thực hiện phần việc phụ thuộc; chưa rõ thì PM/BA ghi câu hỏi và lấy quyết định.
+2. Mọi yêu cầu có test tương ứng; người thực hiện tự kiểm trước khi chuyển cho người khác xác minh.
+3. Người viết không tự xác nhận review của mình. Có source thì thay đổi mã phải được review trước khi merge; có build thì kết luận kiểm thử phải gắn đúng build.
+4. Chuyển bước dựa trên đầu ra và bằng chứng, không dựa riêng vào ngày đến hạn hoặc trạng thái issue.
+5. Ưu tiên xử lý lỗi chặn luồng, sai quyền hoặc làm sai/mất dữ liệu; giữ lịch sử sửa và kiểm tra lại.
 
-**Ranh giới:** các quy tắc kiểm soát mới trong bản QA/QC này là đề xuất quy trình để review; chúng không tự sửa PRD, ngày Master, cơ cấu nhân sự hay điều kiện milestone. Thiết kế còn gắn OQ được dùng làm căn cứ review/kịch bản prototype, không được mô tả là đã được bên nghiệp vụ duyệt. Tài liệu không chứng nhận ISO/CMMI và không xác nhận dự án đã nghiệm thu.
+**Căn cứ hiện tại:** repo tại commit `12329e10ebeba603cd84152cc8c662680757aef0` có tài liệu/kế hoạch; chưa có mã ứng dụng hoặc cấu hình kiểm thử tự động trong repo được đọc. Các test nguồn còn `Not Run`. Vì vậy đây là quy trình dự kiến, không phải xác nhận đã test, đã review code hay đã nghiệm thu. Thiết kế gắn câu hỏi mở vẫn cần quyết định; không lấy việc test đúng thiết kế đề xuất để coi nghiệp vụ đã được duyệt.
 
-## 2. Mục tiêu chất lượng và cách kiểm soát
+## 2. Trách nhiệm và tuyến quyết định
 
-| Mục tiêu | Kiểm soát QA áp dụng | Hồ sơ chứng minh khi thực hiện |
+| Vai trò theo Team Charter | Trách nhiệm chất lượng | Báo cáo và xác nhận |
 | --- | --- | --- |
-| Yêu cầu rõ và có thể kiểm thử | Review actor, tiền điều kiện, dữ liệu, luồng, rule, lỗi, AC và phụ thuộc của từng FR; chỉ rõ quyết định còn mở | Phiên bản FR, nhận xét review, quyết định/OQ liên kết |
-| Thực hiện thống nhất giữa BE, FE và QC | Review cùng hợp đồng API, quyền và vòng đời; kiểm fixture/expected trước khi chuyển bước | Contract được review, danh sách test/fixture và PR liên quan |
-| Ngăn sai quyền, sai trạng thái và dữ liệu không nhất quán | Bắt buộc review các điểm rủi ro tại mục 5; đối chiếu kiểm chứng tương ứng trong QC | Review findings, PR sửa, kết quả QC đúng build |
-| Không bỏ sót đầu ra của kế hoạch | Truy vết FR → AC/TC → task → milestone; kiểm cả đầu vào và điều kiện hoàn thành | Traceability và hồ sơ cổng |
-| Phát hiện sai lệch quy trình và giảm lặp lỗi | Kiểm tra tuân thủ, phân tích nguyên nhân, hành động khắc phục và phòng ngừa | Finding, RCA, hành động, kết quả kiểm lại |
-| Kết luận chất lượng có căn cứ | Chỉ dùng actual/evidence thật, số liệu có mẫu số và phạm vi rõ | Review record, chỉ số có nguồn, báo cáo QC và quyết định |
+| PM/BA | Quản lý PRD/AC, làm rõ rule; theo dõi phạm vi/đầu ra; kiểm soát thay đổi; tổ chức review mốc | Nhận báo cáo trực tiếp từ BE, FE và QA/tài liệu; ghi quyết định. Phần vượt thẩm quyền hoặc đổi cam kết phải lấy xác nhận của thầy/bên có thẩm quyền |
+| BE | Thiết kế dữ liệu/API, phiên/quyền, transaction; unit test hoặc tự kiểm phù hợp implementation; sửa lỗi BE và đóng gói môi trường | Cung cấp PR/commit, kết quả tự kiểm, build/schema/seed và phần còn vướng cho PM/QA |
+| FE | Thiết kế trạng thái màn hình, validation, tích hợp API, desktop/mobile; tự kiểm và sửa lỗi FE | Cung cấp bản giao diện/tích hợp, kết quả tự kiểm, PR và lỗi còn mở |
+| QA/tài liệu | Review khả năng kiểm thử; kiểm tuân thủ; khi thực hiện QC thì chạy test, ghi evidence, bug/retest và tổng hợp kết quả | Báo cáo chất lượng trực tiếp cho PM/BA; người khác review đầu ra của QA theo Charter |
 
-Không đặt thêm tỷ lệ chất lượng hoặc cam kết tốc độ từ ví dụ trong tài liệu tham khảo. Mục tiêu sản phẩm MET-01…04 và các ngưỡng NFR hiện có được dẫn và kiểm chứng ở QC; các chỉ số quản trị quy trình tại mục 8 có mục đích khác.
+Mỗi task có một owner; reviewer được phân công trong bốn vai trò này. Chưa có tên/giờ tham gia thật thì chỉ ghi vai trò. QC đưa kết luận kỹ thuật; người có thẩm quyền quyết định nghiệm thu nghiệp vụ, không để tác giả hoặc tester ký thay.
 
-## 3. Trách nhiệm và thẩm quyền
+## 3. Quy trình QA và các cổng chất lượng
 
-| Vai trò hiện có | Trách nhiệm QA | Phối hợp và giới hạn |
+### 3.1. Hoạt động theo đầu ra
+
+| Khi thực hiện | Cách kiểm soát | Đầu ra và người kiểm |
 | --- | --- | --- |
-| PM/BA | Chủ trì làm rõ yêu cầu, quản lý quyết định/OQ/CR, giữ liên kết kế hoạch và tổ chức review cổng | Không tự xác nhận thay thầy hoặc bên có thẩm quyền; thay phạm vi/cam kết phải lấy quyết định đúng người |
-| BE | Rà thiết kế dữ liệu, API, phiên, quyền, giao dịch và lỗi; thực hiện review kỹ thuật và tự kiểm phần BE | Cung cấp build, seed và bằng chứng; không dùng self-check thay QC độc lập |
-| FE | Rà màn hình, trạng thái, validation, kết nối và khả năng thao tác theo contract | Xác nhận tương thích với BE; không dùng màn hình mock chứng minh backend hoặc phân quyền thật |
-| QA/tài liệu | Duy trì checklist, review test plan/case/fixture, theo dõi tuân thủ, tổng hợp chỉ số và RCA | Đây là vai trò có sẵn; trong hoạt động QC có thể đồng thời làm tester nhưng phải phân biệt hai loại hồ sơ |
+| Trước phát triển | PM/BA cùng BE/FE/QA rà actor, dữ liệu, luồng lỗi, quyền, trạng thái, AC và phụ thuộc; nối AC với TC; chốt phần chặn trước khi giao việc | FR/contract, câu hỏi/decision và traceability được review; gắn `.PM.01`, QA-01/QA-02 |
+| Khi thiết kế/triển khai | BE/FE dùng cùng contract; tự kiểm phần thay đổi. QA kiểm fixture/expected và việc nhận đủ đầu vào | File/PR, self-check và fixture `.QA.01`; người review khác tác giả |
+| Trước merge/chuyển QC | Reviewer đối chiếu thay đổi với AC, quyền và tính nhất quán dữ liệu; owner sửa phản hồi; bàn giao build/config/seed cho QC | Review record, build và hướng dẫn kiểm tra; `.BE.03`, `.FE.02` và entry criteria trong QC |
+| Cuối mốc | QA đối chiếu FR–AC–TC–kết quả, bug/retest, PR review và đầu ra bàn giao; PM kiểm phạm vi và các quyết định còn mở | Biên bản đánh giá mốc: đạt/chưa đạt, phần thiếu, người xử lý và quyết định thật |
+| Sau lỗi nghiêm trọng hoặc lặp lại | QA cùng owner tìm nguyên nhân trong yêu cầu/thiết kế/code/test, đề xuất biện pháp phòng ngừa | Hành động có owner, thời hạn và tiêu chí kiểm hiệu lực; xem mục 7 |
 
-Mỗi đầu ra có một owner và người review được phân công; tác giả không tự xác nhận review của mình. Review là trách nhiệm trong bốn vai trò hiện hữu, không phải nhân sự thứ năm. Chưa có tên người và xác nhận nhận việc thì chỉ ghi vai trò, không tự gán tài khoản hoặc ngày đã làm.
+Checklist review kỹ thuật tập trung vào các rủi ro của dự án:
 
-## 4. Quy trình QA từ yêu cầu đến bàn giao
+- **Phiên và quyền:** actor lấy từ session; capability/scope kiểm ở máy chủ; sinh viên không nhận hồ sơ khác hoặc ghi chú nội bộ; sau đổi người phụ trách phải kiểm quyền hiện hành.
+- **Trạng thái và giao dịch:** state/version đúng rule; nghiệp vụ, dữ liệu con và history nhất quán; lỗi trước commit phải rollback; không ghi đè dữ liệu cũ.
+- **Retry:** create dùng submission_key; no_change và thao tác chuyển trạng thái xử lý theo FR riêng, không dùng một quy tắc chung cho mọi request.
+- **Dữ liệu và giao diện:** validation theo FR, truy vấn tham số hóa, output an toàn, CSRF theo contract; UI xử lý loading/empty/error và lỗi API; ẩn nút không thay quyền server.
+- **Báo cáo và bàn giao:** đúng nguồn/công thức/kỳ/scope; fixture có đáp án; cấu hình và evidence không lộ secret; source/seed/guide khớp build.
 
-### 4.1. Phân tích yêu cầu và xác định tiêu chuẩn
+Các điểm kiểm này lấy từ tài liệu domain và NFR. Khi chưa có implementation, chỉ review được thiết kế; chưa thể xác nhận code tuân thủ hoặc pipeline chạy đạt.
 
-**Khi thực hiện:** trước implementation hoặc khi có thay đổi hành vi. **Đầu vào:** FR, tài liệu domain, AC/TC, câu hỏi mở. **Owner:** PM/BA; BE, FE và QA review phần liên quan.
+### 3.2. Cổng để chuyển bước
 
-1. Đọc một revision chung; xác định ai được thao tác, điều kiện vào và đầu ra của hành vi.
-2. Kiểm trường dữ liệu, rule, trạng thái, quyền theo hồ sơ, luồng lỗi, biên và thao tác gửi lại. Một hành vi phải được hiểu giống nhau ở FE, BE và expected của test.
-3. Đối chiếu FR khác để phát hiện mâu thuẫn; ví dụ quyền xem báo cáo không mặc định cho phép đọc nội dung yêu cầu.
-4. Kiểm mỗi AC có cách chứng minh và test tương ứng. Với số đo, phải xác định mẫu, thời điểm, công thức và môi trường.
-5. Ghi finding/OQ cho chỗ chưa đủ căn cứ. Chỉ chặn phần phụ thuộc quyết định đó; không tự suy diễn để tiếp tục hoặc tự đóng OQ.
-
-**Đầu ra:** FR/contract được review, liên kết AC–TC và danh sách quyết định còn mở. **Điều kiện chuyển bước:** các điểm chặn đối với phần việc sắp làm đã được xử lý; thiết kế đề xuất vẫn được ghi nhãn đúng trạng thái. Gắn với PM-02, QA-01 và task `.PM.01` từng FR trong Master.
-
-### 4.2. Thiết lập và review kế hoạch kiểm thử
-
-QA cùng BE/FE rà kế hoạch QC: phạm vi 24 FR, test level, loại kiểm thử, fixture, môi trường, rủi ro, lịch, entry/exit criteria và báo cáo. Kiểm các trường hợp hợp lệ, dữ liệu sai, trái quyền, ranh giới, gửi lặp/đồng thời và lỗi giao dịch theo từng FR; không bắt mọi FR có cùng số case.
-
-Đối chiếu TC với AC, không tự thêm chức năng từ ví dụ tham khảo. Unit test do Dev chịu trách nhiệm; QA kiểm cách tổ chức và bằng chứng. QC thực thi kiểm thử sản phẩm ở phạm vi được giao. Automation là phương pháp có thể áp dụng ở nhiều level, không phải level thứ năm hoặc bằng chứng đã có pipeline.
-
-**Đầu ra:** kế hoạch QC, case/fixture được review, mapping và điều kiện sẵn sàng. **Task hiện có:** QA-02 và `.QA.01` từng FR. Không nhân đôi estimate vì cùng đầu ra được nhắc trong cả QA và QC.
-
-### 4.3. Kiểm soát thiết kế và coding
-
-BE/FE review contract trước khi tích hợp: dữ liệu vào/ra, lỗi HTTP, quyền, trạng thái, version, transaction, lịch sử và hành vi retry. Dùng bộ kiểm soát kỹ thuật tại mục 5 khi có code. Đầu ra phải chỉ được file/commit, self-check và PR/task tương ứng.
-
-Trong repo hiện tại chưa có implementation để xác nhận coding guideline đã được tuân thủ. Các mục này là tiêu chuẩn thực hiện cho đầu ra tương lai, không phải kết quả audit code đã đạt.
-
-### 4.4. Review thay đổi và chuyển giao QC
-
-1. Owner mở PR hoặc cung cấp thay đổi gắn task/FR; nêu lý do, ảnh hưởng, self-check, cách chạy và dữ liệu thử.
-2. Reviewer đọc theo đặc tả, contract và checklist; ghi vấn đề cụ thể tại PR/task, phân biệt lỗi sản phẩm với thay đổi yêu cầu.
-3. Owner sửa; reviewer kiểm lại phần bị phản hồi. Chưa xử lý finding chặn thì chưa coi review hoàn tất.
-4. Chuyển giao build/commit, cấu hình, schema/seed và test liên quan cho QC; kiểm đủ entry criteria ở QC trước khi chạy.
-
-**Đầu ra:** review record, bản đã review và bộ thông tin bàn giao test. `.BE.03` và `.FE.02` giữ trách nhiệm tự kiểm/tích hợp trong Master. Review code không được dùng thay actual test.
-
-### 4.5. Giám sát tuân thủ trong lúc thực hiện
-
-Thực hiện khi nhận đầu ra, trước review milestone và sau thay đổi có tác động. QA kiểm mapping, review độc lập, build/fixture, actual/evidence, defect/retest và việc đồng bộ kế hoạch. Dùng mục 7; mọi kết luận phải nêu mẫu đã kiểm và revision.
-
-Khi công cụ static analysis hoặc CI được nhóm bổ sung, BE/FE cung cấp cấu hình, phạm vi rule và run log; QA kiểm tính phù hợp và cách xử lý kết quả. Hiện chưa có cấu hình để yêu cầu “pipeline đã xanh”. Không mặc định SonarQube, framework test, license hay một ngưỡng coverage chưa được chọn.
-
-### 4.6. Đánh giá, cải tiến và review bàn giao
-
-Sau một lượt QC có lỗi tái diễn/nghiêm trọng hoặc trước review cổng, QA tổng hợp xu hướng, thực hiện RCA tại mục 9 và đề xuất biện pháp phòng ngừa. PM/BA đánh giá ảnh hưởng kế hoạch. Chỉ kết thúc hành động khi người review kiểm được bằng chứng hiệu lực.
-
-Trước bàn giao, QA rà hồ sơ QC, source/seed/guide, kết quả người khác chạy lại, vấn đề còn mở và quyết định thật. QC đánh giá sẵn sàng kỹ thuật; PM tổ chức review, người có thẩm quyền ra quyết định chấp nhận. QA không tự ký nghiệm thu thay họ.
-
-## 5. Coding guideline và tiêu chuẩn review cho UniSupport
-
-Các yêu cầu nghiệp vụ/kỹ thuật dưới đây truy về tài liệu domain và FR hiện có. Checklist là cách kiểm soát đề xuất; không bổ sung endpoint hoặc chức năng.
-
-| Nhóm kiểm soát | Reviewer cần kiểm gì khi có implementation | Căn cứ |
+| Cổng | Điều kiện đi tiếp | Người xác minh và bằng chứng |
 | --- | --- | --- |
-| Cấu trúc và khả năng đọc | Phân tách xử lý phiên/quyền, validation, nghiệp vụ và truy cập dữ liệu theo kiến trúc được review; tên rõ, không lặp rule mâu thuẫn; thay đổi có FR/task | Contract và thiết kế kỹ thuật của task; chưa mặc định framework/quy ước format chưa được chọn |
-| Phiên và quyền | Actor lấy từ session; kiểm capability và object scope trên server trước truy vấn/hành động; không tin role/scope/student_id từ client; đọc lại trách nhiệm sau đổi người xử lý | IAM-03 và permissions.md |
-| Dữ liệu vào và an toàn đầu ra | Validate theo FR, dùng truy vấn tham số hóa, output encoding, bảo vệ CSRF cho mutation có phiên; không lộ stack trace, SQL, mật khẩu/token | api-contract.md, NFR-SEC-01 |
-| Trạng thái và dữ liệu đồng thời | Kiểm state/version, rollback khi lỗi trước commit; nghiệp vụ và history cùng transaction; giữ bất biến khi stale version | lifecycle.md và các FR ghi dữ liệu |
-| Retry và gửi lặp | Phân biệt create replay theo submission_key, no_change của DSP-03/04/05, logout lặp an toàn và chuyển trạng thái lặp bị từ chối | FR cụ thể; không áp một quy tắc retry chung cho mọi thao tác |
-| FE và tích hợp | Loading/success/empty/error phù hợp thiết kế; xử lý lỗi theo contract; ẩn nút không thay quyền server; không đưa internal history vào màn hình sinh viên | STU/DSP, permissions.md, FE.02 |
-| Báo cáo | Đúng scope, tập nguồn, bộ lọc, biên ngày, thời điểm as_of và công thức; tránh join làm tăng số bản ghi | RPT-01…06 và fixture expected |
-| Log và cấu hình | Truy vết lỗi/nghiệp vụ theo thiết kế; không secret trong code, repo hoặc evidence; cấu hình mẫu, schema/seed và hướng dẫn chạy tương ứng build | NFR-OBS-01, NFR-DEP-01 |
+| Sẵn sàng thực hiện — DoR | Task có FR/đầu ra, AC hoặc tiêu chí review, input/predecessor, owner và reviewer; câu hỏi chặn đã được giải quyết cho phần sắp làm | PM/BA cùng BE/FE/QA; link PRD/contract/decision |
+| Merge mã nguồn | Thay đổi đúng phạm vi, người khác review và phản hồi chặn đã xử lý; có self-check/unit test liên quan và kết quả thực tế phù hợp mã được giao | Reviewer và owner; PR/commit, kết quả kiểm tra. Không tuyên bố có test tự động khi chưa xây dựng |
+| Bàn giao build để test | Có phiên bản, môi trường/config/schema/seed, fixture, quyền truy cập và kết quả tự kiểm/tích hợp liên quan | BE/FE bàn giao, QC kiểm entry criteria; thiếu gì ghi blocker |
+| Hoàn thành task/FR | Đáp ứng DoD đúng loại đầu ra tại mục 4.3; FR phải tích hợp và đạt đủ AC/TC, không còn lỗi chặn | Người review/QC theo loại công việc; source/build/test/evidence liên kết |
+| Xác nhận milestone/bàn giao | Đủ FR/task phụ thuộc và bằng chứng theo milestone; không còn lỗi chặn luồng, sai quyền hoặc sai/mất dữ liệu; ngoại lệ khác có quyết định phù hợp | QA lập hồ sơ, PM/BA tổ chức review và người có thẩm quyền xác nhận; ngày dự kiến giữ theo Master |
 
-Review khả năng bảo trì ở mức cần cho prototype: thay một rule phải xác định được nơi sửa, test liên quan và tác động. Không gắn chứng chỉ bảo mật/khả năng truy cập hoặc yêu cầu tải production ngoài baseline.
+Đầu ra chưa qua cổng được trả về owner cùng điểm chưa đạt. Ngày trên Master là lịch dự kiến; không tự sửa ngày hoặc đóng mốc để làm báo cáo trông đúng kế hoạch.
 
-## 6. Quản lý cấu hình và thay đổi
+## 4. Quản lý sản phẩm và kiểm soát thay đổi
 
-Giữ cùng revision cho PRD, contract, traceability, test, manifest, Master và mô tả issue. Build dùng để kết luận phải được nhận diện bằng commit; fixture có revision riêng hoặc nằm trong cùng commit. Bằng chứng cũ chỉ chứng minh build cũ.
+Phần này quản lý **yêu cầu, đầu ra và phiên bản của UniSupport**. Không tạo thêm module hoặc một danh mục tính năng tách khỏi PRD.
 
-Khi phát hiện khác biệt:
+### 4.1. Nguồn yêu cầu và cách ưu tiên
 
-1. Ghi finding nếu đầu ra không theo yêu cầu đã có; ghi CR nếu đề nghị đổi yêu cầu/cách làm/lịch. Liên kết FR, AC, TC, task và mốc chịu tác động.
-2. PM cùng owner đánh giá ảnh hưởng dữ liệu, quyền, test, predecessor/successor, effort và ngày. Phần cần quyết định được ghi rõ người xác nhận.
-3. Review và ghi quyết định trước khi thay baseline. Không sửa expected để khớp lỗi implementation.
-4. Cập nhật các nguồn bị ảnh hưởng; QC xác định lại retest/regression. Nếu ngày/quan hệ thay đổi thì đồng bộ cả Master, issue body và due milestone.
-5. QA kiểm lại sự nhất quán và lưu revision/decision. Không thay số case hoặc FR âm thầm trong báo cáo.
+PM/BA giữ một nguồn yêu cầu chuẩn là PRD và `requirements.json`. Mỗi FR nêu hành vi, actor, AC, TC và milestone hoàn tất; task BE/FE/QA là công việc tạo ra FR, không phải chức năng mới. Issue cha theo dõi FR, task con theo dõi phần việc; không cộng cả hai thành số chức năng hoàn thành.
 
-Các quyết định về trạng thái/quyền đóng, danh mục/scope, tham số đầu vào/session, kỳ báo cáo và môi trường NFR còn được theo dõi tại OQ-02/03/04/06/07. Kết quả test theo thiết kế hiện hành không tự đóng các OQ này; trước nghiệm thu phải có quyết định phù hợp.
+Khi chọn việc tiếp theo, PM/BA xác định nhu cầu/AC cần đạt, kiểm đầu vào và phụ thuộc với owner, rồi ưu tiên phần đang chặn luồng/nguồn lực hoặc rủi ro quyền, dữ liệu và mốc gần nhất. Những task đủ input được làm song song theo Master; đổi thứ tự làm ảnh hưởng predecessor, effort hoặc ngày phải được đánh giá và cập nhật kế hoạch.
 
-## 7. Kiểm tra tuân thủ và xử lý sai lệch quy trình
+### 4.2. Theo dõi đầu ra và phiên bản
 
-### 7.1. Cách kiểm tra
+Với mỗi FR, duy trì liên kết: **FR/AC → task → thiết kế/PR/commit → build/seed → test result/bug → milestone/quyết định**. Trên issue ghi phần đã có, phần còn thiếu, owner, blocker và dự báo; không bắt tạo thêm bảng theo dõi trùng dữ liệu.
 
-QA chọn phạm vi theo task/cổng/thay đổi; ghi danh sách đầu ra được xem xét, revision, reviewer và thời điểm thật. Kiểm toàn bộ FR thuộc cổng đối với mapping và kết quả; review kỹ thuật theo phần thay đổi/rủi ro và ghi rõ phạm vi, không gọi đó là audit toàn bộ code nếu chỉ đọc một PR.
+Phải phân biệt ba kết luận: giao diện đã review, hành vi tích hợp đã kiểm chứng, và đầu ra đã được chấp nhận. Màn hình mock có thể hoàn thành task thiết kế FE nhưng không chứng minh API, phân quyền server, lưu dữ liệu hoặc số liệu thật đã đúng; chưa đủ để đóng parent FR có các AC đó. Tỷ lệ issue Closed không được dùng thay mức hoàn thành sản phẩm. Nếu báo số FR hoàn tất thì chỉ tính FR đã qua DoD, mẫu số là số FR thuộc phạm vi báo cáo.
 
-| Tiêu chí | Bằng chứng cần xem | Xử lý khi thiếu/sai |
+Trước trình diễn/bàn giao, PM/BA cùng BE/FE/QA xác định một phiên bản gồm source hoặc prototype tương ứng, commit/build, schema/seed, hướng dẫn, bộ test và giới hạn. Hồ sơ ghi rõ bàn giao UI hay bản tích hợp; thiếu đầu ra của milestone thì kết luận chưa đạt, không dùng tên “bản cuối” thay chứng cứ.
+
+### 4.3. Definition of Done theo loại công việc
+
+| Loại đầu ra | Điều kiện hoàn tất |
+| --- | --- |
+| FR/đặc tả, thiết kế, tài liệu | Đúng phạm vi task; có revision, tiêu chí review và người khác review; câu hỏi chặn phần đầu ra được xử lý hoặc nêu rõ chưa thể hoàn tất |
+| Task BE/FE | Đủ source/PR hoặc đầu ra thiết kế theo task; review hoàn tất, có self-check; task tích hợp phải có kết nối thật và build tương ứng |
+| Task QC `.QA.02` / báo cáo `.QA.03` | Chạy/ghi kết quả đúng phạm vi task, đủ actual/evidence; Fail có bug, Blocked có owner; báo cáo phản ánh cả lỗi mở. Báo cáo hoàn tất không có nghĩa FR đã đạt |
+| Parent FR | Build tích hợp, PR review; toàn bộ AC/TC của FR đạt và không còn lỗi chặn; bug/retest truy được tới build kiểm chứng |
+| Milestone và bộ bàn giao | Đáp ứng toàn bộ phạm vi/điều kiện cổng trong Master; có hồ sơ chất lượng, phiên bản bàn giao, vấn đề còn lại và quyết định thật |
+
+DoD của một task chuẩn bị/tài liệu không đòi chạy toàn bộ test của FR. Ngược lại, đóng task code hoặc task báo cáo không thay DoD của parent FR. Đây là điểm kiểm để tránh vừa đếm trùng công việc vừa kết luận sản phẩm đã xong quá sớm.
+
+### 4.4. Lỗi, yêu cầu thay đổi và phản hồi
+
+PM/BA đối chiếu phản hồi với baseline: làm sai yêu cầu hiện có là defect; đề nghị hành vi mới/khác là CR; yêu cầu mơ hồ phải được làm rõ trước khi chốt expected. BE/FE/QA cung cấp tác động kỹ thuật và kiểm thử; không tự sửa expected để bỏ lỗi.
+
+CR ghi nội dung/lý do, FR/AC/TC/task bị ảnh hưởng, phương án, effort, dữ liệu/quyền, dependency và ngày mốc. PM quyết định trong phạm vi được giao; nội dung vượt thẩm quyền hoặc thay cam kết cần xác nhận đúng người trước thực hiện. Quyết định lưu cùng revision; cập nhật đồng bộ PRD, contract, test, manifest, Master và issue/milestone liên quan. QC đánh giá retest/regression; QA kiểm lại tính nhất quán. OQ-02/03/04/06/07 còn ảnh hưởng hành vi và môi trường phải có quyết định phù hợp trước kết luận nghiệm thu.
+
+## 5. Chỉ số chất lượng và báo cáo
+
+Các mục bắt buộc tại cổng lấy từ AC, Charter và điều kiện milestone; bảng này quy định cách kiểm, không ghi số liệu thực thi thay nhóm.
+
+| Chỉ số | Cách đo và nguồn | Mức cần đạt hoặc cách xử lý |
 | --- | --- | --- |
-| Đầu vào đủ và đúng revision | FR/contract/AC, quyết định liên quan, task có predecessor | Finding; làm rõ/chặn phần chưa đủ input |
-| Review độc lập | PR/task có reviewer và nhận xét được xử lý | Trả lại owner, chưa xác nhận review xong |
-| Traceability không thiếu hoặc trùng | FR–AC–TC–task–milestone đối chiếu nguồn | Sửa mapping rồi kiểm lại tổng/phạm vi |
-| Test có căn cứ | Build, seed, expected/actual, result và evidence | Không chấp nhận checkbox/Pass thiếu chứng cứ |
-| Bug có vòng xác minh | Defect, bản fix, retest/regression; lỗi còn mở được báo cáo | Không coi fix hoặc issue đóng là retest đạt |
-| Thay đổi đã đồng bộ | CR, tài liệu, Master, issue và test bị ảnh hưởng | Ghi nguồn lệch và owner xử lý |
-| Kết luận đúng giới hạn | NFR/MET có mẫu; OQ/ngoại lệ công khai; đúng build | Yêu cầu sửa kết luận, không suy rộng từ mock/giả lập |
+| AC đã kiểm chứng | Số AC có đủ các TC liên quan chạy đạt trên build đánh giá / tổng AC trong phạm vi; mỗi AC tính một lần | 100% AC của FR trước hoàn tất parent; đầy đủ phạm vi tại cổng/bàn giao. Liên kết TC không đồng nghĩa đã chạy đạt |
+| Lỗi chặn chất lượng đang mở | Số defect chưa khắc phục gây chặn luồng, sai quyền hoặc sai/mất dữ liệu | 0 khi xác nhận cổng; nếu còn thì chưa đạt, dù issue báo cáo đã đóng |
+| Review trước merge | PR có review độc lập và xử lý phản hồi trước merge / tổng PR đã merge trong phạm vi kiểm | Mọi thay đổi phải qua review theo Charter; chưa có PR/dữ liệu thì N/A, không tự ghi 100% |
+| An toàn quyền và dữ liệu | Kết quả các test quyền/nhất quán, response và dữ liệu thực tế | Không có truy cập trái quyền, rò nội dung hoặc ghi dữ liệu sai theo expected |
+| NFR và mục tiêu sản phẩm | Kết quả NFR/MET theo nguồn và điều kiện đo ở QC mục 4 | Đối chiếu đúng target prototype; mẫu/môi trường chưa đủ thì không kết luận đạt |
+| Lỗi tái diễn / sau xác minh | Defect mở lại sau retest không đạt hoặc phát hiện ở đầu ra đã xác minh; ghi ID và nguyên nhân, không đếm lặp comment | Dùng để chọn RCA/cải tiến; chưa có dữ liệu thì ghi chưa đo. Không đặt ngưỡng 10% từ nhóm mẫu |
 
-### 7.2. Hồ sơ và luồng xử lý finding
+QA/tài liệu tổng hợp kết quả theo task, buổi review tuần khi được nhóm xác nhận và cuối mỗi mốc, báo trực tiếp PM/BA. Owner báo ngay khi có lỗi nghiêm trọng, blocker hoặc nguy cơ ảnh hưởng cổng, không chờ báo cáo tuần. Không tự ấn định giờ họp/kênh hoặc thời hạn phản hồi khác Team Charter.
 
-Đề xuất trạng thái hồ sơ quy trình: **Ghi nhận → Đang khắc phục → Chờ xác minh → Đóng**; kiểm lại chưa đạt thì trả về Đang khắc phục. Đây là quy ước trong tài liệu, không tuyên bố đã cấu hình GitHub workflow.
+Một báo cáo chất lượng chỉ cần: **kỳ/phạm vi/build; AC và Pass/Fail/Blocked/Not Run; lỗi chặn và lỗi còn lại; thay đổi/OQ ảnh hưởng; tác động tới mốc; hành động–owner–hạn; quyết định cần lấy; link bằng chứng**. PM/BA phản hồi quyết định vào task và theo dõi tới khi xử lý xong.
 
-Một finding ghi: ID hoặc issue URL; đối tượng/revision; tiêu chí; sự không phù hợp; bằng chứng; tác động/cổng; owner; hành động/hạn được xác nhận; revision sửa; kết quả xác minh; người xác minh và ngày. Nếu sai lệch là lỗi sản phẩm, liên kết defect theo QC thay vì chỉ sửa tài liệu để che lỗi. Chưa có sự kiện thì không điền ngày/kết quả/ chữ ký giả.
+## 6. Rủi ro chất lượng và sự cố
 
-## 8. Chỉ số theo dõi chất lượng quy trình
+| Rủi ro cần kiểm soát | Phòng ngừa và người phụ trách |
+| --- | --- |
+| Sai quyền hoặc lộ hồ sơ | BE review session/capability/object scope; FE giới hạn hiển thị đúng dữ liệu được cấp; QC kiểm cho phép/từ chối bằng UI và API |
+| Sai trạng thái, trách nhiệm hoặc hạn | PM/BA làm rõ rule; BE/FE dùng cùng contract; QC kiểm chuyển trạng thái, đổi người phụ trách và biên thời gian |
+| Gửi trùng, cập nhật đè, history dở dang | BE review transaction/version/retry; QC kiểm race, stale version và rollback |
+| Số liệu báo cáo sai | BE và QA chuẩn bị tập nguồn/đáp án trước; QC kiểm phạm vi quyền, kỳ, mẫu rỗng và join không nhân bản |
+| Thay đổi sát cổng hoặc bản bàn giao không chạy lại | PM/BA kiểm soát CR; BE/FE giữ source/seed/guide cùng build; QC chạy lại phần ảnh hưởng và kiểm môi trường sạch |
 
-Các định nghĩa sau là đề xuất đo lường cho bản kế hoạch này; chưa có dữ liệu thực thi để tính hoặc ngưỡng KPI mới được phê duyệt. Mỗi báo cáo phải ghi build/phạm vi, kỳ quan sát, tập dữ liệu, người tổng hợp và liên kết nguồn.
+**Defect** là sai lệch sản phẩm so với expected; **sự cố** là sự kiện làm gián đoạn môi trường/bản dùng chung hoặc gây ảnh hưởng dữ liệu, quyền truy cập. Sự cố phải báo PM/BA và người phụ trách ngay; BE/FE giới hạn ảnh hưởng, giữ log/bằng chứng và khôi phục bằng phương án đã kiểm tra nếu có. Sau khôi phục, sửa nguyên nhân, review, QC retest/regression rồi PM/BA kết luận hoạt động đã phục hồi. Không coi khôi phục tạm thời là lỗi đã đóng. Phạm vi áp dụng là môi trường prototype/kiểm thử/bàn giao có thật; không tự thêm thời gian bảo hành hoặc cam kết vận hành production.
 
-| Chỉ số | Định nghĩa để đo nhất quán | Giới hạn |
-| --- | --- | --- |
-| Bao phủ liên kết yêu cầu | Số FR có đủ AC/TC/task/mốc hợp lệ chia số FR trong phạm vi review | Đo chất lượng truy vết, không phải code coverage hoặc tỷ lệ test Pass |
-| Tuân thủ review | Số đầu ra trong mẫu đã đủ review độc lập trước chuyển bước chia tổng đầu ra được kiểm | Công bố mẫu; không suy từ trạng thái Closed |
-| Defect density | Số defect sản phẩm duy nhất, đã xác nhận, gán cho build/phạm vi chia KLOC mã ứng dụng của cùng revision | KLOC cần cách đếm thống nhất; loại thư viện ngoài, mã sinh và tài liệu. Chưa có code/size thì N/A; không lấy 24 FR làm KLOC |
-| Reopen rate | Số defect duy nhất trong tập đã từng được đánh dấu Resolved nhưng retest buộc mở lại chia số defect duy nhất đã từng Resolved trong cùng tập và kỳ | Một bug mở lại nhiều lần chỉ tính một ở tử số; thiếu lịch sử hoặc mẫu số 0 thì N/A |
-| Defect leakage | Với một build/cổng và cửa sổ theo dõi đã chốt: defect duy nhất phát hiện lần đầu sau ranh giới QC chia tổng defect duy nhất phát hiện trước và sau ranh giới đó trong tập đã xác định | Ghi rõ ranh giới (ví dụ QC → UAT), thời gian và cách gán build; bug reopen không phải bug mới. Chưa có giai đoạn sau hoặc mẫu số 0 thì N/A |
+## 7. Cải tiến và hồ sơ chất lượng
 
-Theo dõi xu hướng theo module, loại nguyên nhân và mức độ ảnh hưởng. Không đưa “giảm 60–80% chi phí”, mục tiêu reopen/density/leakage hoặc số liệu tiết kiệm của bài mẫu thành kết quả hay KPI UniSupport. Nếu nhóm đặt ngưỡng sau này, PM phải lưu căn cứ và quyết định rồi cập nhật kế hoạch.
+Cuối mốc, hoặc khi lỗi nghiêm trọng/lặp lại xảy ra, QA cùng owner đối chiếu yêu cầu, thiết kế, review và test để tìm nguyên nhân. Phân biệt sửa lỗi cụ thể với hành động ngăn lỗi lặp lại. Biện pháp có thể là làm rõ AC, bổ sung điểm review, sửa fixture hoặc test hồi quy; thay baseline phải qua CR.
 
-## 9. Phân tích nguyên nhân và cải tiến liên tục
+Ghi **vấn đề và bằng chứng → nguyên nhân có căn cứ → hành động → owner/hạn → tiêu chí kiểm hiệu lực → kết quả kiểm lại** vào task/biên bản. Reviewer khác owner xác minh trước đóng hành động. Lần review sau kiểm loại lỗi còn lặp lại hay không; không chỉ ghi “đã nhắc nhở”.
 
-**Kích hoạt RCA:** lỗi gây sai quyền/sai hoặc mất dữ liệu, lỗi lặp lại sau sửa, cùng nhóm lỗi xuất hiện nhiều nơi, hoặc finding quy trình ảnh hưởng cổng. QC giữ bằng chứng lỗi và kết quả retest; QA điều phối phân tích cùng người thực hiện, PM đánh giá tác động.
+Hồ sơ tối thiểu gồm FR/AC/TC và liên kết task; review/decision/CR; kết quả test và bug/retest; biên bản chất lượng mốc; phiên bản và hồ sơ bàn giao. Nguồn đặc tả/kế hoạch nằm ở repo; kết quả/bằng chứng dẫn từ issue hoặc vị trí nhóm xác nhận.
 
-1. Mô tả sự kiện thật và timeline; xác định FR, build và phạm vi ảnh hưởng. Không mặc định do cá nhân bất cẩn.
-2. Đọc bằng chứng, đối chiếu yêu cầu/thiết kế/review/test; dùng 5 Whys khi phù hợp để kiểm tra nguyên nhân có căn cứ.
-3. Tách **correction** (sửa lỗi cụ thể) khỏi **corrective/preventive action** (sửa nguyên nhân và ngăn lặp).
-4. Giao owner và tiêu chí kiểm hiệu lực: checklist nào đổi, test/fixture nào bổ sung, review nào cần làm lại; tác động vượt task hiện hữu phải được đánh giá.
-5. Xác minh bằng revision mới, retest/regression và lần kiểm tra quy trình tiếp theo. Chỉ đóng RCA khi có bằng chứng cho hành động, không chỉ có câu “đã nhắc nhở”.
+## 8. Nguồn áp dụng
 
-**Ví dụ phương pháp, không phải lỗi đã xảy ra:** nếu QC phát hiện báo cáo bị nhân bản do join lịch sử, BE sửa query và QC retest là correction. QA kiểm vì sao review/fixture không bắt lỗi; bổ sung checklist cardinality và fixture có nhiều history/feedback, rồi review lại sáu báo cáo là hành động phòng ngừa. Test mới hoặc sửa AC cần đi qua kiểm soát thay đổi; không tự đổi tổng 149 TC.
-
-## 10. Review cổng chất lượng gắn Master Plan
-
-Ngày bên dưới giữ nguyên kế hoạch hiện hành, không phải ngày đã nghiệm thu. Các task đủ input có thể thực hiện song song; cổng phải đủ các dependency và điều kiện đầu ra. QC cung cấp chứng cứ, QA kiểm tính đầy đủ của hồ sơ, PM tổ chức quyết định.
-
-| Mốc và kết quả | Ngày dự kiến | Hồ sơ QA cần kiểm |
-| --- | --- | --- |
-| [MS-01](https://github.com/nathyu-le/directorofstudentservice/milestone/1) Truy cập hệ thống đúng quyền | 06/11/2026 | Review contract phiên/quyền, PR, seed và hồ sơ QC của IAM; OQ quyền còn mở phải được giải quyết phù hợp. |
-| [MS-02](https://github.com/nathyu-le/directorofstudentservice/milestone/2) Tiếp nhận và theo dõi yêu cầu | 16/11/2026 | Review hồ sơ tiếp nhận và theo dõi, mapping cùng mã yêu cầu, quyền public/internal và bằng chứng tích hợp. |
-| [MS-03](https://github.com/nathyu-le/directorofstudentservice/milestone/3) Điều phối và phối hợp xử lý | 04/12/2026 | Review nhất quán rule điều phối, người phụ trách, hạn, bổ sung, state/version và tính toàn vẹn lịch sử. |
-| [MS-04](https://github.com/nathyu-le/directorofstudentservice/milestone/4) Trả kết quả và hoàn tất hỗ trợ | 09/12/2026 | Review điều kiện kết quả, phản hồi, đóng yêu cầu và hồ sơ regression liên quan. |
-| [MS-05](https://github.com/nathyu-le/directorofstudentservice/milestone/5) Theo dõi và báo cáo đúng dữ liệu | 18/12/2026 | Review định nghĩa sáu báo cáo, nguồn tính, fixture expected, phạm vi quyền và phép đo. |
-| [MS-06](https://github.com/nathyu-le/directorofstudentservice/milestone/6) Kiểm chứng và bàn giao chạy lại được | 22/01/2027 | Review hồ sơ 149 TC + 18 kiểm tra, defect/retest, nguồn/seed/guide, chạy lại và quyết định bàn giao. |
-
-Lịch review chuẩn bị gắn QA-01 (14/10/2026), QA-02 (15–16/10/2026) và review từng FR. Cuối dự án: QA-10 kiểm chạy lại ngày 07/01/2027; QA-09 tổng hợp ngày 08/01; QA-08 rà hồ sơ ngày 11/01; PM-08 review ngày 12/01; PM-09 trình bày/bàn giao dự kiến ngày 13/01. MS-06 vẫn có due 22/01/2027. Ngày kế hoạch đã đến hoặc đã qua không chứng minh công việc đã làm.
-
-Giữ điều kiện hiện có: không xác nhận cổng khi còn lỗi chặn luồng, sai quyền hoặc làm mất/sai dữ liệu. Ngoại lệ khác phải có tác động và quyết định chấp nhận thật; ngoại lệ không được biến một TC Fail thành Pass. Parent FR chỉ hoàn tất khi đáp ứng điều kiện AC/TC theo baseline. Hướng dẫn không bổ sung task/giờ hoặc tự đóng issue, milestone.
-
-## 11. Đầu ra QA và điều kiện hoàn tất hồ sơ
-
-Tại mỗi lần review phải truy được: đối tượng/revision; owner/reviewer; checklist và kết luận; findings và hành động; CR/OQ liên quan; chỉ số có nguồn nếu đo; báo cáo QC và giới hạn; quyết định chuyển bước. Ghi tại PR/task hoặc nơi nhóm đã thống nhất, dẫn link từ hồ sơ cổng; không bắt tạo một hệ thống quản trị mới.
-
-Trước khi trình review, kiểm:
-
-- QA nói về quy trình/tiêu chuẩn/giám sát/cải tiến; QC giữ chi tiết thực thi sản phẩm.
-- Mọi mã, tên, lịch và liên kết truy về nguồn, không lấy ví dụ bài tham khảo làm scope.
-- Không có kết quả test, phê duyệt, công cụ đã triển khai hoặc danh tính được điền khi chưa có chứng cứ.
-- Các OQ ảnh hưởng đầu ra, findings chặn và rủi ro còn lại được nêu rõ đúng người xử lý.
-- Bản tài liệu được nhóm và người có thẩm quyền review trước khi coi là quy trình đã được chấp thuận.
-
-## 12. Nguồn và tài liệu liên quan
-
-- [PRD và task manifest v6.0](../docs/05-project/requirements.json), [phạm vi dự án](../docs/01-overview/scope.md).
-- [Vòng đời](../docs/02-domain/lifecycle.md), [quyền](../docs/02-domain/permissions.md), [hợp đồng API](../docs/02-domain/api-contract.md), [từ điển dữ liệu](../docs/02-domain/data-dictionary.md).
-- [Ma trận FR–AC–TC](../docs/04-acceptance/traceability-matrix.md), [149 TC chi tiết](../docs/04-acceptance/test-cases.md), [18 kiểm tra hệ thống](../docs/04-acceptance/system-tests.md).
-- [Master Gantt](../UniSupport_Master_Plan.xlsx), [điều kiện milestone](../docs/05-project/master-alignment.md), [Team Charter](../TeamCharter.md), [câu hỏi mở](../docs/05-project/open-questions.md).
+- [PRD và kế hoạch v6.0](../docs/05-project/requirements.json); [scope](../docs/01-overview/scope.md).
+- [Quyền](../docs/02-domain/permissions.md), [vòng đời](../docs/02-domain/lifecycle.md), [API](../docs/02-domain/api-contract.md), [từ điển dữ liệu](../docs/02-domain/data-dictionary.md).
+- [FR–AC–TC](../docs/04-acceptance/traceability-matrix.md); [test chức năng](../docs/04-acceptance/test-cases.md); [test hệ thống](../docs/04-acceptance/system-tests.md).
+- [Master Gantt](../UniSupport_Master_Plan.xlsx); [milestone](../docs/05-project/master-alignment.md); [Team Charter](../TeamCharter.md); [câu hỏi mở](../docs/05-project/open-questions.md).
 - [Kế hoạch QC](QC.md).
-- ASQ, [Quality Assurance vs Quality Control](https://asq.org/quality-resources/quality-assurance-vs-control): tham chiếu phân biệt vai trò đảm bảo quy trình, kiểm soát đầu ra và audit; không phải chứng nhận cho dự án.
-- ISTQB, [CTFL Syllabus v4.0.1](https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf), các mục 2.2, 3 và 5: tham chiếu cách phân loại và thuật ngữ; các kiểm soát cụ thể trong kế hoạch được điều chỉnh theo UniSupport.
-- Đoạn tham khảo QA/QC do người dùng gửi ngày 04/11/2026: dùng khung phân tích yêu cầu → tiêu chuẩn → giám sát → RCA/cải tiến; không sao chép quảng cáo hoặc số liệu lợi ích chưa kiểm chứng.
+
+Khi PRD hoặc kế hoạch được thay đổi có kiểm soát, QA cập nhật tiêu chí và liên kết bị ảnh hưởng cùng revision, rồi kiểm sự nhất quán trước lần review tiếp theo.
