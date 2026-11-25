@@ -1,6 +1,6 @@
 # Ma trận truy vết từng tiêu chí
 
-Nguồn phân mốc FR là [manifest](../05-project/requirements.json) tại `traceability[].milestone`. Bảng dưới là bản xem. Parent task chứa các task triển khai và hồ sơ hoàn thành. QA.02 thực thi các TC.
+Nguồn phân mốc FR là [manifest](../05-project/requirements.json) tại `traceability[].milestone`. Bảng dưới là bản xem. Parent task chứa các task triển khai và hồ sơ hoàn thành. PM/BA theo dõi parent issue theo Team Charter. QA.02 thực thi các TC.
 
 | Báo giá | FR | AC | TC | Parent | Task thực thi | Mốc |
 | --- | --- | --- | --- | --- | --- | --- |

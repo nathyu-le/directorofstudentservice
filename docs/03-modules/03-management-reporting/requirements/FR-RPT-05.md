@@ -48,7 +48,7 @@ P1 theo [thang ưu tiên PRD](../../../01-overview/scope.md#ưu-tiên-yêu-cầu
 
 **Acceptance Criteria**
 
-- **AC-RPT-05-01:** Khi PB-A có 2 mở,1Resolved; PB-B có 1 mở;1 chưa giao. → Backlog PB-A=2, PB-B=1, chưa giao=1, tổng4; request Resolved không tính.
+- **AC-RPT-05-01:** Khi PB-A có 2 hồ sơ mở, 1 hồ sơ Resolved; PB-B có 1 mở; 1 hồ sơ chưa giao. → Backlog PB-A=2, PB-B=1, chưa giao=1, tổng 4; request Resolved không tính.
 - **AC-RPT-05-02:** Khi Gửi from_date/to_date vào báo cáo backlog hiện hành. → HTTP 422 UNSUPPORTED_FILTER; không lọc sai để giấu hồ sơ cũ.
 - **AC-RPT-05-03:** Khi Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi. → Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
 - **AC-RPT-05-04:** Khi Chuyển một hồ sơ PB-A sang PB-B → Sau chuyển, tổng toàn hệ thống giữ nguyên; chỉ nhóm hiện hành tăng/giảm tương ứng.

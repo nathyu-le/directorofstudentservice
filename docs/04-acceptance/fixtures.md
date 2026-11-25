@@ -39,11 +39,11 @@ Tạo tập độc lập cho mỗi báo cáo với PB-A và đối chứng PB-B.
 
 | Báo cáo | Tập kiểm độc lập và phép tính |
 | --- | --- |
-| RPT-01 | Hai hồ sơ PB-A tạo trong kỳ, một Received, một Processing. Đối chứng: PB-B và ngoài kỳ. Dùng requests.created_at, gom status hiện tại. Mẫu 2, ba nhóm còn lại đếm 0. |
-| RPT-02 | Chốt as_of 2026-12-02T06:00:00Z. Hạn của ba hồ sơ mở có thể là 03:00, 03:00 và 05:00. Đối chứng hạn bằng 06:00, không hạn và Closed. Dùng requests.due_at, mẫu 3, số giờ lần lượt 3, 3, 1. |
-| RPT-03 | Hai hồ sơ PB-A giải quyết trong kỳ, khoảng thời gian 2 và 6 giờ tính từ created_at. Một hồ sơ đã chờ bổ sung, một hồ sơ ngoài kỳ. Dùng resolved_at, mẫu 2, trung bình 4, min 2, max 6. |
-| RPT-04 | Hai hồ sơ Học vụ và một CNTT ở PB-A trong kỳ. Dùng created_at, category_id hiện tại. Mẫu 3. Với case hòa đổi thành một hồ sơ mỗi nhóm và so category_id tăng dần. |
-| RPT-05 | Hai hồ sơ mở PB-A (NV-A), một mở PB-B (NV-B), một chưa phân công và một Closed. Không lọc ngày. QL-All thấy 4 hồ sơ mở, QL-A chỉ thấy 2 của PB-A. |
-| RPT-06 | Hai phản hồi PB-A trong kỳ điểm 4 và 2, một hồ sơ chưa đánh giá. Dùng feedback.updated_at, mẫu 2, mean 3, các nhóm điểm 2 và 4 mỗi nhóm 1. Case đổi kỳ đặt updated_at qua biên, giữ nguyên feedback_id. |
+| RPT-01 | TC-RPT-01-01: mười hồ sơ PB-A tạo trong kỳ, hai hồ sơ cho mỗi trạng thái. Đối chứng PB-B và ngoài kỳ. Gom trạng thái hiện tại trên requests.created_at. Mẫu 10, mỗi nhóm 2. |
+| RPT-02 | TC-RPT-02-01: chốt as_of 2026-12-02T06:00:00Z. Dùng một hồ sơ mở hạn 03:00, một hồ sơ đúng 06:00, một hồ sơ không hạn và một hồ sơ Resolved hạn 03:00. Chỉ hồ sơ đầu được tính. Với TC-RPT-02-07, thử tập trống rồi nạp ba hồ sơ mở hạn 03:00, 03:00 và 05:00 cùng đối chứng Closed, đúng hạn và không hạn. Mẫu 3, số giờ theo thứ tự là 3, 3 và 1. |
+| RPT-03 | TC-RPT-03-01: hai hồ sơ PB-A giải quyết trong kỳ, khoảng thời gian 2 và 4 giờ tính từ created_at. Dùng resolved_at, mẫu 2, trung bình 3, min 2, max 4. Loại hồ sơ mở và đối chứng ngoài kỳ. |
+| RPT-04 | TC-RPT-04-01: ba hồ sơ Học vụ, hai CNTT và một Chưa xác định trong kỳ. Dùng created_at và category_id hiện tại. Mẫu 6, nhóm 3, 2 và 1. Với case hòa đổi thành một hồ sơ mỗi nhóm và so category_id tăng dần. |
+| RPT-05 | Hai hồ sơ mở PB-A (NV-A), một mở PB-B (NV-B), một chưa phân công và một Resolved. Không lọc ngày. QL-All thấy 4 hồ sơ mở, QL-A chỉ thấy 2 của PB-A. |
+| RPT-06 | TC-RPT-06-01: hai phản hồi PB-A trong kỳ điểm 5 và 3, một hồ sơ chưa đánh giá. Dùng feedback.updated_at, mẫu 2, trung bình 4, các nhóm điểm 3 và 5 mỗi nhóm 1. Case đổi kỳ đặt updated_at qua biên, giữ nguyên feedback_id. |
 
 Với case chống đếm trùng, thêm hai dòng lịch sử và hai ghi chú cho cùng hồ sơ mà không thêm hồ sơ/phản hồi, lấy lại báo cáo và đối chiếu tập mã, mẫu số và phép tính trước/sau. Với case sai quyền, gửi bộ lọc PB-B bằng QL-A, đối chiếu rằng phản hồi không chứa số tổng hoặc mã hồ sơ. Tên bảng, trường và đường dẫn chi tiết xem [từ điển dữ liệu](../02-domain/data-dictionary.md) và [hợp đồng API](../02-domain/api-contract.md).

@@ -29,9 +29,9 @@ Mẫu cập nhật task: `Task ID / build hoặc PR / đã làm / actual hours /
 
 ### 3.1 Làm rõ và chuẩn bị
 
-PM lấy FR từ `docs/05-project/requirements.json` v6.1, đối chiếu Markdown và proposal. BE/FE/QA review đầu vào, quyền, trạng thái, trường dữ liệu, lỗi và AC. Câu hỏi chưa đủ nguồn ghi vào Open Questions, không coi thiết kế đề xuất là quyết định đã được đại diện Aurora University (Mô phỏng) duyệt.
+PM lấy FR từ `docs/05-project/requirements.json` v6.2, đối chiếu Markdown và proposal. BE/FE/QA review đầu vào, quyền, trạng thái, trường dữ liệu, lỗi và AC. Câu hỏi chưa đủ nguồn ghi vào Open Questions, không coi thiết kế đề xuất là quyết định đã được đại diện Aurora University (Mô phỏng) duyệt.
 
-Mỗi FR là parent không tính giờ riêng. Task triển khai gồm:
+Mỗi FR là parent không tính giờ riêng. PM/BA (Mô phỏng) chịu trách nhiệm theo dõi đầu ra, mốc và điều kiện đóng parent issue. Owner từng task con được ghi theo vai trò; mọi task dùng danh mục AC/TC ở [ma trận truy vết](docs/04-acceptance/traceability-matrix.md). Task triển khai gồm:
 
 | Task con | Owner | Đầu vào | Đầu ra và điều kiện chuyển bước |
 | --- | --- | --- | --- |

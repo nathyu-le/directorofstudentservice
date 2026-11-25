@@ -28,7 +28,7 @@
 | TS-xx | TC-`<module>-<FR>-<AC>` đối với test chức năng. E2E-xx là kịch bản xuyên luồng, NFR-xx và MET-xx là nhóm kiểm/đo riêng. |
 | Q-xx, MS-xx, R-xx, CR-xx | Cùng quy ước của template. Q-05 là công việc dùng chung và Q-06 là dự phòng. |
 
-Các mã đã dùng trong issue, Excel và test được giữ để đường dẫn cũ còn truy vết được. Ma trận nối mã từng AC với test, parent issue, task QA, milestone và báo giá.
+PM/BA là owner của parent issue theo Team Charter. Các mã đã dùng trong issue, Excel và test được giữ để đường dẫn cũ còn truy vết được. Ma trận nối mã từng AC với test, parent issue, task QA, milestone và báo giá.
 
 ## Mô phỏng
 

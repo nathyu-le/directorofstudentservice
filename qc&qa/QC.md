@@ -1,10 +1,10 @@
 # UniSupport — Kế hoạch kiểm soát chất lượng QC
 
-**Phiên bản 3.1 · 25/11/2026 · Kế hoạch thực hiện, chờ review; kết quả chỉ ghi khi có kiểm thử thật.**
+**Phiên bản 3.2 · 25/11/2026 · Kế hoạch thực hiện, chờ review; kết quả chỉ ghi khi có kiểm thử thật.**
 
 ## 1. Phạm vi và điều kiện thực thi
 
-QC kiểm tra sản phẩm theo PRD/Master Plan v6.1, ghi expected/actual, bằng chứng, defect và kết quả kiểm lại. [QA.md](QA.md) giữ quy tắc quy trình, quản lý sản phẩm và cổng chất lượng. Phạm vi kiểm chứng gồm bốn module, 24 FR, 187 TC chức năng, tám E2E, sáu NFR và bốn MET.
+QC kiểm tra sản phẩm theo PRD/Master Plan v6.2, ghi expected/actual, bằng chứng, defect và kết quả kiểm lại. [QA.md](QA.md) giữ quy tắc quy trình, quản lý sản phẩm và cổng chất lượng. Phạm vi kiểm chứng gồm bốn module, 24 FR, 187 TC chức năng, tám E2E, sáu NFR và bốn MET.
 
 | Module | FR | TC chức năng |
 | --- | --- | --- |
@@ -15,7 +15,7 @@ QC kiểm tra sản phẩm theo PRD/Master Plan v6.1, ghi expected/actual, bằn
 
 Sử dụng bộ case và expected trong repo. Không thêm upload, email/SMS, xuất dữ liệu, tài khoản mới, module hoặc rule tính hạn không có trong baseline. Các rule gắn OQ cần được xác nhận; đạt expected của thiết kế đề xuất không thay quyết định nghiệp vụ.
 
-Repo tham chiếu theo [baseline 6.1](../docs/05-project/requirements.json) chưa chứa mã ứng dụng/test tự động/CI; 205 kiểm tra nguồn còn `Not Run`. Tài liệu không khẳng định đã có build chạy được. Bản UI chỉ cho phép kết luận phần điều hướng, hiển thị và trạng thái đã kiểm; API, phân quyền server, transaction, dữ liệu lưu và báo cáo thật cần build tích hợp.
+Repo tham chiếu theo [baseline 6.2](../docs/05-project/requirements.json) chưa chứa mã ứng dụng/test tự động/CI; 205 kiểm tra nguồn còn `Not Run`. Tài liệu không khẳng định đã có build chạy được. Bản UI chỉ cho phép kết luận phần điều hướng, hiển thị và trạng thái đã kiểm; API, phân quyền server, transaction, dữ liệu lưu và báo cáo thật cần build tích hợp.
 
 ### 1.1. Người thực hiện
 
@@ -84,7 +84,7 @@ QC kiểm từng FR theo case: dữ liệu hợp lệ, thiếu/sai/biên, đúng
 - DSP-07 → STU-03/STU-04 → DSP-09: đúng chủ/câu hỏi, trạng thái và điều kiện giải quyết; giữ dữ liệu/lịch sử theo PRD.
 - DSP-09 → STU-05 → DSP-10 → RPT: kết quả, phản hồi, đóng và số liệu đúng quan hệ, quyền và kỳ.
 
-Cuối mốc, chạy đủ case của FR thuộc mốc và regression phần trước có thể bị tác động. Dữ liệu state dựng bằng fixture để kiểm FR không được gọi là toàn luồng E2E đã chạy.
+Cuối mốc, chạy đủ ca của FR thuộc mốc và hồi quy phần trước có thể bị tác động. [Master Plan](../docs/05-project/master-alignment.md#hồi-quy-trước-các-mốc) ghi rõ task thực thi, ca chọn trước và effort ở từng cổng MS-02 đến MS-05. Dữ liệu state dựng bằng fixture để kiểm FR không được gọi là toàn luồng E2E đã chạy.
 
 **Các bước cho một case:** đọc Test ID/AC/revision → reset fixture và xác nhận actor/state/version → thực hiện đúng steps → đối chiếu tất cả expected ở response/UI/DB/history theo case → ghi actual/evidence/result → tạo bug hoặc blocker nếu cần. Test trái quyền phải gọi API trực tiếp khi kiểm quyền server; ẩn nút hoặc mock không đủ bằng chứng. Sau fix chạy lại case lỗi rồi regression phần ảnh hưởng, giữ lịch sử kết quả cũ.
 
@@ -160,7 +160,7 @@ Sự cố môi trường/quyền/dữ liệu xử lý theo QA mục 6: báo và 
 
 ## 6. Lịch và điều kiện mốc
 
-Ngày dưới đây giữ theo Master v6.1; là target, không phải actual.
+Ngày dưới đây giữ theo Master v6.2; là target, không phải actual.
 
 | Mốc và đầu ra | Ngày dự kiến | Phạm vi kiểm chứng |
 | --- | --- | --- |
@@ -207,7 +207,7 @@ Luôn tách số Pass/Fail/Blocked/Not Run của **187 TC chức năng, 8 E2E, 6
 
 ## 8. Nguồn áp dụng
 
-- [PRD và kế hoạch v6.1](../docs/05-project/requirements.json); [scope](../docs/01-overview/scope.md).
+- [PRD và kế hoạch v6.2](../docs/05-project/requirements.json); [scope](../docs/01-overview/scope.md).
 - [Quyền](../docs/02-domain/permissions.md), [vòng đời](../docs/02-domain/lifecycle.md), [API](../docs/02-domain/api-contract.md), [từ điển dữ liệu](../docs/02-domain/data-dictionary.md).
 - [FR–AC–TC](../docs/04-acceptance/traceability-matrix.md); [test chức năng](../docs/04-acceptance/test-cases.md); [test hệ thống](../docs/04-acceptance/system-tests.md).
 - [Master Gantt](../UniSupport_Master_Plan.xlsx); [milestone](../docs/05-project/master-alignment.md); [Team Charter](../TeamCharter.md); [câu hỏi mở](../docs/05-project/open-questions.md).
