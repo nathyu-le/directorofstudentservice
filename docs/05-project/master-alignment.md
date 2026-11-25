@@ -1,6 +1,6 @@
 # UniSupport — Milestone và kế hoạch theo đầu ra
 
-Revision 6.0 · Nguồn PRD: commit `c33c2138ff2a9ba47065efc962c4bbb15d891e23`. Không thêm/bớt 4 module, 24 FR, 149 TC chức năng hoặc 18 kiểm tra hệ thống.
+Revision 6.1 đối chiếu baseline `937c123a1a`. Dự toán, ngày và mốc của 24 FR giữ theo manifest. Bản 6.1 có 187 TC chức năng và 18 kiểm tra hệ thống, kèm các điểm kiểm sớm NFR.
 
 ## Cách đọc kế hoạch
 
@@ -59,7 +59,7 @@ Bằng chứng: build/commit, kết quả test với actual/evidence, PR review 
 
 ## MS-06 — Kiểm chứng và bàn giao chạy lại được
 
-Có kết quả thật của 149 TC chức năng và 18 kiểm tra hệ thống; đối chiếu toàn bộ AC. Không còn lỗi chặn luồng, sai quyền hoặc làm mất/sai dữ liệu; lỗi khác phải có ghi nhận tác động và quyết định chấp nhận. Có build/commit, test report, source/seed/guide và bằng chứng người khác chạy lại. Kết quả MET dưới mục tiêu phải được báo cáo, không tự coi đạt; xác nhận nghiệm thu bởi người có thẩm quyền, không giả chữ ký.
+Có kết quả thật của 187 TC chức năng và 18 kiểm tra hệ thống; đối chiếu toàn bộ AC. Không còn lỗi chặn luồng, sai quyền hoặc làm mất/sai dữ liệu; lỗi khác phải có ghi nhận tác động và quyết định chấp nhận. Có build/commit, test report, source/seed/guide và bằng chứng người khác chạy lại. Kết quả MET dưới mục tiêu phải được báo cáo, không tự coi đạt; xác nhận nghiệm thu bởi người có thẩm quyền, không giả chữ ký.
 
 Điều kiện đầu vào/công việc bắt buộc: MS-05, PM-09, PM-05, QA-08, QA-09, QA-10.
 
@@ -71,13 +71,15 @@ Bằng chứng: build/commit, kết quả test với actual/evidence, PR review 
 
 ## GitHub, Excel và dữ liệu chuẩn
 
-`requirements.json` giữ mã task, FR, milestone, ngày, effort và predecessors. Excel chỉ có Master_Gantt, không có cột Backlog/status hay sheet phụ. Mỗi task công việc có một Issue cùng mã và một milestone đích. Không tạo thêm Issue cha FR tính lại effort. Native GitHub Issue không có start/due mặc định nên ngày task lưu trong body; due của milestone là ngày cổng, không phải due của từng Issue.
+[Manifest](requirements.json) là nguồn task, FR, ngày, giờ, predecessor và FR → milestone (trường `traceability[].milestone`). [Workbook](../../UniSupport_Master_Plan.xlsx) gồm Master_Gantt, Milestones, WBS, Resources và Change log. Mỗi task công việc có một issue và mốc đích. Issue cha FR không cộng effort. GitHub milestone due là ngày cổng, ngày task giữ trong body.
 
-Mỗi Issue ghi input/output/DoD, link PRD, AC/TC, role, estimate, start/due và links predecessors. Assignee chưa gán khi chưa biết người thật. Link trong body chỉ là truy vết; không tuyên bố đã tạo native dependency. Tiến độ đóng Issue không thay kiểm tra điều kiện nghiệm thu. Không đưa 167 test case thành 167 task công thêm giờ.
+Mỗi Issue ghi input/output/DoD, link PRD, AC/TC, role, estimate, start/due và links predecessors. Assignee chưa gán khi chưa biết người thật. Link trong body chỉ là truy vết; không tuyên bố đã tạo native dependency. Tiến độ đóng Issue không thay kiểm tra điều kiện nghiệm thu. TC đi theo các task QA hiện có. Rà effort mới qua [R-08](risk-register.md) và [OQ-08](open-questions.md).
 
-Sau đổi ngày/giờ/dependency: cập nhật manifest, rà task nối tiếp và milestone, xuất lại Excel, cập nhật body Issue và due milestone. Gantt phản ứng theo Start/Due; không tự resource-level hoặc tự đẩy mọi successor khi sửa một ô. Không dùng CSV ClickUp cũ v5.1 với lịch v6.0; ClickUp không tự đồng bộ với GitHub/Excel.
+Áp dụng [quy trình CR](change-control.md) khi đổi phạm vi, ngày, giờ hoặc phụ thuộc. Gantt phản ứng theo Start/Due, kế hoạch phân bổ và successor cần được rà khi lập lại lịch.
 
 ## Kiểm thử và thứ tự bàn giao
+
+Điểm kiểm sớm theo [NFR của PRD](../01-overview/non-functional-requirements.md) trên các task QA trước MS-01 đến MS-05. QA ghi bằng chứng trên issue liên quan. FE tự kiểm giao diện trên các task tích hợp hiện có.
 
 Fixture và FE.01 được chuẩn bị sau contract, song song với BE khi đủ đầu vào. FE.02 chỉ tích hợp khi backend tương ứng đã self-check. QA.02 chỉ chạy sau fixture và FE.02. Kiểm quyền/validation/concurrency được kiểm ở từng FR từ sớm, không để tới cuối.
 
@@ -88,5 +90,7 @@ QA-04 chạy E2E-01..07; QA-05 chạy 5 NFR trừ DEP; QA-06 đo 4 MET. BE/FE s�
 Cần lịch tham gia thật, effort còn lại, task/nguồn lực đang chặn, hạn quay lại và tính lại ảnh hưởng mọi successor/milestone. 4h/ngày chỉ là giả định lập lịch, không là số giờ rảnh đã xác nhận. Chưa có các dữ liệu đó thì không kết luận cho mượn được.
 
 ## Lịch sử thay đổi
+
+Bản 6.1 ngày 25/11/2026 thêm bốn sheet và điểm kiểm sớm. Theo Resources, tải BE cao nhất tuần 4 (18 giờ) và tải QA cao nhất tuần 2 (10,5 giờ). Nếu BE giảm còn 2 giờ/ngày, tuần 4 là tuần đầu vượt tải (8 giờ). Cần lập lại thứ tự và dự báo MS-01 vì đây là tuần kết thúc cổng MS-01. Người xác nhận ghi tại Change log khi có quyết định.
 
 Thay MS-01..06 cũ theo tuần bằng sáu cổng kết quả trên; giữ mã milestone để không mất liên kết. Giữ nguyên mã task để truy vết nhưng đổi tên công việc dùng chung còn gắn W6/W7/W11/W14/W15. Không thêm tạo tài khoản, email/SMS hoặc xuất dữ liệu từ ảnh minh họa. Phạm vi chức năng và form đặc tả giữ nguyên.

@@ -1,6 +1,10 @@
 # UniSupport — Team Charter
 
-## 1. Phân vai và đầu mối
+## 1. Ban quản lý và đội thực thi
+
+Ban quản lý dự án là Nhóm 5 Solo Leveling, chịu trách nhiệm về hồ sơ, kế hoạch và quyết định của nhóm. Danh sách thành viên và phân công thực tế cần xác nhận.
+
+**Đội thực thi (Mô phỏng)** gồm bốn vị trí, mỗi vị trí một người giả định. Dùng nguồn lực và trần giờ trong [Master Plan](UniSupport_Master_Plan.xlsx), sheet Resources. **Khách hàng (Mô phỏng)** là Aurora University. Đại diện Phòng Công tác Sinh viên có thẩm quyền theo [quy trình CR](docs/05-project/change-control.md).
 
 | Vai trò theo proposal | Việc chịu trách nhiệm | Người review đầu ra |
 | --- | --- | --- |
@@ -9,7 +13,7 @@
 | FE | Màn hình desktop/mobile, trạng thái giao diện, validation, kết nối API và hiển thị lỗi | BE review contract; QA kiểm thao tác và khả năng sử dụng |
 | QA/tài liệu | Fixture/case, thực thi và evidence, bug/retest/regression, phép đo mục tiêu và hướng dẫn chạy lại | PM review nội dung; BE/FE review môi trường và tính tái lập |
 
-Mỗi task có một owner. Reviewer không thay owner; người viết không tự xác nhận review của mình. Điều phối là quyền nghiệp vụ trong prototype, không thêm người hoặc vai trò dự án ngoài bốn vai trò trên. PM lấy xác nhận từ thầy/bên có thẩm quyền khi thay phạm vi hoặc cam kết, không ký thay.
+Mỗi task có một owner. Reviewer không thay owner; người viết không tự xác nhận review của mình. Điều phối là quyền nghiệp vụ trong prototype, không thêm người hoặc vai trò dự án ngoài bốn vai trò trên. PM lấy xác nhận từ đại diện được ủy quyền của Phòng Công tác Sinh viên Aurora University (Mô phỏng) khi thay phạm vi hoặc cam kết, không ký thay.
 
 ## 2. Quy tắc nhận việc và cập nhật
 
@@ -25,7 +29,7 @@ Mẫu cập nhật task: `Task ID / build hoặc PR / đã làm / actual hours /
 
 ### 3.1 Làm rõ và chuẩn bị
 
-PM lấy FR từ `docs/05-project/requirements.json` v6.0, đối chiếu Markdown và proposal. BE/FE/QA review đầu vào, quyền, trạng thái, trường dữ liệu, lỗi và AC. Câu hỏi chưa đủ nguồn ghi vào Open Questions, không coi thiết kế đề xuất là quyết định đã được sponsor duyệt.
+PM lấy FR từ `docs/05-project/requirements.json` v6.1, đối chiếu Markdown và proposal. BE/FE/QA review đầu vào, quyền, trạng thái, trường dữ liệu, lỗi và AC. Câu hỏi chưa đủ nguồn ghi vào Open Questions, không coi thiết kế đề xuất là quyết định đã được đại diện Aurora University (Mô phỏng) duyệt.
 
 Mỗi FR là parent không tính giờ riêng. Task triển khai gồm:
 
@@ -64,7 +68,7 @@ Bug ghi `FR / TC / build / môi trường / dữ liệu / bước tái hiện / 
 
 Task đặc tả/tài liệu cần link phiên bản và review. Task BE/FE cần source/PR, review, build và self-check. Parent FR chỉ hoàn tất khi triển khai tích hợp, mọi AC/TC của FR đã đạt và không còn lỗi chặn. Số TC của mỗi FR lấy từ manifest, không mặc định bốn case.
 
-Sáu mốc MS-01..06 lần lượt xác nhận truy cập đúng quyền; tiếp nhận/theo dõi; điều phối/phối hợp xử lý; trả kết quả/hoàn tất; báo cáo; kiểm chứng/bàn giao. Mỗi mốc có danh sách FR, task bắt buộc và điều kiện nghiệm thu tại `docs/05-project/master-alignment.md`. Hoàn thành nội bộ không đồng nghĩa bên duyệt đã nghiệm thu. Các phép đo MET dùng kịch bản giả lập, không công bố như kết quả vận hành thật của trường.
+Sáu mốc MS-01..06 lần lượt xác nhận truy cập đúng quyền; tiếp nhận/theo dõi; điều phối/phối hợp xử lý; trả kết quả/hoàn tất; báo cáo; kiểm chứng/bàn giao. Mỗi mốc có danh sách FR, task bắt buộc và điều kiện nghiệm thu tại `docs/05-project/master-alignment.md`. Hoàn thành nội bộ không đồng nghĩa bên duyệt đã nghiệm thu. [Các phép đo MET (Mô phỏng)](docs/06-product/success-metrics.md) dùng bộ dữ liệu thử.
 
 ## 4. Xử lý chặn và điều chuyển nhân sự
 
@@ -73,10 +77,10 @@ Blocker báo ngay khi biết: task, input thiếu, người cần hỗ trợ, vi
 Trước khi cho mượn BE/FE hoặc người khác:
 
 1. Owner báo lịch tham gia thật, giờ dự án khác, nghỉ, task còn lại và giờ cần giữ theo từng ngày trong task hoặc log nhóm. Ô chưa có dữ liệu không phải số 0.
-2. PM đối chiếu Start/Due, giờ còn lại, predecessor trong PRD `plan.tasks` và các mốc trên Master Gantt. Khoảng trống trên Gantt không chứng minh người đó rảnh.
-3. PM tính phần giờ có thể điều chuyển bằng lịch thật đã xác nhận; rà ảnh hưởng tới BE/FE/QA nối tiếp. Excel hiện không có mô hình capacity hoặc what-if tự tính.
+2. PM đối chiếu Start/Due, giờ còn lại, predecessor trong [manifest](docs/05-project/requirements.json) tại `plan.tasks` và các mốc trên Master Gantt. Khoảng trống trên Gantt không chứng minh người đó rảnh.
+3. PM tính phần giờ có thể điều chuyển bằng lịch thật đã xác nhận; rà ảnh hưởng tới BE/FE/QA nối tiếp. Sheet Resources là tải dự kiến theo tuần. Khi năng lực thực thay đổi, PM/BA lập lại lịch và rà phân bổ trước khi duyệt.
 4. Chốt việc bàn giao, thời gian quay lại, task/mốc bị ảnh hưởng và người xác nhận; sau xác nhận mới điều chỉnh việc ngoài dự án.
-5. Nếu đổi baseline/ngày/giờ, cập nhật Gantt, PRD plan.tasks và CSV cùng phiên bản. Rà toàn bộ task nối tiếp và milestone; CSV đã tải không tự cập nhật.
+5. Đổi baseline theo [quy trình CR](docs/05-project/change-control.md).
 
 Mẫu đề nghị: `Role/người / ngày từ–đến / giờ mỗi ngày / task đang làm / task bị ảnh hưởng / mốc có nguy cơ / cách bàn giao / người xác nhận / ngày quay lại`.
 
@@ -86,24 +90,15 @@ Nhóm tự xác nhận kênh chat, giờ tham gia và thời gian phản hồi. 
 
 PM ghi quyết định sau họp/chat vào log và task, gồm người xác nhận, lý do, phiên bản, owner và hạn. Vấn đề FR/AC/scope hỏi PM; API/DB/quyền hỏi BE; UI/kết nối hỏi FE; fixture/result/bug hỏi QA. Nếu vắng, owner bàn giao task/branch/build/input/blocker, PM xác nhận người tiếp nhận; không mặc định có người rảnh thay.
 
-Thay đổi hành vi có mã `CR-xx`: nguồn yêu cầu, FR/AC/TC liên quan, phương án, effort, resource và mốc bị ảnh hưởng. Review tác động rồi mới cập nhật PRD, manifest, tests, Master và Charter nếu quy trình đổi. Giữ mã FR cũ nếu cùng hành vi; không đổi tên/mã tùy ý làm mất liên kết bug/test. Bất đồng phải nêu căn cứ và tác động, PM điều phối; phần cần quyết định giữ Blocked tới khi có xác nhận.
+Thay đổi hành vi, phân loại, đánh giá, người duyệt và đồng bộ theo [quy trình CR](docs/05-project/change-control.md). Reviewer tra issue quyết định trước khi nhập PR.
 
 ## 6. Lưu đầu ra và đồng bộ
 
-GitHub giữ PRD/source/Charter, Issue theo mã task và milestone theo đầu ra. Issue là nơi cập nhật công việc/owner/estimate/evidence; ngày task ghi trong body, due milestone là ngày cổng. ClickUp chỉ dùng khi xuất/import lại cùng revision; CSV v5.1 cũ không đồng bộ lịch v6.0; Excel chỉ giữ Master Gantt theo ngày, task/FR, role và estimate; không có cột trạng thái, sheet capacity hoặc tính điều chuyển. QA evidence gắn TC/build/date/result. Chưa push/import không ghi như đã thực hiện.
-
-CSV có mã parent/task con và predecessor trong mô tả. Sau import phải tạo native dependencies theo predecessor trong PRD `plan.tasks` và mô tả CSV; văn bản ID không phải link dependency. Gán assignee theo thành viên thật, không gán chủ workspace làm cả bốn role. QA Result phải dùng enum/text, không checkbox. Trạng thái workflow đề xuất: Chưa sẵn sàng → Sẵn sàng → Đang làm → Chờ review → Sẵn sàng QA → Đang QA → Hoàn tất; mapping theo statuses mà workspace thực sự có.
+GitHub lưu bản tài liệu, task, bug, feedback, quyết định, PR và milestone. Ngày từng task ghi trong issue, due của milestone là ngày cổng. Đối chiếu dữ liệu phiên bản tại [Master Plan](docs/05-project/master-alignment.md), ghi trạng thái theo đầu ra và gắn bằng chứng QA với build, TC và ngày chạy.
 
 ## 7. Xác nhận áp dụng
 
-| Vai trò | Họ tên | Lịch tham gia/kênh liên lạc | Ngày xác nhận | Link xác nhận |
-| --- | --- | --- | --- | --- |
-| PM/BA |  |  |  |  |
-| BE |  |  |  |  |
-| FE |  |  |  |  |
-| QA/tài liệu |  |  |  |  |
-
-Các ô trên để trống tới khi có xác nhận thật. Trần ngân sách giờ là 288h chính + 32h dự phòng. Giờ dự phòng chưa giao task; chỉ dùng khi PM ghi nhận nguyên nhân, owner, tác động chi phí/mốc và quyết định. Phân bổ giờ theo task và ngày trong Master vẫn là đề xuất cần review, không là giờ thực tế đã làm. Khi thiếu giờ, ghi chênh lệch và xử lý dự phòng/CR; không tự cắt scope hoặc ghi Done/Pass để vừa ngân sách.
+PM/BA lưu xác nhận lịch và đầu mối thật trong GitHub Issue khi có. Trần ngân sách giờ là 288h chính + 32h dự phòng. Giờ dự phòng chưa giao task; chỉ dùng khi PM ghi nhận nguyên nhân, owner, tác động chi phí/mốc và quyết định. Phân bổ giờ theo task và ngày trong Master vẫn là đề xuất cần review, không là giờ thực tế đã làm. Khi thiếu giờ, ghi chênh lệch và xử lý dự phòng/CR; không tự cắt scope hoặc ghi Done/Pass để vừa ngân sách.
 
 ## 8. Review cổng kết quả và bàn giao
 

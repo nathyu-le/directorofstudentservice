@@ -2,11 +2,15 @@
 
 **Mô tả**
 
-Nhận biết yêu cầu còn mở đã vượt hạn dự kiến. Đặc tả triển khai prototype thuộc Proposal §2.1 — trạng thái, thời gian, vấn đề phổ biến, khối lượng và hài lòng; các chi tiết trường và quy tắc dưới đây là thiết kế đề xuất v5.0 để review, không phải thông tin vận hành đã được khách hàng xác nhận.
+Nhận biết yêu cầu còn mở đã vượt hạn dự kiến. Phạm vi và mục tiêu xem [tổng quan sản phẩm](../../../01-overview/scope.md). Các chi tiết nghiệp vụ đang ở trạng thái đề xuất.
 
 **Actor**
 
 Quản lý. Quyền cụ thể kiểm ở máy chủ theo [ma trận quyền](../../../02-domain/permissions.md).
+
+**Priority**
+
+P1 theo [thang ưu tiên PRD](../../../01-overview/scope.md#ưu-tiên-yêu-cầu).
 
 **Preconditions**
 
@@ -28,19 +32,19 @@ Quản lý. Quyền cụ thể kiểm ở máy chủ theo [ma trận quyền](..
 | department_id/category_id | Tùy chọn | ID nguyên dương, hợp lệ và trong reporting scope; omit=mọi đơn vị/loại trong scope. |
 | as_of | Chỉ đọc | Một thời điểm UTC từ server, không từ trình duyệt. Không nhận kỳ ngày tạo. |
 
-- Chỉ quản lý có report capability và reporting scope. Sinh viên/handler không quyền report:403. Chọn đơn vị ngoài scope:403, không trả một phần. Scope áp dụng TRƯỚC mọi COUNT/AVG.
-- Backlog HIỆN TẠI ở mọi ngày tạo: due_at NOT NULL, due_at<as_of và status Received/Processing/WaitingInfo. as_of lấy server_now một lần cho cả response. Không có from/to, tránh giấu hồ sơ cũ. overdue_hours=(as_of-due_at)/3600.
-- Không chấp nhận from_date/to_date trong endpoint này:422 UNSUPPORTED_FILTER. Không âm thầm lọc theo ngày tạo.
-- Request, question, note và history join không được làm nhân bản dòng nguồn. Aggregate trên request_id/feedback_id duy nhất. Response trả filters, as_of, sample_count, metrics, source_references; không có nội dung sinh viên hoặc internal note.
-- Chỉ số được tính từ seed/prototype; không là kết quả vận hành toàn trường. N=0 count=0 là số thật; average=null là chưa có mẫu, không đổi thành0.
-- metrics={overdue_count}; sample_count=overdue_count. source_references là các dòng {reference, status, department_id, assignee_id, due_at, overdue_hours}; sắp due_at tăng dần rồi request_id tăng dần, không trả nội dung sinh viên.
+- Chỉ quản lý có report capability và reporting scope. Sinh viên/handler không quyền report:403. Chọn đơn vị ngoài scope:403, không trả một phần. Phạm vi quyền áp dụng trước mọi COUNT/AVG. **Kiểm bởi:** AC-RPT-02-03.
+- Backlog HIỆN TẠI ở mọi ngày tạo: due_at NOT NULL, due_at<as_of và status Received/Processing/WaitingInfo. as_of lấy server_now một lần cho cả response. Không có from/to, tránh giấu hồ sơ cũ. overdue_hours=(as_of-due_at)/3600. **Kiểm bởi:** AC-RPT-02-01, AC-RPT-02-04, AC-RPT-02-05, AC-RPT-02-07.
+- Không chấp nhận from_date/to_date trong endpoint này:422 UNSUPPORTED_FILTER. Không âm thầm lọc theo ngày tạo. **Kiểm bởi:** AC-RPT-02-02.
+- Request, question, note và history join không được làm nhân bản dòng nguồn. Aggregate trên request_id/feedback_id duy nhất. Response trả filters, as_of, sample_count, metrics, source_references; không có nội dung sinh viên hoặc internal note. **Kiểm bởi:** AC-RPT-02-03, AC-RPT-02-06.
+- Chỉ số được tính từ seed/prototype; không là kết quả vận hành toàn trường. N=0 count=0 là số thật; average=null là chưa có mẫu, không đổi thành 0. **Kiểm bởi:** AC-RPT-02-07.
+- metrics={overdue_count}; sample_count=overdue_count. source_references là các dòng {reference, status, department_id, assignee_id, due_at, overdue_hours}; sắp due_at tăng dần rồi request_id tăng dần, không trả nội dung sinh viên. **Kiểm bởi:** AC-RPT-02-01, AC-RPT-02-07.
 
 **Alternative / Error Flows**
 
-- 401: phiên không hợp lệ, yêu cầu đăng nhập; không có số liệu trong response.
-- 403: thiếu report capability hoặc chọn đơn vị ngoài reporting scope; không trả số liệu một phần.
-- 422: sai hoặc dùng bộ lọc không hỗ trợ theo FR; hiển thị lỗi bộ lọc, không âm thầm thay kỳ.
-- 500/mất mạng: hiển thị Không tải được báo cáo, cho thử tải lại GET; không thay dữ liệu nghiệp vụ.
+- 401 khi phiên hết hiệu lực. Xem NFR-SEC-01 về xác thực lại và xử lý thao tác đang chờ.
+- 403 thiếu quyền báo cáo hoặc lọc ngoài phạm vi. **Kiểm bởi:** AC-RPT-02-03.
+- 422 UNSUPPORTED_FILTER khi gửi ngày. **Kiểm bởi:** AC-RPT-02-02.
+- Xử lý mất kết nối, thông báo lỗi biểu mẫu và mã đối chiếu theo [NFR-OBS-01](../../../01-overview/non-functional-requirements.md).
 
 **Acceptance Criteria**
 
@@ -49,11 +53,13 @@ Quản lý. Quyền cụ thể kiểm ở máy chủ theo [ma trận quyền](..
 - **AC-RPT-02-03:** Khi Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi. → Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
 - **AC-RPT-02-04:** Khi now bằng due_at → Yêu cầu chưa bị tính quá hạn tại đúng ranh giới.
 - **AC-RPT-02-05:** Khi Một request từ tháng trước còn mở trong scope; due_at nhỏ hơn as_of. → Vẫn được tính trong backlog hiện hành; không loại vì ngày tạo cũ.
-- **AC-RPT-02-06:** Khi Một request có 3 notes,2 questions và 5 history events. → Chỉ tính request đó một lần, không nhân bản bởi dữ liệu con.
+- **AC-RPT-02-06:** Khi Một request có 3 notes, 2 questions và 5 history events. → Chỉ tính request đó một lần, không nhân bản bởi dữ liệu con.
+
+- **AC-RPT-02-07:** Khi Đo tập trống rồi đo ba hồ sơ quá hạn, hai hồ sơ cùng due_at. Thêm một hồ sơ Closed, một hồ sơ không hạn và một hồ sơ đúng as_of. → Tập trống có sample_count và overdue_count bằng 0. Ba dòng quá hạn sắp theo hạn rồi ID tăng, giờ quá hạn tính theo cùng một as_of. Không đưa ba hồ sơ đối chứng vào nguồn.
 
 **Ví dụ Edge Case**
 
-Join không nhân bản: Một request có 3 notes,2 questions và 5 history events.
+Join không nhân bản: Một request có 3 notes, 2 questions và 5 history events.
 
 **Expected Result**
 

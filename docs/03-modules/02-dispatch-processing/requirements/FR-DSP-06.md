@@ -2,11 +2,15 @@
 
 **Mô tả**
 
-Xác nhận bắt đầu xử lý yêu cầu đã tiếp nhận. Đặc tả triển khai prototype thuộc Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử; các chi tiết trường và quy tắc dưới đây là thiết kế đề xuất v5.0 để review, không phải thông tin vận hành đã được khách hàng xác nhận.
+Xác nhận bắt đầu xử lý yêu cầu đã tiếp nhận. Phạm vi và mục tiêu xem [tổng quan sản phẩm](../../../01-overview/scope.md). Các chi tiết nghiệp vụ đang ở trạng thái đề xuất.
 
 **Actor**
 
 Nhân viên được giao. Quyền cụ thể kiểm ở máy chủ theo [ma trận quyền](../../../02-domain/permissions.md).
+
+**Priority**
+
+P0 theo [thang ưu tiên PRD](../../../01-overview/scope.md#ưu-tiên-yêu-cầu).
 
 **Preconditions**
 
@@ -26,18 +30,19 @@ Nhân viên được giao. Quyền cụ thể kiểm ở máy chủ theo [ma tr�
 | request_id | Bắt buộc | Hồ sơ được giao cho người thao tác. |
 | record_version | Hệ thống | Phiên bản hiện hành. |
 
-- Chỉ nhân viên đang được giao, status=Received, trách nhiệm hợp lệ. Nhân viên không tự chuyển hồ sơ chưa giao hoặc tự đổi assignee.
-- Transaction chuyển Received→Processing, set started_at=server_now lần đầu, tăng version, history STARTED public. Giữ due_at và chủ hồ sơ.
-- Lần nhấn thứ hai/trạng thái khác/version cũ trả 409, không ghi sự kiện khác và không đặt lại started_at. Ngoài trách nhiệm trả 404.
+- Chỉ nhân viên đang được giao, status=Received, trách nhiệm hợp lệ. Nhân viên không tự chuyển hồ sơ chưa giao hoặc tự đổi assignee. **Kiểm bởi:** AC-DSP-06-01, AC-DSP-06-03, AC-DSP-06-07.
+- Transaction chuyển Received→Processing, set started_at=server_now lần đầu, tăng version, history STARTED public. Giữ due_at và chủ hồ sơ. **Kiểm bởi:** AC-DSP-06-01, AC-DSP-06-05, AC-DSP-06-07.
+- Lần nhấn thứ hai/trạng thái khác/version cũ trả 409, không ghi sự kiện khác và không đặt lại started_at. Ngoài trách nhiệm trả 404. **Kiểm bởi:** AC-DSP-06-02, AC-DSP-06-03, AC-DSP-06-04, AC-DSP-06-06.
 
 **Alternative / Error Flows**
 
-- 401: phiên không hợp lệ; điều hướng đăng nhập, không gửi lại thao tác ghi tự động sau login.
-- 403: thiếu capability/CSRF hoặc bộ lọc ngoài scope; không trả dữ liệu trái quyền.
-- 404: request không tồn tại/ngoài quyền đối tượng; không tiết lộ hồ sơ có tồn tại hay không.
-- 422: sai trường/bộ lọc theo Business Rules; hiển thị lỗi tại trường, giữ dữ liệu đang nhập.
-- 409: trạng thái/phiên bản/khóa xung đột theo quy tắc của chức năng; không ghi một phần, yêu cầu tải lại dữ liệu hiện hành.
-- 500 hoặc mất mạng: không đánh thao tác thành công khi chưa có response xác nhận. Riêng STU-01 retry dùng cùng submission_key; các thao tác khác tải lại để xác định lần ghi đã commit, không gửi tự động vô điều kiện.
+- 401 khi phiên hết hiệu lực. Xem NFR-SEC-01 về xác thực lại và xử lý thao tác đang chờ.
+- 403 thiếu quyền xử lý hoặc CSRF. **Kiểm bởi:** NFR-SEC-01.
+- 404 hồ sơ không giao cho actor. **Kiểm bởi:** AC-DSP-06-03, AC-DSP-06-07.
+- 422 phiên bản đầu vào hoặc ID không hợp lệ. **Kiểm bởi:** NFR-SEC-01.
+- 409 trạng thái/phiên bản xung đột hoặc bắt đầu lặp. **Kiểm bởi:** AC-DSP-06-02, AC-DSP-06-04, AC-DSP-06-06.
+- 500 hoàn tác chuyển sang Processing. **Kiểm bởi:** AC-DSP-06-05.
+- Xử lý mất kết nối, thông báo lỗi biểu mẫu và mã đối chiếu theo [NFR-OBS-01](../../../01-overview/non-functional-requirements.md).
 
 **Acceptance Criteria**
 
@@ -46,13 +51,15 @@ Nhân viên được giao. Quyền cụ thể kiểm ở máy chủ theo [ma tr�
 - **AC-DSP-06-03:** Khi NV-B bắt đầu hồ sơ giao NV-A. → Từ chối; trách nhiệm giữ nguyên.
 - **AC-DSP-06-04:** Khi Gửi lặp lần bắt đầu. → Không tạo hai lần bắt đầu; started_at ban đầu giữ nguyên.
 - **AC-DSP-06-05:** Khi Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production. → 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
-- **AC-DSP-06-06:** Khi Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ. → TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
+- **AC-DSP-06-06:** Khi Hai tab đọc cùng version; tab A lưu hợp lệ, tab B gửi version cũ. → Tab B nhận 409 STALE_VERSION; không ghi đè dữ liệu/lịch sử của A; giao diện yêu cầu tải lại.
+
+- **AC-DSP-06-07:** Khi NV-A thử bắt đầu hồ sơ 310 chưa phân công rồi kiểm lại hồ sơ hợp lệ đã bắt đầu. → Lượt không có quyền đối tượng không thay dữ liệu. Với hồ sơ hợp lệ, started_at lấy đồng hồ máy chủ lần đầu, giữ due_at và student_id.
 
 **Ví dụ Edge Case**
 
-Cập nhật phiên bản cũ: Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
+Cập nhật phiên bản cũ: Hai tab đọc cùng version; tab A lưu hợp lệ, tab B gửi version cũ.
 
 **Expected Result**
 
-TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại. Kiểm theo TC-DSP-06-06; kết quả thực thi ban đầu là Not Run.
+Tab B nhận 409 STALE_VERSION; không ghi đè dữ liệu/lịch sử của A; giao diện yêu cầu tải lại. Kiểm theo TC-DSP-06-06; kết quả thực thi ban đầu là Not Run.
 

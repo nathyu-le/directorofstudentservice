@@ -2,11 +2,15 @@
 
 **Mô tả**
 
-Đọc thông tin cần xử lý và truy vết thao tác theo trách nhiệm. Đặc tả triển khai prototype thuộc Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử; các chi tiết trường và quy tắc dưới đây là thiết kế đề xuất v5.0 để review, không phải thông tin vận hành đã được khách hàng xác nhận.
+Đọc thông tin cần xử lý và truy vết thao tác theo trách nhiệm. Phạm vi và mục tiêu xem [tổng quan sản phẩm](../../../01-overview/scope.md). Các chi tiết nghiệp vụ đang ở trạng thái đề xuất.
 
 **Actor**
 
 Điều phối viên / Nhân viên xử lý. Quyền cụ thể kiểm ở máy chủ theo [ma trận quyền](../../../02-domain/permissions.md).
+
+**Priority**
+
+P0 theo [thang ưu tiên PRD](../../../01-overview/scope.md#ưu-tiên-yêu-cầu).
 
 **Preconditions**
 
@@ -27,18 +31,18 @@
 | request_id | Bắt buộc | Yêu cầu thuộc phạm vi được xem. |
 | history | Chỉ đọc | Người, thời gian, hành động và thay đổi; phân biệt nội bộ/công khai. |
 
-- Nhân viên xử lý chỉ đọc hồ sơ được giao cho chính mình. Điều phối đọc trong scope dispatch. Quản lý xem số liệu RPT; quyền đọc chi tiết cần được cấp riêng, không mặc định bởi vai trò.
-- Đầu ra gồm nội dung hồ sơ, thông tin định danh mẫu của sinh viên cần cho xử lý, bộ trách nhiệm, hạn, version, câu hỏi/trả lời, kết quả và lịch sử public/internal đúng scope.
-- Lịch sử append-only có event_id, event_type, actor_id, occurred_at, old/new values và visibility. Sắp occurred_at tăng dần, event_id tăng dần. Giao lại không xóa lịch sử.
-- Phản hồi nội bộ không gửi sang STU. Không có endpoint tải tài liệu trong baseline; nếu bổ sung sau này phải tuân cùng quyền đối tượng và CR.
+- Nhân viên xử lý chỉ đọc hồ sơ được giao cho chính mình. Điều phối đọc trong scope dispatch. Quản lý xem số liệu RPT; quyền đọc chi tiết cần được cấp riêng, không mặc định bởi vai trò. **Kiểm bởi:** AC-DSP-02-03, AC-DSP-02-05.
+- Đầu ra gồm nội dung hồ sơ, thông tin định danh mẫu của sinh viên cần cho xử lý, bộ trách nhiệm, hạn, version, câu hỏi/trả lời, kết quả và lịch sử public/internal đúng scope. **Kiểm bởi:** AC-DSP-02-01, AC-DSP-02-04, AC-DSP-02-05.
+- Lịch sử append-only có event_id, event_type, actor_id, occurred_at, old/new values và visibility. Sắp occurred_at tăng dần, event_id tăng dần. Giao lại không xóa lịch sử. **Kiểm bởi:** AC-DSP-02-01, AC-DSP-02-05.
+- Phản hồi nội bộ không gửi sang STU. Không có endpoint tải tài liệu trong baseline; nếu bổ sung sau này phải tuân cùng quyền đối tượng và CR. **Kiểm bởi:** AC-DSP-02-04.
 
 **Alternative / Error Flows**
 
-- 401: phiên không hợp lệ; điều hướng đăng nhập, không gửi lại thao tác ghi tự động sau login.
-- 403: thiếu capability/CSRF hoặc bộ lọc ngoài scope; không trả dữ liệu trái quyền.
-- 404: request không tồn tại/ngoài quyền đối tượng; không tiết lộ hồ sơ có tồn tại hay không.
-- 422: sai trường/bộ lọc theo Business Rules; hiển thị lỗi tại trường, giữ dữ liệu đang nhập.
-- 500 hoặc mất mạng: không đánh thao tác thành công khi chưa có response xác nhận. Riêng STU-01 retry dùng cùng submission_key; các thao tác khác tải lại để xác định lần ghi đã commit, không gửi tự động vô điều kiện.
+- 401 khi phiên hết hiệu lực. Xem NFR-SEC-01 về xác thực lại và xử lý thao tác đang chờ.
+- 403 thiếu quyền nghiệp vụ. **Kiểm bởi:** AC-DSP-02-05.
+- 404 ID không có hoặc đối tượng ngoài phạm vi. **Kiểm bởi:** AC-DSP-02-02, AC-DSP-02-03.
+- 422 ID sai định dạng. **Kiểm bởi:** AC-DSP-02-06.
+- Xử lý mất kết nối, thông báo lỗi biểu mẫu và mã đối chiếu theo [NFR-OBS-01](../../../01-overview/non-functional-requirements.md).
 
 **Acceptance Criteria**
 
@@ -46,6 +50,9 @@
 - **AC-DSP-02-02:** Khi Mở mã không tồn tại. → Không tìm thấy; không sinh dữ liệu.
 - **AC-DSP-02-03:** Khi Nhân viên phòng ban B đọc hồ sơ không được giao ở phòng ban A. → Từ chối, không trả nội dung sinh viên.
 - **AC-DSP-02-04:** Khi Thêm tiến độ nội bộ qua DSP-08 rồi SV xem STU-03. → Người xử lý có quyền thấy nội bộ; sinh viên không thấy cả qua API trực tiếp.
+
+- **AC-DSP-02-05:** Khi QL-A mở hồ sơ PB-A khi chưa có quyền chi tiết. NV-A và DP-All đọc hồ sơ đã giao lại có hai sự kiện cùng giờ. → Quyền báo cáo riêng không cho đọc chi tiết. Người có quyền nhận đầy đủ trạng thái, version, bổ sung/kết quả và nội dung lịch sử đúng thứ tự giờ rồi ID. Lịch sử cũ giữ sau phân công.
+- **AC-DSP-02-06:** Khi Gọi GET chi tiết với ID 0 hoặc chữ. → 422, không trả lịch sử hoặc thông tin sinh viên.
 
 **Ví dụ Edge Case**
 

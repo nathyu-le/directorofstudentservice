@@ -1,24 +1,28 @@
-# Phạm vi và nguồn
+# Tổng quan sản phẩm UniSupport
 
-Nguồn: UniSupport_Project_Proposal.docx, Library version 6,7trang; proposal được đọc đầy đủ. Ảnh thầy là mẫu trình bày, không thêm module.
+## Vấn đề
 
-| Căn cứ | Nội dung áp dụng |
+[Proposal mục 1](../../project_proposal.md#1-bài-toán-hiện-tại-và-mục-tiêu) mô tả hiện trạng Aurora University (Mô phỏng). Sinh viên thiếu mã theo dõi xuyên suốt, nhân viên khó biết hồ sơ thuộc ai sau khi chuyển phòng, còn quản lý cần nguồn chung để kiểm tra tình trạng và hồ sơ quá hạn.
+
+## Người dùng
+
+| Actor | Quyền và nhu cầu |
 | --- | --- |
-| Proposal §2.1 | Đúng4module: Cổng hỗ trợ sinh viên; Điều phối và xử lý yêu cầu; Quản lý và báo cáo; Tài khoản và quyền truy cập |
-| Người dùng | Sinh viên, nhân viên, quản lý. Quyền điều phối là capability của staff/manager trong thiết kế, không thêm nhóm proposal |
-| Công nghệ | Prototype web PHP/MySQL, desktop/mobile, dữ liệu giả lập; xem xét nhãn Việt/Anh trong thiết kế |
-| Thời gian | Giữ chân trời kế hoạch dự kiến 15 tuần. Revision kế hoạch 6.0 tổ chức milestone theo đầu ra nghiệp vụ và xếp lại task/dependency; không dùng các giai đoạn tuần của proposal làm điều kiện nghiệm thu. Xem docs/05-project/master-alignment.md. |
-| Nhóm | 4người:PM/BA, BE, FE, QA/tài liệu |
-| Mục tiêu | >=90% hồ sơ có người chịu trách nhiệm,>=90% trạng thái theo dõi được,>=30% giảm hỏi lại tiến độ; giảm bỏ sót/trùng không tự đặt tỷ lệ mới |
-| Handoff | Prototype, source, seed, requirements, design, tests, user/setup guide để nhóm khác chạy lại |
+| Sinh viên | Gửi, đọc hồ sơ của mình, bổ sung và phản hồi. |
+| Nhân viên xử lý | Xem hồ sơ được giao, hỏi bổ sung, ghi tiến độ và kết quả. |
+| Điều phối | Quyền bổ sung cấp cho nhân viên hoặc quản lý trong phạm vi xác định. Xem hàng chờ, phân loại, phân công, đặt hạn và đóng hồ sơ. |
+| Quản lý | Xem báo cáo theo phạm vi được cấp. Quyền đọc chi tiết cần cấp riêng. |
 
-## Ranh giới
+Xem [ma trận quyền](../02-domain/permissions.md).
 
-Không làm production toàn trường, tích hợp thật với mọi hệ thống, dữ liệu cá nhân thật, thu học phí, quyết định học vụ tự động. Không tự thêm KB, FAQ, upload, email, notification, SLA engine, CRUDadmin, resetpassword hoặc module thứ 5. Danh mục/tài khoản/scope khởi tạo bằng seed trong prototype.
+## Goals và non-goals
 
-24FR là phân rã thiết kế v5.0 của năng lực proposal, không là số chức năng mà proposal ghi sẵn. Mỗi FR có hành vi riêng; các màn hình/kỹ thuật/test không được đếm như module.
+- G1. Hồ sơ có mã, trạng thái và người phụ trách để sinh viên tự theo dõi. Liên quan M01, M02 và MET-01 đến MET-04.
+- G2. Đổi đơn vị hoặc bổ sung thông tin trên cùng hồ sơ, giữ lịch sử. Liên quan M01, M02.
+- G3. Đối chiếu báo cáo theo phạm vi được cấp. Liên quan M03, M04.
+- G4. Kiểm quyền trên máy chủ và đóng gói bản chạy lại được trên dữ liệu mô phỏng. Liên quan M04, NFR-SEC-01 và NFR-DEP-01.
+- Non-goals theo [ranh giới tại Proposal mục 2](../../project_proposal.md#2-phạm-vi-và-giả-định). Xem [hồ sơ Proposal có phiên bản và ngày](../05-project/sent/README.md).
 
-## Trạng thái quyết định
+## Ưu tiên yêu cầu
 
-Đã biết từ proposal:phạm vi4module, công nghệ,15tuần,4vai trò, mục tiêu. Chưa xác nhận:ngày khởi động thật, tên người, availability/ngày nghỉ, danh mục phòng/loại, sponsor review kết quả,5trạng thái và tham số prototype. Không tự điền actual, Pass, nghiệm thu hoặc chữ ký.
-
+P0 giữ luồng tối thiểu và bảo vệ quyền/dữ liệu. P1 hỗ trợ phối hợp hoặc quyết định quản lý. P2 là phân tích bổ trợ, xem xét lùi trước P1 khi thiếu nguồn lực. Cả ba nhóm đều trong phạm vi đề xuất. Đổi mốc hoặc phạm vi phải đi qua [CR](../05-project/change-control.md).

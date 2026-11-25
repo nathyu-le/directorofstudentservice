@@ -2,11 +2,15 @@
 
 **Mô tả**
 
-Xác thực tài khoản mẫu trước khi sử dụng chức năng. Đặc tả triển khai prototype thuộc Proposal §2.1 — xác thực, phân quyền, hạn chế truy cập thông tin và tài liệu liên quan; các chi tiết trường và quy tắc dưới đây là thiết kế đề xuất v5.0 để review, không phải thông tin vận hành đã được khách hàng xác nhận.
+Xác thực tài khoản mẫu trước khi sử dụng chức năng. Phạm vi và mục tiêu xem [tổng quan sản phẩm](../../../01-overview/scope.md). Các chi tiết nghiệp vụ đang ở trạng thái đề xuất.
 
 **Actor**
 
 Sinh viên / Điều phối viên / Nhân viên / Quản lý. Quyền cụ thể kiểm ở máy chủ theo [ma trận quyền](../../../02-domain/permissions.md).
+
+**Priority**
+
+P0 theo [thang ưu tiên PRD](../../../01-overview/scope.md#ưu-tiên-yêu-cầu).
 
 **Preconditions**
 
@@ -27,18 +31,17 @@ Sinh viên / Điều phối viên / Nhân viên / Quản lý. Quyền cụ thể
 | password | Bắt buộc | Không rỗng; không ghi log hay lưu dạng thô. |
 | session | Hệ thống | Sinh phiên mới khi xác thực thành công; idle 30 phút, absolute 8 giờ. |
 
-- email bắt buộc, trim, chuyển chữ thường, định dạng email, max254; password bắt buộc giữ nguyên không trim, max256. Tài khoản seed có password_hash, active, role/scope ở máy chủ.
-- Đúng email/password và active=true: regenerate session ID, hủy ID trước đăng nhập, trả user_id/display_name và capabilities hiện hành. Không nhận role/scope của client.
-- Sai password/email không có/tài khoản inactive cùng401 INVALID_CREDENTIALS và một thông báo chung. Đầu vào sai422. Không log password/session token. Thời gian idle đề xuất30 phút, absolute 8 giờ.
-- Cookie HttpOnly, SameSite=Lax, Secure khi HTTPS. Local HTTP chỉ dùng môi trường mẫu, không được mô tả như bảo mật production. Login giới hạn đề xuất5 lần sai/15 phút cho cặp email+IP:429; không là account-lock vĩnh viễn.
+- email bắt buộc, trim, chuyển chữ thường, định dạng email, tối đa 254; password bắt buộc giữ nguyên không trim, tối đa 256. Tài khoản seed có password_hash, active, role/scope ở máy chủ. **Kiểm bởi:** AC-IAM-01-01, AC-IAM-01-07.
+- Đúng email/password và active=true: regenerate session ID, hủy ID trước đăng nhập, trả user_id/display_name và capabilities hiện hành. Không nhận role/scope của client. **Kiểm bởi:** AC-IAM-01-01, AC-IAM-01-04, AC-IAM-01-08.
+- Sai password/email không có/tài khoản inactive cùng401 INVALID_CREDENTIALS và một thông báo chung. Đầu vào sai422. Không log password/session token. Thời gian idle đề xuất 30 phút, absolute 8 giờ. **Kiểm bởi:** AC-IAM-01-02, AC-IAM-01-04, AC-IAM-01-05, AC-IAM-01-07, AC-IAM-01-08.
+- Cookie HttpOnly, SameSite=Lax, Secure khi HTTPS. Local HTTP chỉ dùng môi trường mẫu, không được mô tả như bảo mật production. Login giới hạn đề xuất 5 lần sai/15 phút cho cặp email+IP:429; không là account-lock vĩnh viễn. **Kiểm bởi:** AC-IAM-01-06, AC-IAM-01-08.
 
 **Alternative / Error Flows**
 
-- 401: phiên không hợp lệ; điều hướng đăng nhập, không gửi lại thao tác ghi tự động sau login.
-- 403: thiếu capability/CSRF hoặc bộ lọc ngoài scope; không trả dữ liệu trái quyền.
-- 404: request không tồn tại/ngoài quyền đối tượng; không tiết lộ hồ sơ có tồn tại hay không.
-- 422: sai trường/bộ lọc theo Business Rules; hiển thị lỗi tại trường, giữ dữ liệu đang nhập.
-- 500 hoặc mất mạng: không đánh thao tác thành công khi chưa có response xác nhận. Riêng STU-01 retry dùng cùng submission_key; các thao tác khác tải lại để xác định lần ghi đã commit, không gửi tự động vô điều kiện.
+- 401 INVALID_CREDENTIALS dùng thông báo chung cho sai mật khẩu, email không có và inactive. **Kiểm bởi:** AC-IAM-01-02, AC-IAM-01-05.
+- 422 email/mật khẩu không hợp lệ, không lặp mật khẩu trong phản hồi. **Kiểm bởi:** AC-IAM-01-07.
+- 429 giới hạn thử sai cho cặp email/IP. **Kiểm bởi:** AC-IAM-01-06.
+- 500 phản hồi lỗi đăng nhập có mã đối chiếu, không tự lập phiên trên máy khách. **Kiểm bởi:** NFR-OBS-01.
 
 **Acceptance Criteria**
 
@@ -48,6 +51,9 @@ Sinh viên / Điều phối viên / Nhân viên / Quản lý. Quyền cụ thể
 - **AC-IAM-01-04:** Khi Dùng mã phiên trước đăng nhập hoặc phiên hết hạn idle 30 phút, absolute 8 giờ. → Mã phiên cũ không có quyền; phiên hết hạn không ghi nghiệp vụ; yêu cầu đăng nhập lại.
 - **AC-IAM-01-05:** Khi Đúng password nhưng active=false. → 401 INVALID_CREDENTIALS như email không có; không cấp session.
 - **AC-IAM-01-06:** Khi 5 lần sai trong15 phút, sau đó thử lần6 cùng email+IP. → Lần6 trả 429 có thời gian thử lại; hết cửa sổ mới được thử, không khóa tài khoản vĩnh viễn.
+
+- **AC-IAM-01-07:** Khi Dùng email seed với khoảng trắng đầu/cuối và chữ hoa. Gửi email sai định dạng hoặc 255 ký tự, mật khẩu rỗng hoặc 257 ký tự, rồi nối khoảng trắng vào mật khẩu seed hợp lệ. → Email đúng được chuẩn hóa. Dữ liệu sai báo 422. Mật khẩu có phần thêm bị đối chiếu nguyên văn và trả 401 nếu sai. Không ghi mật khẩu vào log.
+- **AC-IAM-01-08:** Khi Trên cấu hình HTTPS thử đăng nhập đúng một actor seed, đọc thuộc tính cookie và gọi một điểm truy cập có bảo vệ sau mốc idle và sau mốc tuyệt đối. → Cookie HttpOnly, SameSite=Lax, Secure khi HTTPS. Phiên cũ đổi khi đăng nhập, các phiên quá hạn idle hoặc tuyệt đối bị từ chối.
 
 **Ví dụ Edge Case**
 

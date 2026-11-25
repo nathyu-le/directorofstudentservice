@@ -2,11 +2,15 @@
 
 **Mô tả**
 
-Tìm yêu cầu mình đã gửi và biết trạng thái hiện tại. Đặc tả triển khai prototype thuộc Proposal §2.1 — gửi yêu cầu, cung cấp thông tin, theo dõi tiến độ, phản hồi kết quả; các chi tiết trường và quy tắc dưới đây là thiết kế đề xuất v5.0 để review, không phải thông tin vận hành đã được khách hàng xác nhận.
+Tìm yêu cầu mình đã gửi và biết trạng thái hiện tại. Phạm vi và mục tiêu xem [tổng quan sản phẩm](../../../01-overview/scope.md). Các chi tiết nghiệp vụ đang ở trạng thái đề xuất.
 
 **Actor**
 
 Sinh viên. Quyền cụ thể kiểm ở máy chủ theo [ma trận quyền](../../../02-domain/permissions.md).
+
+**Priority**
+
+P0 theo [thang ưu tiên PRD](../../../01-overview/scope.md#ưu-tiên-yêu-cầu).
 
 **Preconditions**
 
@@ -27,18 +31,17 @@ Sinh viên. Quyền cụ thể kiểm ở máy chủ theo [ma trận quyền](..
 | status | Tùy chọn | Một trạng thái hợp lệ hoặc Tất cả. |
 | page | Tùy chọn | Số nguyên dương; kích thước trang page_size=20. |
 
-- Truy vấn luôn có student_id=session.user_id trước mọi điều kiện tìm kiếm. Tham số student_id từ client không làm thay đổi phạm vi.
-- keyword tùy chọn, trim, tối đa 100 ký tự, so khớp chuỗi con reference/title không phân biệt hoa thường. status tùy chọn thuộc Received/Processing/WaitingInfo/Resolved/Closed. page nguyên >=1; page_size cố định 20.
-- Sắp updated_at giảm dần, id giảm dần khi bằng nhau. total và items dùng cùng scope/bộ lọc. Trang vượt số trang trả items rỗng, total đúng; không tự đổi trang.
-- Mỗi dòng gồm reference, title, status, department_name, assignee_display_name, due_at, updated_at. NULL trách nhiệm hiển thị Chưa phân công; NULL hạn hiển thị Chưa đặt hạn. Không trả email riêng của nhân viên.
+- Truy vấn luôn có student_id=session.user_id trước mọi điều kiện tìm kiếm. Tham số student_id từ client không làm thay đổi phạm vi. **Kiểm bởi:** AC-STU-02-01, AC-STU-02-03, AC-STU-02-06.
+- keyword tùy chọn, trim, tối đa 100 ký tự, so khớp chuỗi con reference/title không phân biệt hoa thường. status tùy chọn thuộc Received/Processing/WaitingInfo/Resolved/Closed. page nguyên >=1; page_size cố định 20. **Kiểm bởi:** AC-STU-02-02, AC-STU-02-06, AC-STU-02-07.
+- Sắp updated_at giảm dần, id giảm dần khi bằng nhau. total và items dùng cùng scope/bộ lọc. Trang vượt số trang trả items rỗng, total đúng; không tự đổi trang. **Kiểm bởi:** AC-STU-02-05, AC-STU-02-07.
+- Mỗi dòng gồm reference, title, status, department_name, assignee_display_name, due_at, updated_at. NULL trách nhiệm hiển thị Chưa phân công; NULL hạn hiển thị Chưa đặt hạn. Không trả email riêng của nhân viên. **Kiểm bởi:** AC-STU-02-04, AC-STU-02-07.
 
 **Alternative / Error Flows**
 
-- 401: phiên không hợp lệ; điều hướng đăng nhập, không gửi lại thao tác ghi tự động sau login.
-- 403: thiếu capability/CSRF hoặc bộ lọc ngoài scope; không trả dữ liệu trái quyền.
-- 404: request không tồn tại/ngoài quyền đối tượng; không tiết lộ hồ sơ có tồn tại hay không.
-- 422: sai trường/bộ lọc theo Business Rules; hiển thị lỗi tại trường, giữ dữ liệu đang nhập.
-- 500 hoặc mất mạng: không đánh thao tác thành công khi chưa có response xác nhận. Riêng STU-01 retry dùng cùng submission_key; các thao tác khác tải lại để xác định lần ghi đã commit, không gửi tự động vô điều kiện.
+- 401 khi phiên hết hiệu lực. Xem NFR-SEC-01 về xác thực lại và xử lý thao tác đang chờ.
+- 403 thiếu quyền đọc danh sách sinh viên. **Kiểm bởi:** NFR-SEC-01.
+- 422 trạng thái, trang hoặc từ khóa sai. **Kiểm bởi:** AC-STU-02-02, AC-STU-02-06.
+- Xử lý mất kết nối, thông báo lỗi biểu mẫu và mã đối chiếu theo [NFR-OBS-01](../../../01-overview/non-functional-requirements.md).
 
 **Acceptance Criteria**
 
@@ -47,6 +50,9 @@ Sinh viên. Quyền cụ thể kiểm ở máy chủ theo [ma trận quyền](..
 - **AC-STU-02-03:** Khi SV-A sửa tham số student_id thành SV-B. → Không trả bất kỳ yêu cầu của SV-B.
 - **AC-STU-02-04:** Khi Tài khoản SV-C chưa có yêu cầu. → Hiển thị Chưa có yêu cầu và liên kết gửi yêu cầu; không báo lỗi hệ thống.
 - **AC-STU-02-05:** Khi Có 1 request, page=2 với page_size 20. → items=[] và total=1; không trả request người khác, không tự sửa page.
+
+- **AC-STU-02-06:** Khi Với SV-A, tìm từ khóa có khoảng trắng đầu/cuối và khác chữ hoa/thường, khớp một phần mã US-310 hoặc tiêu đề Học vụ. Thử từ khóa 100 và 101 ký tự. → Tìm trên mã/tiêu đề đúng phạm vi. 100 ký tự hợp lệ, 101 trả 422 tại bộ lọc. Không đưa hồ sơ SV-B vào items/total.
+- **AC-STU-02-07:** Khi Tạo 21 hồ sơ của SV-A. Hai hồ sơ mới nhất trùng updated_at nhưng ID khác. Một hồ sơ không có người/hạn. Đọc trang 1 và 2. → 20 dòng rồi 1 dòng, cùng total=21, thứ tự updated_at và ID giảm dần. Hiện Chưa phân công, Chưa đặt hạn. Không có email riêng nhân viên trong JSON.
 
 **Ví dụ Edge Case**
 
