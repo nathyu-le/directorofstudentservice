@@ -1,11 +1,11 @@
 {
   "project": "UniSupport",
-  "version": "6.1",
+  "version": "6.2",
   "status": "Kế hoạch theo đầu ra; chưa có actual hoặc xác nhận nghiệm thu",
   "source": {
     "proposal": "project_proposal.md",
     "archive": "docs/05-project/sent/README.md",
-    "version": "6.1"
+    "version": "6.2"
   },
   "modules": [
     {
@@ -2731,8 +2731,8 @@
       "checks": [
         [
           "Đối chiếu phép tính",
-          "PB-A có 2 mở,1Resolved; PB-B có 1 mở;1 chưa giao.",
-          "Backlog PB-A=2, PB-B=1, chưa giao=1, tổng4; request Resolved không tính."
+          "PB-A có 2 hồ sơ mở, 1 hồ sơ Resolved; PB-B có 1 mở; 1 hồ sơ chưa giao.",
+          "Backlog PB-A=2, PB-B=1, chưa giao=1, tổng 4; request Resolved không tính."
         ],
         [
           "Tham số không hỗ trợ",
@@ -3084,7 +3084,7 @@
       "rules": [
         "email bắt buộc, trim, chuyển chữ thường, định dạng email, tối đa 254; password bắt buộc giữ nguyên không trim, tối đa 256. Tài khoản seed có password_hash, active, role/scope ở máy chủ.",
         "Đúng email/password và active=true: regenerate session ID, hủy ID trước đăng nhập, trả user_id/display_name và capabilities hiện hành. Không nhận role/scope của client.",
-        "Sai password/email không có/tài khoản inactive cùng401 INVALID_CREDENTIALS và một thông báo chung. Đầu vào sai422. Không log password/session token. Thời gian idle đề xuất 30 phút, absolute 8 giờ.",
+        "Sai password/email không có/tài khoản inactive cùng trả 401 INVALID_CREDENTIALS và một thông báo chung. Đầu vào sai trả 422. Không log password/session token. Thời gian idle đề xuất 30 phút, absolute 8 giờ.",
         "Cookie HttpOnly, SameSite=Lax, Secure khi HTTPS. Local HTTP chỉ dùng môi trường mẫu, không được mô tả như bảo mật production. Login giới hạn đề xuất 5 lần sai/15 phút cho cặp email+IP:429; không là account-lock vĩnh viễn."
       ],
       "effort_basis": "Dự toán prototype đề xuất, chưa là actual hay xác nhận của nhóm",
@@ -3280,7 +3280,7 @@
         [
           "Aggregate vượt scope",
           "QL-A chỉ PB-A; gọi report PB-B hoặc scope=all.",
-          "PB-B403; scope=all không mở rộng quyền; không có source/số liệu ngoài PB-A."
+          "PB-B trả 403; scope=all không mở rộng quyền; không có source/số liệu ngoài PB-A."
         ],
         [
           "Phiên hết hạn hoặc tài khoản không hoạt động",
@@ -3326,7 +3326,7 @@
       "prd_path": "docs/03-modules/04-accounts-permissions/requirements/FR-IAM-03.md",
       "rules": [
         "Áp dụng middleware trước mọi endpoint protected và mọi truy vấn dữ liệu; kiểm user active, session, capability, scope và quyền object từ DB, không từ UI/client.",
-        "Không phiên/hết hạn401. Vai trò thiếu quyền hành động403. Request không tồn tại/ngoài quyền object404. Bộ lọc department vượt scope403. CSRF thiếu/sai403. Không chứa dữ liệu nghiệp vụ trong error.",
+        "Không phiên/hết hạn trả 401. Vai trò thiếu quyền hành động trả 403. Request không tồn tại/ngoài quyền đối tượng trả 404. Bộ lọc department vượt phạm vi trả 403. CSRF thiếu/sai trả 403. Không chứa dữ liệu nghiệp vụ trong error.",
         "Sinh viên chỉ request.student_id=self và public; handler chỉ request.assignee_id=self; dispatch theo configured scope; manager chỉ aggregate theo reporting scope. Quyền dispatch có thể gắn staff/manager nhưng không tự cấp cho mọi staff.",
         "Thay responsibility ở DSP-04 làm object permission đổi ngay ở request tiếp theo. Không cache dài quyền từ lần login. Seed định nghĩa phạm vi đầy đủ; quyền xem hàng chờ chưa giao chỉ dispatch toàn trường.",
         "Server bỏ qua client role/scope/student_id, không mass-assign fields. Đầu ra chỉ định rõ trường được phép; query báo cáo phải lọc scope trước aggregate."
@@ -3400,7 +3400,7 @@
     "main_hours": 288,
     "total_budget_hours": 320,
     "budget_source": "User-confirmed ceiling: 288h main + 32h reserve. Role/task allocation is proposed, not actual or owner-approved.",
-    "estimate_status": "Budget-constrained allocation for review; functional/task coverage preserved. Feasibility requires BE/FE/QA review. Reserve is unassigned and not counted in task hours.",
+    "estimate_status": "Dự toán 6.2 để rà. 288 giờ chính + 32 giờ dự phòng, không thay ngày mốc. Chuyển 4,5 giờ QA dùng chung sang các lượt hồi quy MS-02–MS-05. Đây là dự toán và chưa ghi actual.",
     "schedule_status": "Giữ cửa sổ triển khai backend từng FR từ lịch repo và cửa sổ kiểm chứng cuối 28/12/2026. Tính lại thứ tự/ngày theo dependency và phân bổ giả định. Milestone theo đầu ra, không theo nhãn tuần; không tự hứa rút ngắn dự án.",
     "tasks": [
       {
@@ -4137,7 +4137,7 @@
         "hours": 2.5,
         "input": "Đặc tả hiện hành và đầu ra các task phụ thuộc; chỉ nhận việc khi đủ đầu vào.",
         "output": "Traceability FR/AC/TC",
-        "dod": "149 AC/TC đều có liên kết; câu hỏi ghi cho PM",
+        "dod": "187 AC/TC đều có liên kết; câu hỏi ghi cho PM",
         "deps": [
           "PM-02"
         ],
@@ -4159,9 +4159,9 @@
         "name": "Chuẩn hóa case, expected và fixture nền",
         "role": "QA",
         "fr": "",
-        "hours": 6,
+        "hours": 4.5,
         "input": "Đặc tả hiện hành và đầu ra các task phụ thuộc; chỉ nhận việc khi đủ đầu vào.",
-        "output": "149 case, fixture và expected",
+        "output": "Bộ fixture nền dùng lại, chuẩn expected và kiểm tính đầy đủ của danh mục 187 ca; các task QA.01 chuẩn bị biến thể từng FR.",
         "dod": "Đủ positive/negative/quyền/edge; BE/FE rà dữ liệu",
         "deps": [
           "QA-01",
@@ -4169,7 +4169,7 @@
         ],
         "start_date": "2026-10-15",
         "due_date": "2026-10-16",
-        "estimate_basis": "Rà và chuẩn hóa 149 TC đã soạn trong PRD cùng fixture nền; chưa thực thi test.",
+        "estimate_basis": "Rà và chuẩn hóa 187 TC đã soạn trong PRD cùng fixture nền; chưa thực thi test. Dự toán 6.2 chuyển 1.5 giờ của phần dùng chung sang hồi quy trước mốc. Căn cứ xem Master Plan.",
         "milestone": "MS-01",
         "kind": "Task",
         "planned_allocation": [
@@ -4179,7 +4179,7 @@
           },
           {
             "date": "2026-10-16",
-            "hours": 2
+            "hours": 0.5
           }
         ],
         "dependency_rule": "FS ngày làm việc kế tiếp; task cùng FR/role có thể nối tiếp trong ngày; cổng nghiệm thu có thể cùng ngày sau đủ đầu ra."
@@ -4191,7 +4191,7 @@
         "fr": "",
         "hours": 1.5,
         "input": "Đặc tả hiện hành và đầu ra các task phụ thuộc; chỉ nhận việc khi đủ đầu vào.",
-        "output": "Checklist MS-02, kết quả kiểm luồng tiếp nhận và bug còn mở Trước cổng MS-02, tổng hợp kết quả kiểm sớm NFR-SEC-01; NFR-REL-01; NFR-USAB-01; NFR-PERF-01; NFR-OBS-01 theo các FR có bản tích hợp tại mốc. Lưu rõ kết quả, thiếu điều kiện hoặc yêu cầu điều chỉnh giờ.",
+        "output": "Checklist MS-02, kết quả kiểm luồng tiếp nhận và bug còn mở",
         "dod": "Có build/fixture/expected/actual; không công bố toàn bộ vòng xử lý đã đạt khi chưa chạy E2E.",
         "deps": [
           "FE-03",
@@ -4212,36 +4212,29 @@
             "hours": 1.5
           }
         ],
-        "dependency_rule": "FS ngày làm việc kế tiếp; task cùng FR/role có thể nối tiếp trong ngày; cổng nghiệm thu có thể cùng ngày sau đủ đầu ra.",
-        "nfr_checkpoint": [
-          "NFR-SEC-01",
-          "NFR-REL-01",
-          "NFR-USAB-01",
-          "NFR-PERF-01",
-          "NFR-OBS-01"
-        ]
+        "dependency_rule": "FS ngày làm việc kế tiếp; task cùng FR/role có thể nối tiếp trong ngày; cổng nghiệm thu có thể cùng ngày sau đủ đầu ra."
       },
       {
         "id": "QA-04",
         "name": "Chạy E2E-01 đến E2E-07 xuyên module",
         "role": "QA",
         "fr": "",
-        "hours": 4,
+        "hours": 3,
         "input": "Đặc tả hiện hành và đầu ra các task phụ thuộc; chỉ nhận việc khi đủ đầu vào.",
-        "output": "Kết quả E2E-01..07, evidence và bug",
+        "output": "Kết quả E2E-01 đến E2E-07 trên build tích hợp, đối chiếu bằng chứng hồi quy sớm để chuẩn bị dữ liệu; ghi bug và kết quả thực thi.",
         "dod": "Chạy 7 luồng trên build tích hợp; E2E-08 thuộc QA-10, không tính hoặc ghi chạy hai lần.",
         "deps": [
           "MS-05"
         ],
         "start_date": "2026-12-28",
         "due_date": "2026-12-28",
-        "estimate_basis": "Giữ đủ 4h thực thi 8 E2E xuyên module, tách khỏi test từng FR.",
+        "estimate_basis": "Giữ đủ 4h thực thi 8 E2E xuyên module, tách khỏi test từng FR. Dự toán 6.2 chuyển 1 giờ của phần dùng chung sang hồi quy trước mốc. Căn cứ xem Master Plan.",
         "milestone": "MS-06",
         "kind": "Task",
         "planned_allocation": [
           {
             "date": "2026-12-28",
-            "hours": 4
+            "hours": 3
           }
         ],
         "dependency_rule": "FS ngày làm việc kế tiếp; task cùng FR/role có thể nối tiếp trong ngày; cổng nghiệm thu có thể cùng ngày sau đủ đầu ra."
@@ -4251,22 +4244,22 @@
         "name": "Chạy NFR, trừ kiểm tra chạy lại khi bàn giao",
         "role": "QA",
         "fr": "",
-        "hours": 3,
+        "hours": 2.5,
         "input": "Đặc tả hiện hành và đầu ra các task phụ thuộc; chỉ nhận việc khi đủ đầu vào.",
-        "output": "Kết quả NFR-SEC/REL/USAB/PERF/OBS và bug",
+        "output": "Kết quả NFR-SEC/REL/USAB/PERF/OBS; tái sử dụng dữ liệu và cách đo đã được thiết lập trước, chạy lại trên build tích hợp và lưu bằng chứng.",
         "dod": "5 NFR được chạy theo kịch bản PRD; NFR-DEP-01 thuộc QA-10. Không là chứng nhận production.",
         "deps": [
           "MS-05"
         ],
         "start_date": "2026-12-29",
         "due_date": "2026-12-29",
-        "estimate_basis": "3h cho 6 NFR prototype, dùng môi trường/fixture nền; chưa là kiểm định production.",
+        "estimate_basis": "3h cho 6 NFR prototype, dùng môi trường/fixture nền; chưa là kiểm định production. Dự toán 6.2 chuyển 0.5 giờ của phần dùng chung sang hồi quy trước mốc. Căn cứ xem Master Plan.",
         "milestone": "MS-06",
         "kind": "Task",
         "planned_allocation": [
           {
             "date": "2026-12-29",
-            "hours": 3
+            "hours": 2.5
           }
         ],
         "dependency_rule": "FS ngày làm việc kế tiếp; task cùng FR/role có thể nối tiếp trong ngày; cổng nghiệm thu có thể cùng ngày sau đủ đầu ra."
@@ -4302,9 +4295,9 @@
         "name": "Retest, regression và rà kết quả MET",
         "role": "QA",
         "fr": "",
-        "hours": 5,
+        "hours": 3.5,
         "input": "Đặc tả hiện hành và đầu ra các task phụ thuộc; chỉ nhận việc khi đủ đầu vào.",
-        "output": "Báo cáo retest/regression",
+        "output": "Báo cáo retest/regression theo phạm vi thay đổi sau QA-04/QA-05, dùng lại bằng chứng tương thích và chạy lại phần bị tác động hoặc thiếu chứng cứ.",
         "dod": "Case lỗi và ảnh hưởng đã chạy; bug chặn không bị đóng trước retest",
         "deps": [
           "BE-07",
@@ -4313,13 +4306,13 @@
         ],
         "start_date": "2027-01-04",
         "due_date": "2027-01-05",
-        "estimate_basis": "Giữ 5h retest/regression cuối; số bug thực tế có thể cần dự phòng.",
+        "estimate_basis": "Giữ 5h retest/regression cuối; số bug thực tế có thể cần dự phòng. Dự toán 6.2 chuyển 1.5 giờ của phần dùng chung sang hồi quy trước mốc. Căn cứ xem Master Plan.",
         "milestone": "MS-06",
         "kind": "Task",
         "planned_allocation": [
           {
             "date": "2027-01-04",
-            "hours": 4
+            "hours": 2.5
           },
           {
             "date": "2027-01-05",
@@ -5328,7 +5321,7 @@
         "fr": "FR-STU-04",
         "hours": 0.35,
         "input": "Kết quả QA.02,bug/build",
-        "output": "Báo cáo,bug dẫn FR/TC; danh sách retest còn mở Trước cổng MS-03, tổng hợp kết quả kiểm sớm NFR-SEC-01; NFR-REL-01; NFR-USAB-01; NFR-OBS-01 theo các FR có bản tích hợp tại mốc. Lưu rõ kết quả, thiếu điều kiện hoặc yêu cầu điều chỉnh giờ.",
+        "output": "Báo cáo,bug dẫn FR/TC; danh sách retest còn mở",
         "dod": "Fail có bug; Blocked có nguyên nhân; retest thật ghi build/evidence, không giả đã sửa",
         "deps": [
           "FR-STU-04.QA.02"
@@ -5344,13 +5337,7 @@
             "hours": 0.35
           }
         ],
-        "dependency_rule": "FS ngày làm việc kế tiếp; task cùng FR/role có thể nối tiếp trong ngày; cổng nghiệm thu có thể cùng ngày sau đủ đầu ra.",
-        "nfr_checkpoint": [
-          "NFR-SEC-01",
-          "NFR-REL-01",
-          "NFR-USAB-01",
-          "NFR-OBS-01"
-        ]
+        "dependency_rule": "FS ngày làm việc kế tiếp; task cùng FR/role có thể nối tiếp trong ngày; cổng nghiệm thu có thể cùng ngày sau đủ đầu ra."
       },
       {
         "id": "FR-STU-05.PM.01",
@@ -7919,7 +7906,7 @@
         "fr": "FR-DSP-10",
         "hours": 0.35,
         "input": "Kết quả QA.02,bug/build",
-        "output": "Báo cáo,bug dẫn FR/TC; danh sách retest còn mở Trước cổng MS-04, tổng hợp kết quả kiểm sớm NFR-SEC-01; NFR-REL-01; NFR-USAB-01; NFR-OBS-01 theo các FR có bản tích hợp tại mốc. Lưu rõ kết quả, thiếu điều kiện hoặc yêu cầu điều chỉnh giờ.",
+        "output": "Báo cáo,bug dẫn FR/TC; danh sách retest còn mở",
         "dod": "Fail có bug; Blocked có nguyên nhân; retest thật ghi build/evidence, không giả đã sửa",
         "deps": [
           "FR-DSP-10.QA.02"
@@ -7935,13 +7922,7 @@
             "hours": 0.35
           }
         ],
-        "dependency_rule": "FS ngày làm việc kế tiếp; task cùng FR/role có thể nối tiếp trong ngày; cổng nghiệm thu có thể cùng ngày sau đủ đầu ra.",
-        "nfr_checkpoint": [
-          "NFR-SEC-01",
-          "NFR-REL-01",
-          "NFR-USAB-01",
-          "NFR-OBS-01"
-        ]
+        "dependency_rule": "FS ngày làm việc kế tiếp; task cùng FR/role có thể nối tiếp trong ngày; cổng nghiệm thu có thể cùng ngày sau đủ đầu ra."
       },
       {
         "id": "FR-RPT-01.PM.01",
@@ -9330,7 +9311,7 @@
         "fr": "FR-RPT-06",
         "hours": 0.35,
         "input": "Kết quả QA.02,bug/build",
-        "output": "Báo cáo,bug dẫn FR/TC; danh sách retest còn mở Trước cổng MS-05, tổng hợp kết quả kiểm sớm NFR-SEC-01; NFR-PERF-01; NFR-OBS-01 theo các FR có bản tích hợp tại mốc. Lưu rõ kết quả, thiếu điều kiện hoặc yêu cầu điều chỉnh giờ.",
+        "output": "Báo cáo,bug dẫn FR/TC; danh sách retest còn mở",
         "dod": "Fail có bug; Blocked có nguyên nhân; retest thật ghi build/evidence, không giả đã sửa",
         "deps": [
           "FR-RPT-06.QA.02"
@@ -9346,12 +9327,7 @@
             "hours": 0.35
           }
         ],
-        "dependency_rule": "FS ngày làm việc kế tiếp; task cùng FR/role có thể nối tiếp trong ngày; cổng nghiệm thu có thể cùng ngày sau đủ đầu ra.",
-        "nfr_checkpoint": [
-          "NFR-SEC-01",
-          "NFR-PERF-01",
-          "NFR-OBS-01"
-        ]
+        "dependency_rule": "FS ngày làm việc kế tiếp; task cùng FR/role có thể nối tiếp trong ngày; cổng nghiệm thu có thể cùng ngày sau đủ đầu ra."
       },
       {
         "id": "FR-IAM-01.PM.01",
@@ -10010,7 +9986,7 @@
         "fr": "FR-IAM-03",
         "hours": 0.9,
         "input": "Build tích hợp + fixture; AC-IAM-03-01, AC-IAM-03-02, AC-IAM-03-03, AC-IAM-03-04, AC-IAM-03-05, AC-IAM-03-06, AC-IAM-03-07, AC-IAM-03-08",
-        "output": "TC-IAM-03-01, TC-IAM-03-02, TC-IAM-03-03, TC-IAM-03-04, TC-IAM-03-05, TC-IAM-03-06, TC-IAM-03-07, TC-IAM-03-08 có actual/result/evidence",
+        "output": "TC-IAM-03-01, TC-IAM-03-02, TC-IAM-03-03, TC-IAM-03-04, TC-IAM-03-05, TC-IAM-03-06, TC-IAM-03-07, TC-IAM-03-08 có actual/result/evidence Với cổng MS-01 lưu kiểm phiên và phạm vi bằng các ca IAM, kiểm mã đối chiếu khi có lỗi được mô phỏng và đối chiếu log đã che thông tin theo NFR-OBS-01.",
         "dod": "Not Run/Pass/Fail/Blocked đúng thực thi; không đánh Pass khi chưa chạy",
         "deps": [
           "FR-IAM-03.QA.01",
@@ -10027,7 +10003,11 @@
             "hours": 0.9
           }
         ],
-        "dependency_rule": "FS ngày làm việc kế tiếp; task cùng FR/role có thể nối tiếp trong ngày; cổng nghiệm thu có thể cùng ngày sau đủ đầu ra."
+        "dependency_rule": "FS ngày làm việc kế tiếp; task cùng FR/role có thể nối tiếp trong ngày; cổng nghiệm thu có thể cùng ngày sau đủ đầu ra.",
+        "nfr_checkpoint": [
+          "NFR-SEC-01",
+          "NFR-OBS-01"
+        ]
       },
       {
         "id": "FR-IAM-03.QA.03",
@@ -10091,6 +10071,46 @@
         "dependency_rule": "FS ngày làm việc kế tiếp; task cùng FR/role có thể nối tiếp trong ngày; cổng nghiệm thu có thể cùng ngày sau đủ đầu ra."
       },
       {
+        "id": "QA-RG-02",
+        "name": "Hồi quy tích hợp trước MS-02",
+        "role": "QA",
+        "fr": "",
+        "hours": 1,
+        "milestone": "MS-02",
+        "kind": "Task",
+        "start_date": "2026-11-16",
+        "due_date": "2026-11-16",
+        "deps": [
+          "MS-01",
+          "QA-03"
+        ],
+        "input": "Bản tích hợp đã sẵn sàng, dữ liệu thử, bằng chứng cổng trước và kết quả QA các FR tại mốc.",
+        "output": "Kiểm lại phiên bị thu hồi và quyền đọc hồ sơ, rồi đối chiếu việc tiếp nhận/gửi lặp trên build có hàng chờ. Lưu mã case, build, kết quả, lỗi và phạm vi NFR kiểm lại trên issue. Dùng bằng chứng NFR còn hiệu lực khi có cùng cấu hình và phạm vi.",
+        "dod": "Chạy các ca hồi quy bắt buộc và bổ sung theo thay đổi. Nếu sai quyền, sai dữ liệu, luồng chính bị chặn hoặc thiếu bằng chứng bắt buộc, báo blocker trước khi đề xuất duyệt mốc.",
+        "estimate_basis": "Ước lượng mô phỏng cho tập hồi quy trọng yếu và kiểm bằng chứng NFR trên build dùng thử. Vượt dự toán thì báo R-08/OQ-08, đánh giá lại phạm vi ảnh hưởng và trình quyết định dự phòng.",
+        "dependency_rule": "Task chạy sau những đầu vào đã hoàn thành. Khi đầu vào cùng ngày, chờ bản tích hợp và QA trước rồi mới chạy, xác nhận milestone sau khi đã có kết quả.",
+        "planned_allocation": [
+          {
+            "date": "2026-11-16",
+            "hours": 1
+          }
+        ],
+        "regression_test_ids": [
+          "TC-IAM-02-03",
+          "TC-IAM-03-03",
+          "TC-STU-01-04",
+          "TC-DSP-01-01"
+        ],
+        "nfr_checkpoint": [
+          "NFR-SEC-01",
+          "NFR-REL-01",
+          "NFR-USAB-01",
+          "NFR-PERF-01",
+          "NFR-OBS-01"
+        ],
+        "github_issue": 284
+      },
+      {
         "id": "MS-02",
         "name": "Tiếp nhận và theo dõi yêu cầu",
         "frs": [
@@ -10100,14 +10120,14 @@
           "FR-DSP-01",
           "FR-DSP-02"
         ],
-        "acceptance": "Sinh viên gửi yêu cầu hợp lệ, thấy đúng hồ sơ của mình; điều phối thấy cùng mã trong hàng chờ và hồ sơ xử lý. Kiểm gửi lặp, validation, quyền đọc và lịch sử công khai/nội bộ theo AC. Các trạng thái chưa có thao tác sinh dữ liệu được kiểm bằng fixture; không coi đó là bằng chứng E2E đã chạy.",
+        "acceptance": "Sinh viên gửi yêu cầu hợp lệ, thấy đúng hồ sơ của mình; điều phối thấy cùng mã trong hàng chờ và hồ sơ xử lý. Kiểm gửi lặp, validation, quyền đọc và lịch sử công khai/nội bộ theo AC. Các trạng thái chưa có thao tác sinh dữ liệu được kiểm bằng fixture; không coi đó là bằng chứng E2E đã chạy. Hồi quy trên bản dự kiến giao phải có kết quả và bằng chứng của QA-RG-02.",
         "role": "PM",
         "fr": "",
         "hours": 0,
         "kind": "Milestone",
         "milestone": "MS-02",
         "input": "Bằng chứng triển khai/kiểm thử/review của các task phụ thuộc",
-        "output": "Sinh viên gửi yêu cầu hợp lệ, thấy đúng hồ sơ của mình; điều phối thấy cùng mã trong hàng chờ và hồ sơ xử lý. Kiểm gửi lặp, validation, quyền đọc và lịch sử công khai/nội bộ theo AC. Các trạng thái chưa có thao tác sinh dữ liệu được kiểm bằng fixture; không coi đó là bằng chứng E2E đã chạy.",
+        "output": "Sinh viên gửi yêu cầu hợp lệ, thấy đúng hồ sơ của mình; điều phối thấy cùng mã trong hàng chờ và hồ sơ xử lý. Kiểm gửi lặp, validation, quyền đọc và lịch sử công khai/nội bộ theo AC. Các trạng thái chưa có thao tác sinh dữ liệu được kiểm bằng fixture; không coi đó là bằng chứng E2E đã chạy. Hồi quy trên bản dự kiến giao phải có kết quả và bằng chứng của QA-RG-02.",
         "dod": "Chỉ đóng khi đủ điều kiện và bằng chứng thực tế; task QA có báo cáo không đồng nghĩa mọi TC đã Pass.",
         "deps": [
           "MS-01",
@@ -10119,12 +10139,53 @@
           "PM-06",
           "BE-04",
           "FE-03",
-          "QA-03"
+          "QA-03",
+          "QA-RG-02"
         ],
         "start_date": "2026-11-16",
         "due_date": "2026-11-16",
         "planned_allocation": [],
         "dependency_rule": "FS ngày làm việc kế tiếp; task cùng FR/role có thể nối tiếp trong ngày; cổng nghiệm thu có thể cùng ngày sau đủ đầu ra."
+      },
+      {
+        "id": "QA-RG-03",
+        "name": "Hồi quy tích hợp trước MS-03",
+        "role": "QA",
+        "fr": "",
+        "hours": 1.25,
+        "milestone": "MS-03",
+        "kind": "Task",
+        "start_date": "2026-12-04",
+        "due_date": "2026-12-04",
+        "deps": [
+          "MS-02",
+          "FR-STU-04.QA.03",
+          "FR-DSP-07.QA.03"
+        ],
+        "input": "Bản tích hợp đã sẵn sàng, dữ liệu thử, bằng chứng cổng trước và kết quả QA các FR tại mốc.",
+        "output": "Kiểm lại gửi lặp và lịch sử công khai khi đã có phân công và vòng bổ sung. Xác nhận người xử lý cũ mất quyền và dấu mốc xử lý được giữ. Lưu mã case, build, kết quả, lỗi và phạm vi NFR kiểm lại trên issue. Dùng bằng chứng NFR còn hiệu lực khi có cùng cấu hình và phạm vi.",
+        "dod": "Chạy các ca hồi quy bắt buộc và bổ sung theo thay đổi. Nếu sai quyền, sai dữ liệu, luồng chính bị chặn hoặc thiếu bằng chứng bắt buộc, báo blocker trước khi đề xuất duyệt mốc.",
+        "estimate_basis": "Ước lượng mô phỏng cho tập hồi quy trọng yếu và kiểm bằng chứng NFR trên build dùng thử. Vượt dự toán thì báo R-08/OQ-08, đánh giá lại phạm vi ảnh hưởng và trình quyết định dự phòng.",
+        "dependency_rule": "Task chạy sau những đầu vào đã hoàn thành. Khi đầu vào cùng ngày, chờ bản tích hợp và QA trước rồi mới chạy, xác nhận milestone sau khi đã có kết quả.",
+        "planned_allocation": [
+          {
+            "date": "2026-12-04",
+            "hours": 1.25
+          }
+        ],
+        "regression_test_ids": [
+          "TC-STU-01-04",
+          "TC-STU-03-05",
+          "TC-DSP-04-04",
+          "TC-STU-04-05"
+        ],
+        "nfr_checkpoint": [
+          "NFR-SEC-01",
+          "NFR-REL-01",
+          "NFR-USAB-01",
+          "NFR-OBS-01"
+        ],
+        "github_issue": 285
       },
       {
         "id": "MS-03",
@@ -10138,14 +10199,14 @@
           "FR-DSP-08",
           "FR-STU-04"
         ],
-        "acceptance": "Phân loại, phân công, đặt hạn, bắt đầu xử lý, cập nhật tiến độ và vòng yêu cầu/bổ sung thông tin hoạt động đúng vai trò, scope, state và version. Kiểm quyền sau đổi người phụ trách, không ghi dữ liệu/lịch sử một phần.",
+        "acceptance": "Phân loại, phân công, đặt hạn, bắt đầu xử lý, cập nhật tiến độ và vòng yêu cầu/bổ sung thông tin hoạt động đúng vai trò, scope, state và version. Kiểm quyền sau đổi người phụ trách, không ghi dữ liệu/lịch sử một phần. Hồi quy trên bản dự kiến giao phải có kết quả và bằng chứng của QA-RG-03.",
         "role": "PM",
         "fr": "",
         "hours": 0,
         "kind": "Milestone",
         "milestone": "MS-03",
         "input": "Bằng chứng triển khai/kiểm thử/review của các task phụ thuộc",
-        "output": "Phân loại, phân công, đặt hạn, bắt đầu xử lý, cập nhật tiến độ và vòng yêu cầu/bổ sung thông tin hoạt động đúng vai trò, scope, state và version. Kiểm quyền sau đổi người phụ trách, không ghi dữ liệu/lịch sử một phần.",
+        "output": "Phân loại, phân công, đặt hạn, bắt đầu xử lý, cập nhật tiến độ và vòng yêu cầu/bổ sung thông tin hoạt động đúng vai trò, scope, state và version. Kiểm quyền sau đổi người phụ trách, không ghi dữ liệu/lịch sử một phần. Hồi quy trên bản dự kiến giao phải có kết quả và bằng chứng của QA-RG-03.",
         "dod": "Chỉ đóng khi đủ điều kiện và bằng chứng thực tế; task QA có báo cáo không đồng nghĩa mọi TC đã Pass.",
         "deps": [
           "MS-02",
@@ -10155,12 +10216,54 @@
           "FR-DSP-06.QA.03",
           "FR-DSP-07.QA.03",
           "FR-DSP-08.QA.03",
-          "FR-STU-04.QA.03"
+          "FR-STU-04.QA.03",
+          "QA-RG-03"
         ],
         "start_date": "2026-12-04",
         "due_date": "2026-12-04",
         "planned_allocation": [],
         "dependency_rule": "FS ngày làm việc kế tiếp; task cùng FR/role có thể nối tiếp trong ngày; cổng nghiệm thu có thể cùng ngày sau đủ đầu ra."
+      },
+      {
+        "id": "QA-RG-04",
+        "name": "Hồi quy tích hợp trước MS-04",
+        "role": "QA",
+        "fr": "",
+        "hours": 1,
+        "milestone": "MS-04",
+        "kind": "Task",
+        "start_date": "2026-12-09",
+        "due_date": "2026-12-09",
+        "deps": [
+          "MS-03",
+          "FR-DSP-10.QA.03",
+          "FR-STU-05.QA.03"
+        ],
+        "input": "Bản tích hợp đã sẵn sàng, dữ liệu thử, bằng chứng cổng trước và kết quả QA các FR tại mốc.",
+        "output": "Kiểm lại hồ sơ, quyền xem lịch sử và kết quả. Đổi điểm rồi đóng, đối chiếu dữ liệu cập nhật đúng một lần. Lưu mã case, build, kết quả, lỗi và phạm vi NFR kiểm lại trên issue. Dùng bằng chứng NFR còn hiệu lực khi có cùng cấu hình và phạm vi.",
+        "dod": "Chạy các ca hồi quy bắt buộc và bổ sung theo thay đổi. Nếu sai quyền, sai dữ liệu, luồng chính bị chặn hoặc thiếu bằng chứng bắt buộc, báo blocker trước khi đề xuất duyệt mốc.",
+        "estimate_basis": "Ước lượng mô phỏng cho tập hồi quy trọng yếu và kiểm bằng chứng NFR trên build dùng thử. Vượt dự toán thì báo R-08/OQ-08, đánh giá lại phạm vi ảnh hưởng và trình quyết định dự phòng.",
+        "dependency_rule": "Task chạy sau những đầu vào đã hoàn thành. Khi đầu vào cùng ngày, chờ bản tích hợp và QA trước rồi mới chạy, xác nhận milestone sau khi đã có kết quả.",
+        "planned_allocation": [
+          {
+            "date": "2026-12-09",
+            "hours": 1
+          }
+        ],
+        "regression_test_ids": [
+          "TC-STU-03-05",
+          "TC-STU-04-05",
+          "TC-DSP-09-01",
+          "TC-STU-05-04",
+          "TC-DSP-10-01"
+        ],
+        "nfr_checkpoint": [
+          "NFR-SEC-01",
+          "NFR-REL-01",
+          "NFR-USAB-01",
+          "NFR-OBS-01"
+        ],
+        "github_issue": 287
       },
       {
         "id": "MS-04",
@@ -10170,26 +10273,68 @@
           "FR-STU-05",
           "FR-DSP-10"
         ],
-        "acceptance": "Ghi kết quả, sinh viên đọc kết quả và phản hồi; đóng yêu cầu theo đúng điều kiện trong PRD. Không thêm email, SMS hay xuất file. Xác nhận đọc tiến độ/lịch sử liên quan không bị hồi quy.",
+        "acceptance": "Ghi kết quả, sinh viên đọc kết quả và phản hồi; đóng yêu cầu theo đúng điều kiện trong PRD. Không thêm email, SMS hay xuất file. Xác nhận đọc tiến độ/lịch sử liên quan không bị hồi quy. Hồi quy trên bản dự kiến giao phải có kết quả và bằng chứng của QA-RG-04.",
         "role": "PM",
         "fr": "",
         "hours": 0,
         "kind": "Milestone",
         "milestone": "MS-04",
         "input": "Bằng chứng triển khai/kiểm thử/review của các task phụ thuộc",
-        "output": "Ghi kết quả, sinh viên đọc kết quả và phản hồi; đóng yêu cầu theo đúng điều kiện trong PRD. Không thêm email, SMS hay xuất file. Xác nhận đọc tiến độ/lịch sử liên quan không bị hồi quy.",
+        "output": "Ghi kết quả, sinh viên đọc kết quả và phản hồi; đóng yêu cầu theo đúng điều kiện trong PRD. Không thêm email, SMS hay xuất file. Xác nhận đọc tiến độ/lịch sử liên quan không bị hồi quy. Hồi quy trên bản dự kiến giao phải có kết quả và bằng chứng của QA-RG-04.",
         "dod": "Chỉ đóng khi đủ điều kiện và bằng chứng thực tế; task QA có báo cáo không đồng nghĩa mọi TC đã Pass.",
         "deps": [
           "MS-03",
           "FR-DSP-09.QA.03",
           "FR-STU-05.QA.03",
           "FR-DSP-10.QA.03",
-          "PM-07"
+          "PM-07",
+          "QA-RG-04"
         ],
         "start_date": "2026-12-09",
         "due_date": "2026-12-09",
         "planned_allocation": [],
         "dependency_rule": "FS ngày làm việc kế tiếp; task cùng FR/role có thể nối tiếp trong ngày; cổng nghiệm thu có thể cùng ngày sau đủ đầu ra."
+      },
+      {
+        "id": "QA-RG-05",
+        "name": "Hồi quy tích hợp trước MS-05",
+        "role": "QA",
+        "fr": "",
+        "hours": 1.25,
+        "milestone": "MS-05",
+        "kind": "Task",
+        "start_date": "2026-12-18",
+        "due_date": "2026-12-18",
+        "deps": [
+          "MS-04",
+          "BE-05",
+          "FE-04",
+          "FR-RPT-06.QA.03"
+        ],
+        "input": "Bản tích hợp đã sẵn sàng, dữ liệu thử, bằng chứng cổng trước và kết quả QA các FR tại mốc.",
+        "output": "Trên bản tích hợp, kiểm lại đóng hồ sơ và đổi người phụ trách trước khi đối chiếu báo cáo quá hạn, khối lượng và phản hồi theo phạm vi quyền. Lưu mã case, build, kết quả, lỗi và phạm vi NFR kiểm lại trên issue. Dùng bằng chứng NFR còn hiệu lực khi có cùng cấu hình và phạm vi.",
+        "dod": "Chạy các ca hồi quy bắt buộc và bổ sung theo thay đổi. Nếu sai quyền, sai dữ liệu, luồng chính bị chặn hoặc thiếu bằng chứng bắt buộc, báo blocker trước khi đề xuất duyệt mốc.",
+        "estimate_basis": "Ước lượng mô phỏng cho tập hồi quy trọng yếu và kiểm bằng chứng NFR trên build dùng thử. Vượt dự toán thì báo R-08/OQ-08, đánh giá lại phạm vi ảnh hưởng và trình quyết định dự phòng.",
+        "dependency_rule": "Task chạy sau những đầu vào đã hoàn thành. Khi đầu vào cùng ngày, chờ bản tích hợp và QA trước rồi mới chạy, xác nhận milestone sau khi đã có kết quả.",
+        "planned_allocation": [
+          {
+            "date": "2026-12-18",
+            "hours": 1.25
+          }
+        ],
+        "regression_test_ids": [
+          "TC-IAM-03-06",
+          "TC-DSP-10-01",
+          "TC-RPT-02-04",
+          "TC-RPT-05-04",
+          "TC-RPT-06-07"
+        ],
+        "nfr_checkpoint": [
+          "NFR-SEC-01",
+          "NFR-PERF-01",
+          "NFR-OBS-01"
+        ],
+        "github_issue": 286
       },
       {
         "id": "MS-05",
@@ -10202,14 +10347,14 @@
           "FR-RPT-05",
           "FR-RPT-06"
         ],
-        "acceptance": "Sáu báo cáo đúng tập nguồn, phạm vi quyền, bộ lọc, biên thời gian và công thức PRD; đối chiếu với fixture có expected xác định. Bản tích hợp đủ 24 FR; không có chức năng xuất dữ liệu ngoài baseline.",
+        "acceptance": "Sáu báo cáo đúng tập nguồn, phạm vi quyền, bộ lọc, biên thời gian và công thức PRD; đối chiếu với fixture có expected xác định. Bản tích hợp đủ 24 FR; không có chức năng xuất dữ liệu ngoài baseline. Hồi quy trên bản dự kiến giao phải có kết quả và bằng chứng của QA-RG-05.",
         "role": "PM",
         "fr": "",
         "hours": 0,
         "kind": "Milestone",
         "milestone": "MS-05",
         "input": "Bằng chứng triển khai/kiểm thử/review của các task phụ thuộc",
-        "output": "Sáu báo cáo đúng tập nguồn, phạm vi quyền, bộ lọc, biên thời gian và công thức PRD; đối chiếu với fixture có expected xác định. Bản tích hợp đủ 24 FR; không có chức năng xuất dữ liệu ngoài baseline.",
+        "output": "Sáu báo cáo đúng tập nguồn, phạm vi quyền, bộ lọc, biên thời gian và công thức PRD; đối chiếu với fixture có expected xác định. Bản tích hợp đủ 24 FR; không có chức năng xuất dữ liệu ngoài baseline. Hồi quy trên bản dự kiến giao phải có kết quả và bằng chứng của QA-RG-05.",
         "dod": "Chỉ đóng khi đủ điều kiện và bằng chứng thực tế; task QA có báo cáo không đồng nghĩa mọi TC đã Pass.",
         "deps": [
           "MS-04",
@@ -10220,7 +10365,8 @@
           "FR-RPT-05.QA.03",
           "FR-RPT-06.QA.03",
           "BE-05",
-          "FE-04"
+          "FE-04",
+          "QA-RG-05"
         ],
         "start_date": "2026-12-18",
         "due_date": "2026-12-18",
@@ -10231,7 +10377,7 @@
         "id": "MS-06",
         "name": "Kiểm chứng và bàn giao chạy lại được",
         "frs": [],
-        "acceptance": "Có kết quả thật của 149 TC chức năng và 18 kiểm tra hệ thống; đối chiếu toàn bộ AC. Không còn lỗi chặn luồng, sai quyền hoặc làm mất/sai dữ liệu; lỗi khác phải có ghi nhận tác động và quyết định chấp nhận. Có build/commit, test report, source/seed/guide và bằng chứng người khác chạy lại. Kết quả MET dưới mục tiêu phải được báo cáo, không tự coi đạt; xác nhận nghiệm thu bởi người có thẩm quyền, không giả chữ ký.",
+        "acceptance": "Có kết quả thật của 187 TC chức năng và 18 kiểm tra hệ thống; đối chiếu toàn bộ AC. Không còn lỗi chặn luồng, sai quyền hoặc làm mất/sai dữ liệu; lỗi khác phải có ghi nhận tác động và quyết định chấp nhận. Có build/commit, test report, source/seed/guide và bằng chứng người khác chạy lại. Kết quả MET dưới mục tiêu phải được báo cáo, không tự coi đạt; xác nhận nghiệm thu bởi người có thẩm quyền, không giả chữ ký.",
         "role": "PM",
         "fr": "",
         "hours": 0,
@@ -10287,7 +10433,7 @@
           "FR-DSP-01",
           "FR-DSP-02"
         ],
-        "acceptance": "Sinh viên gửi yêu cầu hợp lệ, thấy đúng hồ sơ của mình; điều phối thấy cùng mã trong hàng chờ và hồ sơ xử lý. Kiểm gửi lặp, validation, quyền đọc và lịch sử công khai/nội bộ theo AC. Các trạng thái chưa có thao tác sinh dữ liệu được kiểm bằng fixture; không coi đó là bằng chứng E2E đã chạy.",
+        "acceptance": "Sinh viên gửi yêu cầu hợp lệ, thấy đúng hồ sơ của mình; điều phối thấy cùng mã trong hàng chờ và hồ sơ xử lý. Kiểm gửi lặp, validation, quyền đọc và lịch sử công khai/nội bộ theo AC. Các trạng thái chưa có thao tác sinh dữ liệu được kiểm bằng fixture; không coi đó là bằng chứng E2E đã chạy. Hồi quy trên bản dự kiến giao phải có kết quả và bằng chứng của QA-RG-02.",
         "deps": [
           "MS-01",
           "FR-STU-01.QA.03",
@@ -10298,7 +10444,8 @@
           "PM-06",
           "BE-04",
           "FE-03",
-          "QA-03"
+          "QA-03",
+          "QA-RG-02"
         ]
       },
       {
@@ -10314,7 +10461,7 @@
           "FR-DSP-08",
           "FR-STU-04"
         ],
-        "acceptance": "Phân loại, phân công, đặt hạn, bắt đầu xử lý, cập nhật tiến độ và vòng yêu cầu/bổ sung thông tin hoạt động đúng vai trò, scope, state và version. Kiểm quyền sau đổi người phụ trách, không ghi dữ liệu/lịch sử một phần.",
+        "acceptance": "Phân loại, phân công, đặt hạn, bắt đầu xử lý, cập nhật tiến độ và vòng yêu cầu/bổ sung thông tin hoạt động đúng vai trò, scope, state và version. Kiểm quyền sau đổi người phụ trách, không ghi dữ liệu/lịch sử một phần. Hồi quy trên bản dự kiến giao phải có kết quả và bằng chứng của QA-RG-03.",
         "deps": [
           "MS-02",
           "FR-DSP-03.QA.03",
@@ -10323,7 +10470,8 @@
           "FR-DSP-06.QA.03",
           "FR-DSP-07.QA.03",
           "FR-DSP-08.QA.03",
-          "FR-STU-04.QA.03"
+          "FR-STU-04.QA.03",
+          "QA-RG-03"
         ]
       },
       {
@@ -10335,13 +10483,14 @@
           "FR-STU-05",
           "FR-DSP-10"
         ],
-        "acceptance": "Ghi kết quả, sinh viên đọc kết quả và phản hồi; đóng yêu cầu theo đúng điều kiện trong PRD. Không thêm email, SMS hay xuất file. Xác nhận đọc tiến độ/lịch sử liên quan không bị hồi quy.",
+        "acceptance": "Ghi kết quả, sinh viên đọc kết quả và phản hồi; đóng yêu cầu theo đúng điều kiện trong PRD. Không thêm email, SMS hay xuất file. Xác nhận đọc tiến độ/lịch sử liên quan không bị hồi quy. Hồi quy trên bản dự kiến giao phải có kết quả và bằng chứng của QA-RG-04.",
         "deps": [
           "MS-03",
           "FR-DSP-09.QA.03",
           "FR-STU-05.QA.03",
           "FR-DSP-10.QA.03",
-          "PM-07"
+          "PM-07",
+          "QA-RG-04"
         ]
       },
       {
@@ -10356,7 +10505,7 @@
           "FR-RPT-05",
           "FR-RPT-06"
         ],
-        "acceptance": "Sáu báo cáo đúng tập nguồn, phạm vi quyền, bộ lọc, biên thời gian và công thức PRD; đối chiếu với fixture có expected xác định. Bản tích hợp đủ 24 FR; không có chức năng xuất dữ liệu ngoài baseline.",
+        "acceptance": "Sáu báo cáo đúng tập nguồn, phạm vi quyền, bộ lọc, biên thời gian và công thức PRD; đối chiếu với fixture có expected xác định. Bản tích hợp đủ 24 FR; không có chức năng xuất dữ liệu ngoài baseline. Hồi quy trên bản dự kiến giao phải có kết quả và bằng chứng của QA-RG-05.",
         "deps": [
           "MS-04",
           "FR-RPT-01.QA.03",
@@ -10366,7 +10515,8 @@
           "FR-RPT-05.QA.03",
           "FR-RPT-06.QA.03",
           "BE-05",
-          "FE-04"
+          "FE-04",
+          "QA-RG-05"
         ]
       },
       {
@@ -10388,7 +10538,7 @@
     "planning_capacity_hours_per_role_day": 4,
     "capacity_confirmation": "Giả định lập lịch 4h/role/ngày để kiểm tra không đè việc. Chưa có lịch availability/ngày nghỉ hoặc người thật; không suy ra có thể cho mượn người.",
     "baseline_revision_date": "2026-11-25",
-    "source_commit": "937c123a1a71767eda1c2c20ce8cfda77e8a7ca2"
+    "source_commit": "69d667a93726cae921a5e781330ea2592d4a2123"
   },
   "traceability": [
     {
@@ -10434,7 +10584,8 @@
       ],
       "quotation_id": "Q-01",
       "parent_issue": 13,
-      "qa_execution_issue": 65
+      "qa_execution_issue": 65,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-STU-02",
@@ -10471,7 +10622,8 @@
       ],
       "quotation_id": "Q-01",
       "parent_issue": 14,
-      "qa_execution_issue": 74
+      "qa_execution_issue": 74,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-STU-03",
@@ -10508,7 +10660,8 @@
       ],
       "quotation_id": "Q-01",
       "parent_issue": 15,
-      "qa_execution_issue": 84
+      "qa_execution_issue": 84,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-STU-04",
@@ -10549,7 +10702,8 @@
       ],
       "quotation_id": "Q-01",
       "parent_issue": 16,
-      "qa_execution_issue": 92
+      "qa_execution_issue": 92,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-STU-05",
@@ -10590,7 +10744,8 @@
       ],
       "quotation_id": "Q-01",
       "parent_issue": 17,
-      "qa_execution_issue": 102
+      "qa_execution_issue": 102,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-DSP-01",
@@ -10625,7 +10780,8 @@
       ],
       "quotation_id": "Q-02",
       "parent_issue": 18,
-      "qa_execution_issue": 109
+      "qa_execution_issue": 109,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-DSP-02",
@@ -10660,7 +10816,8 @@
       ],
       "quotation_id": "Q-02",
       "parent_issue": 19,
-      "qa_execution_issue": 120
+      "qa_execution_issue": 120,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-DSP-03",
@@ -10701,7 +10858,8 @@
       ],
       "quotation_id": "Q-02",
       "parent_issue": 20,
-      "qa_execution_issue": 131
+      "qa_execution_issue": 131,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-DSP-04",
@@ -10746,7 +10904,8 @@
       ],
       "quotation_id": "Q-02",
       "parent_issue": 21,
-      "qa_execution_issue": 138
+      "qa_execution_issue": 138,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-DSP-05",
@@ -10789,7 +10948,8 @@
       ],
       "quotation_id": "Q-02",
       "parent_issue": 22,
-      "qa_execution_issue": 147
+      "qa_execution_issue": 147,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-DSP-06",
@@ -10826,7 +10986,8 @@
       ],
       "quotation_id": "Q-02",
       "parent_issue": 23,
-      "qa_execution_issue": 156
+      "qa_execution_issue": 156,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-DSP-07",
@@ -10865,7 +11026,8 @@
       ],
       "quotation_id": "Q-02",
       "parent_issue": 24,
-      "qa_execution_issue": 168
+      "qa_execution_issue": 168,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-DSP-08",
@@ -10902,7 +11064,8 @@
       ],
       "quotation_id": "Q-02",
       "parent_issue": 25,
-      "qa_execution_issue": 181
+      "qa_execution_issue": 181,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-DSP-09",
@@ -10941,7 +11104,8 @@
       ],
       "quotation_id": "Q-02",
       "parent_issue": 26,
-      "qa_execution_issue": 190
+      "qa_execution_issue": 190,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-DSP-10",
@@ -10978,7 +11142,8 @@
       ],
       "quotation_id": "Q-02",
       "parent_issue": 27,
-      "qa_execution_issue": 199
+      "qa_execution_issue": 199,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-RPT-01",
@@ -11015,7 +11180,8 @@
       ],
       "quotation_id": "Q-03",
       "parent_issue": 28,
-      "qa_execution_issue": 208
+      "qa_execution_issue": 208,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-RPT-02",
@@ -11052,7 +11218,8 @@
       ],
       "quotation_id": "Q-03",
       "parent_issue": 29,
-      "qa_execution_issue": 218
+      "qa_execution_issue": 218,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-RPT-03",
@@ -11089,7 +11256,8 @@
       ],
       "quotation_id": "Q-03",
       "parent_issue": 30,
-      "qa_execution_issue": 228
+      "qa_execution_issue": 228,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-RPT-04",
@@ -11126,7 +11294,8 @@
       ],
       "quotation_id": "Q-03",
       "parent_issue": 31,
-      "qa_execution_issue": 237
+      "qa_execution_issue": 237,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-RPT-05",
@@ -11163,7 +11332,8 @@
       ],
       "quotation_id": "Q-03",
       "parent_issue": 32,
-      "qa_execution_issue": 246
+      "qa_execution_issue": 246,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-RPT-06",
@@ -11202,7 +11372,8 @@
       ],
       "quotation_id": "Q-03",
       "parent_issue": 33,
-      "qa_execution_issue": 253
+      "qa_execution_issue": 253,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-IAM-01",
@@ -11241,7 +11412,8 @@
       ],
       "quotation_id": "Q-04",
       "parent_issue": 34,
-      "qa_execution_issue": 262
+      "qa_execution_issue": 262,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-IAM-02",
@@ -11276,7 +11448,8 @@
       ],
       "quotation_id": "Q-04",
       "parent_issue": 35,
-      "qa_execution_issue": 271
+      "qa_execution_issue": 271,
+      "parent_owner": "PM/BA"
     },
     {
       "fr": "FR-IAM-03",
@@ -11315,7 +11488,8 @@
       ],
       "quotation_id": "Q-04",
       "parent_issue": 36,
-      "qa_execution_issue": 280
+      "qa_execution_issue": 280,
+      "parent_owner": "PM/BA"
     }
   ],
   "test_cases": [
@@ -13525,12 +13699,12 @@
       "fr": "FR-RPT-05",
       "name": "Đối chiếu phép tính",
       "pre": "Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-05 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).",
-      "data": "PB-A có 2 mở,1Resolved; PB-B có 1 mở;1 chưa giao.",
+      "data": "PB-A có 2 hồ sơ mở, 1 hồ sơ Resolved; PB-B có 1 mở; 1 hồ sơ chưa giao.",
       "steps": [
-        "PB-A có 2 mở,1Resolved; PB-B có 1 mở;1 chưa giao. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.",
+        "PB-A có 2 hồ sơ mở, 1 hồ sơ Resolved; PB-B có 1 mở; 1 hồ sơ chưa giao. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.",
         "Gọi `GET /api/reports/05` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai."
       ],
-      "expected": "Backlog PB-A=2, PB-B=1, chưa giao=1, tổng4; request Resolved không tính.",
+      "expected": "Backlog PB-A=2, PB-B=1, chưa giao=1, tổng 4; request Resolved không tính.",
       "result": "Not Run"
     },
     {
@@ -14028,7 +14202,7 @@
         "Chọn API của hành vi: GET /api/student/requests/310 để đọc theo chủ, POST /api/staff/requests/315/progress để ghi, GET /api/dispatch/requests cho điều phối hoặc GET /api/reports/01 cho phạm vi báo cáo.",
         "Gọi bằng từng phiên tách riêng. Đối chiếu mã HTTP, phạm vi JSON và trạng thái DB trước/sau; lưu response đã loại thông tin phiên."
       ],
-      "expected": "PB-B403; scope=all không mở rộng quyền; không có source/số liệu ngoài PB-A.",
+      "expected": "PB-B trả 403; scope=all không mở rộng quyền; không có source/số liệu ngoài PB-A.",
       "result": "Not Run"
     },
     {
@@ -14067,13 +14241,12 @@
       "id": "E2E-01",
       "type": "E2E",
       "name": "Yêu cầu đến kết quả",
-      "fr": "FR-STU-01, FR-DSP-01, FR-DSP-03, FR-DSP-04, FR-DSP-06, FR-DSP-08, FR-DSP-09, FR-STU-03, FR-STU-05, FR-DSP-10",
-      "steps": "Tạo → phân loại → giao → bắt đầu → tiến độ công khai → giải quyết → phản hồi → đóng.",
-      "expected": "Một request_id; đúng người/trạng thái/lịch sử; phản hồi tính đúng một lần.",
+      "fr": "FR-DSP-01, FR-DSP-03, FR-DSP-04, FR-DSP-06, FR-DSP-08, FR-DSP-09, FR-STU-03, FR-STU-05, FR-DSP-10",
+      "steps": "SV-A tạo hồ sơ Chưa xác định; DP-All tìm cùng mã trong hàng chờ, gán Học vụ rồi giao NV-A. NV-A bắt đầu và ghi tiến độ công khai. SV-A tải lại danh sách và chi tiết. NV-A giải quyết, SV-A phản hồi điểm 4 rồi DP-All đóng. QL-All đối chiếu RPT-04 có nhóm Học vụ.",
+      "expected": "Một mã hồ sơ xuyên suốt, cổng sinh viên và hàng chờ nhất quán, lịch sử giữ đúng người/thời điểm, báo cáo dùng loại hiện hành. Điểm 4 hiện lại, trạng thái Closed có closed_at và kết quả vẫn đọc được.",
       "result": "Not Run",
       "execution_task": "QA-04",
       "coverage_ids": [
-        "AC-STU-01-01",
         "AC-DSP-01-01",
         "AC-DSP-03-01",
         "AC-DSP-04-01",
@@ -14089,14 +14262,13 @@
       "id": "E2E-02",
       "type": "E2E",
       "name": "Bổ sung thông tin",
-      "fr": "FR-DSP-07, FR-STU-03, FR-STU-04, FR-DSP-09",
-      "steps": "Yêu cầu câu hỏi khi đang xử lý; SV đọc/trả lời; NV giải quyết.",
-      "expected": "Chờ bổ sung → Đang xử lý; giữ hồ sơ và trách nhiệm; không câu hỏi mở khi giải quyết.",
+      "fr": "FR-DSP-07, FR-STU-04, FR-DSP-09",
+      "steps": "NV-A hỏi mã lớp khi hồ sơ đang Processing. SV-A tải lại, xem câu hỏi và trả lời TEST-01. Ghi nhận hạn, người xử lý và giờ bắt đầu trước/sau. NV-A giải quyết, SV-A mở chi tiết xem kết quả.",
+      "expected": "Chỉ có một câu hỏi mở trước khi trả lời. Trả lời xong về Processing trên cùng hồ sơ, hạn/giờ bắt đầu/trách nhiệm giữ nguyên. Sau giải quyết, có resolved_at và sinh viên thấy nội dung đúng.",
       "result": "Not Run",
       "execution_task": "QA-04",
       "coverage_ids": [
         "AC-DSP-07-01",
-        "AC-STU-03-06",
         "AC-STU-04-01",
         "AC-STU-04-05",
         "AC-DSP-09-01"
@@ -14107,8 +14279,8 @@
       "type": "E2E",
       "name": "Phối hợp đổi trách nhiệm",
       "fr": "FR-DSP-04, FR-IAM-03, FR-DSP-08",
-      "steps": "Giao PB-A/NV-A rồi chuyển PB-B/NV-B có lý do; thử NV-A và NV-B.",
-      "expected": "Chỉ người hiện hành sửa; lịch sử giữ bộ cũ/mới; không có khoảng dữ liệu hai người.",
+      "steps": "Trên hồ sơ Processing của PB-A/NV-A, ghi một tiến độ nội bộ. DP-All chuyển sang PB-B/NV-B có lý do. Gửi cập nhật từ phiên/màn hình cũ của NV-A, rồi để NV-B ghi một tiến độ công khai. SV-A xem trực tiếp chi tiết và JSON.",
+      "expected": "Chỉ NV-B cập nhật được. Trách nhiệm một bộ, lịch sử giữ cũ/mới, cập nhật cũ bị chặn. Tiến độ công khai có nội dung/người/thời điểm, ghi chú nội bộ không nằm trong nội dung SV nhận.",
       "result": "Not Run",
       "execution_task": "QA-04",
       "coverage_ids": [
@@ -14123,15 +14295,14 @@
       "type": "E2E",
       "name": "Hạn và báo cáo",
       "fr": "FR-DSP-05, FR-DSP-09, FR-RPT-02",
-      "steps": "Đặt hạn, đo trước/đúng/sau hạn, giải quyết rồi đo lại.",
-      "expected": "Đúng công thức quá hạn; yêu cầu kết thúc rời danh sách quá hạn.",
+      "steps": "Dùng NV-A và DP-All trên hồ sơ mở, kiểm báo cáo RPT-02 lúc chưa có hạn rồi đặt hạn. Cố định đồng hồ trước, đúng và sau hạn. NV-A giải quyết, SV-A đọc kết quả, quản lý đo lại.",
+      "expected": "Không hạn và đúng hạn chưa tính quá hạn. Sau hạn chỉ hồ sơ mở xuất hiện. Hồ sơ đã giải quyết rời tập quá hạn, có resolved_at và kết quả hiển thị cho chủ.",
       "result": "Not Run",
       "execution_task": "QA-04",
       "coverage_ids": [
         "AC-DSP-05-04",
         "AC-DSP-09-01",
-        "AC-RPT-02-04",
-        "AC-RPT-02-07"
+        "AC-RPT-02-04"
       ]
     },
     {
@@ -14139,8 +14310,8 @@
       "type": "E2E",
       "name": "Đối chiếu 6 báo cáo",
       "fr": "FR-RPT-01, FR-RPT-02, FR-RPT-03, FR-RPT-04, FR-RPT-05, FR-RPT-06",
-      "steps": "Seed có kết quả đã biết; chạy từng báo cáo và đối chiếu query nguồn.",
-      "expected": "Mọi tổng, trung bình, mẫu, kỳ và phạm vi khớp định nghĩa; dữ liệu rỗng hiển thị đúng.",
+      "steps": "Nạp riêng bộ dữ liệu ở sáu ca TC-RPT-01-01 đến TC-RPT-06-01. Dùng tài khoản quản lý đúng phạm vi theo từng ca. Chạy từng báo cáo, đối chiếu tập nguồn và kết quả độc lập từng ca.",
+      "expected": "Mẫu số, nhóm, tổng/trung bình và các hồ sơ loại trừ khớp sáu ca chức năng. Record mỗi phép đối chiếu riêng để truy lại đúng tập dữ liệu.",
       "result": "Not Run",
       "execution_task": "QA-04",
       "coverage_ids": [
@@ -14157,8 +14328,8 @@
       "type": "E2E",
       "name": "Quyền xuyên luồng",
       "fr": "FR-IAM-01, FR-IAM-02, FR-IAM-03, FR-STU-03, FR-DSP-02, FR-RPT-01",
-      "steps": "Đăng nhập từng vai trò; thử hành động hợp lệ và trái quyền; đăng xuất rồi gọi phiên cũ.",
-      "expected": "Không lộ hồ sơ/số liệu/ghi chú; phiên cũ không đọc/ghi.",
+      "steps": "Dùng các phiên SV, NV, điều phối và quản lý để kiểm đúng quyền sau đăng nhập. Gửi ID hồ sơ của actor khác, role/scope giả, bộ lọc PB-B khi chỉ có PB-A và POST thiếu/sai CSRF. NV ghi một ghi chú nội bộ rồi SV mở API trực tiếp. Đăng xuất và gọi lại thao tác ghi bằng phiên cũ.",
+      "expected": "Phiên đúng người và quyền. Không nâng quyền từ dữ liệu trình duyệt. Sai quyền và CSRF bị từ chối theo AC, không trả số liệu/ghi chú nội bộ, GET chỉ đọc vẫn theo quyền. Phiên cũ không sửa dữ liệu.",
       "result": "Not Run",
       "execution_task": "QA-04",
       "coverage_ids": [
@@ -14178,8 +14349,8 @@
       "type": "E2E",
       "name": "Không bỏ sót/gửi trùng",
       "fr": "FR-STU-01, FR-DSP-01",
-      "steps": "Gửi n yêu cầu với n khóa khác nhau, gửi lặp một khóa, đối chiếu hàng chờ và DB.",
-      "expected": "Có n hồ sơ duy nhất, mỗi mã ở hàng chờ trong phạm vi; không phát sinh n+1 do lặp.",
+      "steps": "SV-A gửi N hồ sơ Chưa xác định cùng nội dung nhưng N khóa khác nhau. Với một hồ sơ, giả lập mất phản hồi sau commit như fixture rồi gửi lại cùng khóa và nội dung. DP-All đối chiếu hàng chờ và QA đối chiếu dữ liệu.",
+      "expected": "Có đúng N mã và mỗi mã đúng phạm vi; lượt gửi lại trả HTTP 200 cùng mã, chỉ một bản ghi yêu cầu và một sự kiện CREATED cho khóa bị mất phản hồi.",
       "result": "Not Run",
       "execution_task": "QA-04",
       "coverage_ids": [
@@ -14208,7 +14379,7 @@
       "name": "Bảo vệ phiên, quyền và dữ liệu",
       "fr": "FR-STU-01; FR-STU-02; FR-STU-03; FR-STU-04; FR-STU-05; FR-DSP-01; FR-DSP-02; FR-DSP-03; FR-DSP-04; FR-DSP-05; FR-DSP-06; FR-DSP-07; FR-DSP-08; FR-DSP-09; FR-DSP-10; FR-RPT-01; FR-RPT-02; FR-RPT-03; FR-RPT-04; FR-RPT-05; FR-RPT-06; FR-IAM-01; FR-IAM-02; FR-IAM-03",
       "steps": "Dùng ma trận quyền và fixture với actor hợp lệ, sai vai trò, sai phạm vi hoặc phiên hết hạn. Kiểm 401 và không tự gửi lại thao tác ghi, 403/404 và CSRF theo tuyến. Kiểm an toàn đầu vào, xử lý văn bản và log trên môi trường thử.",
-      "expected": "Mọi API kiểm tra phiên/vai trò/đối tượng; mật khẩu băm; truy vấn tham số hóa; output encode; chống CSRF cho thao tác ghi; không ghi mật khẩu/nội dung nhạy cảm vào log.",
+      "expected": "Các API cần xác thực kiểm phiên, vai trò, phạm vi hoặc quyền đối tượng theo hành động. Đăng nhập tạo phiên sau xác thực. Đăng xuất có phiên kiểm CSRF, còn không có phiên xử lý theo FR-IAM-02. Mật khẩu băm, truy vấn tham số hóa, mã hóa đầu ra và không ghi bí mật vào log.",
       "result": "Not Run",
       "execution_task": "QA-05",
       "prerelease_gates": [
@@ -14221,19 +14392,20 @@
       ],
       "execution_tasks": {
         "MS-01": [
+          "FR-IAM-03.QA.02",
           "FR-IAM-03.QA.03"
         ],
         "MS-02": [
-          "QA-03"
+          "QA-RG-02"
         ],
         "MS-03": [
-          "FR-STU-04.QA.03"
+          "QA-RG-03"
         ],
         "MS-04": [
-          "FR-DSP-10.QA.03"
+          "QA-RG-04"
         ],
         "MS-05": [
-          "FR-RPT-06.QA.03"
+          "QA-RG-05"
         ],
         "MS-06": [
           "QA-05"
@@ -14260,13 +14432,13 @@
       ],
       "execution_tasks": {
         "MS-02": [
-          "QA-03"
+          "QA-RG-02"
         ],
         "MS-03": [
-          "FR-STU-04.QA.03"
+          "QA-RG-03"
         ],
         "MS-04": [
-          "FR-DSP-10.QA.03"
+          "QA-RG-04"
         ],
         "MS-06": [
           "QA-05"
@@ -14293,13 +14465,13 @@
       ],
       "execution_tasks": {
         "MS-02": [
-          "QA-03"
+          "QA-RG-02"
         ],
         "MS-03": [
-          "FR-STU-04.QA.03"
+          "QA-RG-03"
         ],
         "MS-04": [
-          "FR-DSP-10.QA.03"
+          "QA-RG-04"
         ],
         "MS-06": [
           "QA-05"
@@ -14325,10 +14497,10 @@
       ],
       "execution_tasks": {
         "MS-02": [
-          "QA-03"
+          "QA-RG-02"
         ],
         "MS-05": [
-          "FR-RPT-06.QA.03"
+          "QA-RG-05"
         ],
         "MS-06": [
           "QA-05"
@@ -14343,8 +14515,8 @@
       "type": "NFR",
       "name": "Truy vết lỗi và nghiệp vụ",
       "fr": "FR-STU-01; FR-STU-02; FR-STU-03; FR-STU-04; FR-STU-05; FR-DSP-01; FR-DSP-02; FR-DSP-03; FR-DSP-04; FR-DSP-05; FR-DSP-06; FR-DSP-07; FR-DSP-08; FR-DSP-09; FR-DSP-10; FR-RPT-01; FR-RPT-02; FR-RPT-03; FR-RPT-04; FR-RPT-05; FR-RPT-06; FR-IAM-01; FR-IAM-02; FR-IAM-03",
-      "steps": "Tạo lỗi kiểm tra trường, lỗi máy chủ và mất kết nối ở các luồng tại mốc. Đối chiếu giữ dữ liệu biểu mẫu, giao diện không báo thành công, tải lại và kiểm mã log theo NFR.",
-      "expected": "Có request/correlation ID cho lỗi; lịch sử nghiệp vụ có tác nhân/thời gian/hành động, không lộ mật khẩu hay token.",
+      "steps": "Trên build thử, kiểm tình huống 422 giữ dữ liệu biểu mẫu. Dùng lỗi mô phỏng khi xử lý đăng nhập hoặc tra phiên/quyền và một lần ngắt kết nối khi ghi. Đối chiếu HTTP, phiên, cấu hình, log đã che bí mật và dữ liệu đã lưu.",
+      "expected": "Có mã đối chiếu cho lỗi máy chủ. Lỗi đăng nhập không tạo phiên đã xác thực, lỗi tra quyền từ chối và không trả dữ liệu nghiệp vụ. Giao diện không báo thành công khi mất xác nhận. Lịch sử có tác nhân/thời gian/hành động và log không lộ mật khẩu hoặc token.",
       "result": "Not Run",
       "execution_task": "QA-05",
       "prerelease_gates": [
@@ -14357,19 +14529,20 @@
       ],
       "execution_tasks": {
         "MS-01": [
+          "FR-IAM-03.QA.02",
           "FR-IAM-03.QA.03"
         ],
         "MS-02": [
-          "QA-03"
+          "QA-RG-02"
         ],
         "MS-03": [
-          "FR-STU-04.QA.03"
+          "QA-RG-03"
         ],
         "MS-04": [
-          "FR-DSP-10.QA.03"
+          "QA-RG-04"
         ],
         "MS-05": [
-          "FR-RPT-06.QA.03"
+          "QA-RG-05"
         ],
         "MS-06": [
           "QA-05"

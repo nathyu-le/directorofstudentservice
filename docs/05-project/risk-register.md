@@ -11,4 +11,4 @@
 | R-05 | Kịch bản di động bị chặn hoặc số đo hiệu năng vượt ngưỡng trên máy thử. | Vừa | Vừa | FE | Kiểm viewport và bộ dữ liệu tải sớm theo NFR, ghi kết quả và retest trước mốc. | MS-02–MS-06 | Mở |
 | R-06 | Phép đo MET thiếu mẫu hoặc dưới mục tiêu. | Vừa | Vừa | QA | Lưu số liệu trước/sau và mẫu, phân tích nguyên nhân, trình PM/BA và đại diện nghiệp vụ quyết định. | MS-06 | Mở |
 | R-07 | Người tiếp nhận không cài lại được do thiếu phiên bản, cấu hình, dữ liệu hoặc hướng dẫn. | Vừa | Cao | QA | Yêu cầu người ngoài phần phát triển chạy E2E-08 trên môi trường sạch và ghi bước thiếu. | MS-06 | Mở |
-| R-08 | Khối lượng kiểm thử mới vượt giờ của task QA hiện tại. | Cao | Cao | QA | Đo trên build đầu tiên, dự báo chênh lệch, ưu tiên lỗi quyền/ghi dữ liệu, xét dự phòng hoặc CR trước khi đổi ngày. | MS-01–MS-06 | Mở |
+| R-08 | Khối lượng kiểm thử mới vượt giờ của task QA hiện tại. | Cao | Cao | QA | Đo effort trên build đầu tiên, dùng giờ hồi quy đã phân bổ trong Master Plan. Nếu các ca mới hoặc kiểm lại vượt dự toán, báo dự báo chênh lệch, ưu tiên lỗi quyền/ghi dữ liệu và xử lý dự phòng hoặc CR. | MS-01–MS-06 | Mở |

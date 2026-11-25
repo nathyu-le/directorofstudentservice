@@ -1,6 +1,6 @@
 # UniSupport — Milestone và kế hoạch theo đầu ra
 
-Revision 6.1 đối chiếu baseline `937c123a1a`. Dự toán, ngày và mốc của 24 FR giữ theo manifest. Bản 6.1 có 187 TC chức năng và 18 kiểm tra hệ thống, kèm các điểm kiểm sớm NFR.
+Revision 6.2 đối chiếu baseline `69d667a`. Ngày và phạm vi của 24 FR giữ theo manifest. Bản 6.2 có 187 TC chức năng và 18 kiểm tra hệ thống, kèm các điểm kiểm sớm NFR.
 
 ## Cách đọc kế hoạch
 
@@ -29,7 +29,7 @@ Bằng chứng: build/commit, kết quả test với actual/evidence, PR review 
 
 Sinh viên gửi yêu cầu hợp lệ, thấy đúng hồ sơ của mình; điều phối thấy cùng mã trong hàng chờ và hồ sơ xử lý. Kiểm gửi lặp, validation, quyền đọc và lịch sử công khai/nội bộ theo AC. Các trạng thái chưa có thao tác sinh dữ liệu được kiểm bằng fixture; không coi đó là bằng chứng E2E đã chạy.
 
-Điều kiện đầu vào/công việc bắt buộc: MS-01, FR-STU-01.QA.03, FR-STU-02.QA.03, FR-STU-03.QA.03, FR-DSP-01.QA.03, FR-DSP-02.QA.03, PM-06, BE-04, FE-03, QA-03.
+Điều kiện đầu vào/công việc bắt buộc: MS-01, FR-STU-01.QA.03, FR-STU-02.QA.03, FR-STU-03.QA.03, FR-DSP-01.QA.03, FR-DSP-02.QA.03, PM-06, BE-04, FE-03, QA-03, QA-RG-02.
 
 Bằng chứng: build/commit, kết quả test với actual/evidence, PR review và biên bản quyết định. Lỗi chặn khiến mốc chưa đạt dù Issue chuẩn bị báo cáo đã đóng. Không ghi Pass, ngày nghiệm thu hoặc người xác nhận trước khi có thật.
 
@@ -37,7 +37,7 @@ Bằng chứng: build/commit, kết quả test với actual/evidence, PR review 
 
 Phân loại, phân công, đặt hạn, bắt đầu xử lý, cập nhật tiến độ và vòng yêu cầu/bổ sung thông tin hoạt động đúng vai trò, scope, state và version. Kiểm quyền sau đổi người phụ trách, không ghi dữ liệu/lịch sử một phần.
 
-Điều kiện đầu vào/công việc bắt buộc: MS-02, FR-DSP-03.QA.03, FR-DSP-04.QA.03, FR-DSP-05.QA.03, FR-DSP-06.QA.03, FR-DSP-07.QA.03, FR-DSP-08.QA.03, FR-STU-04.QA.03.
+Điều kiện đầu vào/công việc bắt buộc: MS-02, FR-DSP-03.QA.03, FR-DSP-04.QA.03, FR-DSP-05.QA.03, FR-DSP-06.QA.03, FR-DSP-07.QA.03, FR-DSP-08.QA.03, FR-STU-04.QA.03, QA-RG-03.
 
 Bằng chứng: build/commit, kết quả test với actual/evidence, PR review và biên bản quyết định. Lỗi chặn khiến mốc chưa đạt dù Issue chuẩn bị báo cáo đã đóng. Không ghi Pass, ngày nghiệm thu hoặc người xác nhận trước khi có thật.
 
@@ -45,7 +45,7 @@ Bằng chứng: build/commit, kết quả test với actual/evidence, PR review 
 
 Ghi kết quả, sinh viên đọc kết quả và phản hồi; đóng yêu cầu theo đúng điều kiện trong PRD. Không thêm email, SMS hay xuất file. Xác nhận đọc tiến độ/lịch sử liên quan không bị hồi quy.
 
-Điều kiện đầu vào/công việc bắt buộc: MS-03, FR-DSP-09.QA.03, FR-STU-05.QA.03, FR-DSP-10.QA.03, PM-07.
+Điều kiện đầu vào/công việc bắt buộc: MS-03, FR-DSP-09.QA.03, FR-STU-05.QA.03, FR-DSP-10.QA.03, PM-07, QA-RG-04.
 
 Bằng chứng: build/commit, kết quả test với actual/evidence, PR review và biên bản quyết định. Lỗi chặn khiến mốc chưa đạt dù Issue chuẩn bị báo cáo đã đóng. Không ghi Pass, ngày nghiệm thu hoặc người xác nhận trước khi có thật.
 
@@ -53,7 +53,7 @@ Bằng chứng: build/commit, kết quả test với actual/evidence, PR review 
 
 Sáu báo cáo đúng tập nguồn, phạm vi quyền, bộ lọc, biên thời gian và công thức PRD; đối chiếu với fixture có expected xác định. Bản tích hợp đủ 24 FR; không có chức năng xuất dữ liệu ngoài baseline.
 
-Điều kiện đầu vào/công việc bắt buộc: MS-04, FR-RPT-01.QA.03, FR-RPT-02.QA.03, FR-RPT-03.QA.03, FR-RPT-04.QA.03, FR-RPT-05.QA.03, FR-RPT-06.QA.03, BE-05, FE-04.
+Điều kiện đầu vào/công việc bắt buộc: MS-04, FR-RPT-01.QA.03, FR-RPT-02.QA.03, FR-RPT-03.QA.03, FR-RPT-04.QA.03, FR-RPT-05.QA.03, FR-RPT-06.QA.03, BE-05, FE-04, QA-RG-05.
 
 Bằng chứng: build/commit, kết quả test với actual/evidence, PR review và biên bản quyết định. Lỗi chặn khiến mốc chưa đạt dù Issue chuẩn bị báo cáo đã đóng. Không ghi Pass, ngày nghiệm thu hoặc người xác nhận trước khi có thật.
 
@@ -84,6 +84,19 @@ Mỗi Issue ghi input/output/DoD, link PRD, AC/TC, role, estimate, start/due và
 Fixture và FE.01 được chuẩn bị sau contract, song song với BE khi đủ đầu vào. FE.02 chỉ tích hợp khi backend tương ứng đã self-check. QA.02 chỉ chạy sau fixture và FE.02. Kiểm quyền/validation/concurrency được kiểm ở từng FR từ sớm, không để tới cuối.
 
 QA-04 chạy E2E-01..07; QA-05 chạy 5 NFR trừ DEP; QA-06 đo 4 MET. BE/FE sửa trước QA-07 retest/regression. BE-08 và FE-07 chuẩn bị gói/hướng dẫn, sau đó QA-10 chạy E2E-08 và NFR-DEP-01 trên môi trường sạch. QA-09 chốt test report sau QA-10; QA-08 rà hồ sơ; PM-08 review rồi PM-09 bàn giao. Không kiểm chạy lại trước khi có gói/hướng dẫn. Thay code sau kiểm chứng phải đánh giá và chạy lại test bị ảnh hưởng.
+
+## Hồi quy trước các mốc
+
+MS-01 dùng bộ ca IAM để lập kết quả gốc. Từ MS-02, QA chạy các ca dưới đây trên build đã có đầu vào, bao gồm ca thuộc phần đã giao. PM/BA xem kết quả trước khi xác nhận cổng. Với đầu vào cùng ngày, chạy tích hợp trước, hồi quy sau, rồi mới trình nghiệm thu.
+
+| Mốc | Task QA | Giờ dự kiến | Ca chọn trước |
+| --- | --- | --- | --- |
+| MS-02 | [QA-RG-02](https://github.com/nathyu-le/directorofstudentservice/issues/284) | 1 | TC-IAM-02-03, TC-IAM-03-03, TC-STU-01-04, TC-DSP-01-01 |
+| MS-03 | [QA-RG-03](https://github.com/nathyu-le/directorofstudentservice/issues/285) | 1.25 | TC-STU-01-04, TC-STU-03-05, TC-DSP-04-04, TC-STU-04-05 |
+| MS-04 | [QA-RG-04](https://github.com/nathyu-le/directorofstudentservice/issues/287) | 1 | TC-STU-03-05, TC-STU-04-05, TC-DSP-09-01, TC-STU-05-04, TC-DSP-10-01 |
+| MS-05 | [QA-RG-05](https://github.com/nathyu-le/directorofstudentservice/issues/286) | 1.25 | TC-IAM-03-06, TC-DSP-10-01, TC-RPT-02-04, TC-RPT-05-04, TC-RPT-06-07 |
+
+Chuyển 4,5 giờ QA dùng chung từ QA-02 (1,5), QA-04 (1), QA-05 (0,5) và QA-07 (1,5) sang bốn lượt hồi quy. Giữ 73,5 giờ QA, 288 giờ kế hoạch và 32 giờ dự phòng. Case theo từng FR và các lượt kiểm cuối vẫn là đầu ra đã lên kế hoạch. Nếu bằng chứng trước khác build, cấu hình hoặc phạm vi và không thể dùng lại, ghi chênh lệch và xử lý theo R-08/OQ-08.
 
 ## Điều kiện cho mượn nhân sự
 

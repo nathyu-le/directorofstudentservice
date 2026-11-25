@@ -2058,10 +2058,10 @@ Dùng [fixture và quy trình chạy](fixtures.md), [hợp đồng API](../02-do
 
 **Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-05 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-1. PB-A có 2 mở,1Resolved; PB-B có 1 mở;1 chưa giao. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+1. PB-A có 2 hồ sơ mở, 1 hồ sơ Resolved; PB-B có 1 mở; 1 hồ sơ chưa giao. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
 2. Gọi `GET /api/reports/05` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-**Mong đợi:** Backlog PB-A=2, PB-B=1, chưa giao=1, tổng4; request Resolved không tính.
+**Mong đợi:** Backlog PB-A=2, PB-B=1, chưa giao=1, tổng 4; request Resolved không tính.
 
 **Kết quả:** Not Run.
 
@@ -2525,7 +2525,7 @@ Dùng [fixture và quy trình chạy](fixtures.md), [hợp đồng API](../02-do
 2. Chọn API của hành vi: GET /api/student/requests/310 để đọc theo chủ, POST /api/staff/requests/315/progress để ghi, GET /api/dispatch/requests cho điều phối hoặc GET /api/reports/01 cho phạm vi báo cáo.
 3. Gọi bằng từng phiên tách riêng. Đối chiếu mã HTTP, phạm vi JSON và trạng thái DB trước/sau; lưu response đã loại thông tin phiên.
 
-**Mong đợi:** PB-B403; scope=all không mở rộng quyền; không có source/số liệu ngoài PB-A.
+**Mong đợi:** PB-B trả 403; scope=all không mở rộng quyền; không có source/số liệu ngoài PB-A.
 
 **Kết quả:** Not Run.
 

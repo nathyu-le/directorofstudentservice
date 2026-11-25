@@ -32,7 +32,7 @@ P0 theo [thang ưu tiên PRD](../../../01-overview/scope.md#ưu-tiên-yêu-cầu
 | object_id / action | Bắt buộc theo API | Kiểm tra cả quyền hành động và quyền trên đối tượng. |
 
 - Áp dụng middleware trước mọi endpoint protected và mọi truy vấn dữ liệu; kiểm user active, session, capability, scope và quyền object từ DB, không từ UI/client. **Kiểm bởi:** AC-IAM-03-01, AC-IAM-03-02, AC-IAM-03-05, AC-IAM-03-07.
-- Không phiên/hết hạn401. Vai trò thiếu quyền hành động403. Request không tồn tại/ngoài quyền object404. Bộ lọc department vượt scope403. CSRF thiếu/sai403. Không chứa dữ liệu nghiệp vụ trong error. **Kiểm bởi:** AC-IAM-03-02, AC-IAM-03-03, AC-IAM-03-05, AC-IAM-03-06, AC-IAM-03-07, AC-IAM-03-08.
+- Không phiên/hết hạn trả 401. Vai trò thiếu quyền hành động trả 403. Request không tồn tại/ngoài quyền đối tượng trả 404. Bộ lọc department vượt phạm vi trả 403. CSRF thiếu/sai trả 403. Không chứa dữ liệu nghiệp vụ trong error. **Kiểm bởi:** AC-IAM-03-02, AC-IAM-03-03, AC-IAM-03-05, AC-IAM-03-06, AC-IAM-03-07, AC-IAM-03-08.
 - Sinh viên chỉ request.student_id=self và public; handler chỉ request.assignee_id=self; dispatch theo configured scope; manager chỉ aggregate theo reporting scope. Quyền dispatch có thể gắn staff/manager nhưng không tự cấp cho mọi staff. **Kiểm bởi:** AC-IAM-03-01, AC-IAM-03-03, AC-IAM-03-06, AC-IAM-03-08.
 - Thay responsibility ở DSP-04 làm object permission đổi ngay ở request tiếp theo. Không cache dài quyền từ lần login. Seed định nghĩa phạm vi đầy đủ; quyền xem hàng chờ chưa giao chỉ dispatch toàn trường. **Kiểm bởi:** AC-IAM-03-04, AC-IAM-03-08.
 - Server bỏ qua client role/scope/student_id, không mass-assign fields. Đầu ra chỉ định rõ trường được phép; query báo cáo phải lọc scope trước aggregate. **Kiểm bởi:** AC-IAM-03-02, AC-IAM-03-03, AC-IAM-03-04, AC-IAM-03-06.
@@ -51,7 +51,7 @@ P0 theo [thang ưu tiên PRD](../../../01-overview/scope.md#ưu-tiên-yêu-cầu
 - **AC-IAM-03-03:** Khi SV thay request_id; NV đọc ngoài trách nhiệm; quản lý đổi department ngoài phạm vi. → Đều bị chặn; không lộ nội dung, số liệu hoặc tài liệu liên quan.
 - **AC-IAM-03-04:** Khi Giao lại hồ sơ, thử từ phiên NV cũ; SV đọc nội bộ trực tiếp. → NV cũ không sửa được; SV không nhận ghi chú nội bộ trong HTML/JSON hay tài liệu nếu sau này được bổ sung.
 - **AC-IAM-03-05:** Khi Đăng nhập hợp lệ rồi gửi POST protected không CSRF hoặc CSRF của phiên khác. → 403 CSRF_INVALID; không ghi dữ liệu. GET chỉ đọc không yêu cầu CSRF.
-- **AC-IAM-03-06:** Khi QL-A chỉ PB-A; gọi report PB-B hoặc scope=all. → PB-B403; scope=all không mở rộng quyền; không có source/số liệu ngoài PB-A.
+- **AC-IAM-03-06:** Khi QL-A chỉ PB-A; gọi report PB-B hoặc scope=all. → PB-B trả 403; scope=all không mở rộng quyền; không có source/số liệu ngoài PB-A.
 
 - **AC-IAM-03-07:** Khi Tạo phiên hợp lệ, sau đó đổi tài khoản seed sang không hoạt động ở DB hoặc đưa đồng hồ quá giới hạn phiên. Dùng cookie cũ gọi GET và POST hợp lệ. → 401 và không đọc/ghi dữ liệu. Middleware lấy trạng thái hiện hành từ máy chủ.
 - **AC-IAM-03-08:** Khi Dùng DP-A và DP-All đọc hàng chờ có hồ sơ chưa giao. Dùng SV-B gọi chi tiết hồ sơ SV-A và một ID hợp lệ không tồn tại. → Chỉ DP-All thấy chưa giao. Hai phản hồi 404 cho SV-B có nội dung tương đương, không tiết lộ hồ sơ có tồn tại.
@@ -62,5 +62,5 @@ Aggregate vượt scope: QL-A chỉ PB-A; gọi report PB-B hoặc scope=all.
 
 **Expected Result**
 
-PB-B403; scope=all không mở rộng quyền; không có source/số liệu ngoài PB-A. Kiểm theo TC-IAM-03-06; kết quả thực thi ban đầu là Not Run.
+PB-B trả 403; scope=all không mở rộng quyền; không có source/số liệu ngoài PB-A. Kiểm theo TC-IAM-03-06; kết quả thực thi ban đầu là Not Run.
 

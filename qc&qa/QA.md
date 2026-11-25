@@ -1,10 +1,10 @@
 # UniSupport — Kế hoạch đảm bảo chất lượng QA
 
-**Phiên bản 3.1 · 25/11/2026 · Đề xuất quy trình để nhóm và người có thẩm quyền review.**
+**Phiên bản 3.2 · 25/11/2026 · Đề xuất quy trình để nhóm và người có thẩm quyền review.**
 
 ## 1. Mục đích và nguyên tắc
 
-QA quy định cách phòng ngừa sai sót, quản lý đầu ra sản phẩm, giám sát việc tuân thủ và cải tiến quy trình. [QC.md](QC.md) quy định kiểm thử sản phẩm, xử lý lỗi và bằng chứng nghiệm thu. Hai tài liệu dùng cùng PRD/Master Plan v6.1: bốn module STU, DSP, RPT, IAM; 24 FR, 187 TC chức năng và 18 kiểm tra hệ thống.
+QA quy định cách phòng ngừa sai sót, quản lý đầu ra sản phẩm, giám sát việc tuân thủ và cải tiến quy trình. [QC.md](QC.md) quy định kiểm thử sản phẩm, xử lý lỗi và bằng chứng nghiệm thu. Hai tài liệu dùng cùng PRD/Master Plan v6.2: bốn module STU, DSP, RPT, IAM; 24 FR, 187 TC chức năng và 18 kiểm tra hệ thống.
 
 Nguyên tắc áp dụng:
 
@@ -14,7 +14,7 @@ Nguyên tắc áp dụng:
 4. Chuyển bước dựa trên đầu ra và bằng chứng, không dựa riêng vào ngày đến hạn hoặc trạng thái issue.
 5. Ưu tiên xử lý lỗi chặn luồng, sai quyền hoặc làm sai/mất dữ liệu; giữ lịch sử sửa và kiểm tra lại.
 
-**Căn cứ hiện tại:** repo theo [baseline 6.1](../docs/05-project/requirements.json) có tài liệu/kế hoạch; chưa có mã ứng dụng hoặc cấu hình kiểm thử tự động trong repo được đọc. Các test nguồn còn `Not Run`. Vì vậy đây là quy trình dự kiến, không phải xác nhận đã test, đã review code hay đã nghiệm thu. Thiết kế gắn câu hỏi mở vẫn cần quyết định; không lấy việc test đúng thiết kế đề xuất để coi nghiệp vụ đã được duyệt.
+**Căn cứ hiện tại:** repo theo [baseline 6.2](../docs/05-project/requirements.json) có tài liệu/kế hoạch; chưa có mã ứng dụng hoặc cấu hình kiểm thử tự động trong repo được đọc. Các test nguồn còn `Not Run`. Vì vậy đây là quy trình dự kiến, không phải xác nhận đã test, đã review code hay đã nghiệm thu. Thiết kế gắn câu hỏi mở vẫn cần quyết định; không lấy việc test đúng thiết kế đề xuất để coi nghiệp vụ đã được duyệt.
 
 ## 2. Trách nhiệm và tuyến quyết định
 
@@ -136,7 +136,7 @@ Hồ sơ tối thiểu gồm FR/AC/TC và liên kết task; review/decision/CR; 
 
 ## 8. Nguồn áp dụng
 
-- [PRD và kế hoạch v6.1](../docs/05-project/requirements.json); [scope](../docs/01-overview/scope.md).
+- [PRD và kế hoạch v6.2](../docs/05-project/requirements.json); [scope](../docs/01-overview/scope.md).
 - [Quyền](../docs/02-domain/permissions.md), [vòng đời](../docs/02-domain/lifecycle.md), [API](../docs/02-domain/api-contract.md), [từ điển dữ liệu](../docs/02-domain/data-dictionary.md).
 - [FR–AC–TC](../docs/04-acceptance/traceability-matrix.md); [test chức năng](../docs/04-acceptance/test-cases.md); [test hệ thống](../docs/04-acceptance/system-tests.md).
 - [Master Gantt](../UniSupport_Master_Plan.xlsx); [milestone](../docs/05-project/master-alignment.md); [Team Charter](../TeamCharter.md); [câu hỏi mở](../docs/05-project/open-questions.md).

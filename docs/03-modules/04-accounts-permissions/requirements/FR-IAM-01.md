@@ -33,7 +33,7 @@ P0 theo [thang ưu tiên PRD](../../../01-overview/scope.md#ưu-tiên-yêu-cầu
 
 - email bắt buộc, trim, chuyển chữ thường, định dạng email, tối đa 254; password bắt buộc giữ nguyên không trim, tối đa 256. Tài khoản seed có password_hash, active, role/scope ở máy chủ. **Kiểm bởi:** AC-IAM-01-01, AC-IAM-01-07.
 - Đúng email/password và active=true: regenerate session ID, hủy ID trước đăng nhập, trả user_id/display_name và capabilities hiện hành. Không nhận role/scope của client. **Kiểm bởi:** AC-IAM-01-01, AC-IAM-01-04, AC-IAM-01-08.
-- Sai password/email không có/tài khoản inactive cùng401 INVALID_CREDENTIALS và một thông báo chung. Đầu vào sai422. Không log password/session token. Thời gian idle đề xuất 30 phút, absolute 8 giờ. **Kiểm bởi:** AC-IAM-01-02, AC-IAM-01-04, AC-IAM-01-05, AC-IAM-01-07, AC-IAM-01-08.
+- Sai password/email không có/tài khoản inactive cùng trả 401 INVALID_CREDENTIALS và một thông báo chung. Đầu vào sai trả 422. Không log password/session token. Thời gian idle đề xuất 30 phút, absolute 8 giờ. **Kiểm bởi:** AC-IAM-01-02, AC-IAM-01-04, AC-IAM-01-05, AC-IAM-01-07, AC-IAM-01-08.
 - Cookie HttpOnly, SameSite=Lax, Secure khi HTTPS. Local HTTP chỉ dùng môi trường mẫu, không được mô tả như bảo mật production. Login giới hạn đề xuất 5 lần sai/15 phút cho cặp email+IP:429; không là account-lock vĩnh viễn. **Kiểm bởi:** AC-IAM-01-06, AC-IAM-01-08.
 
 **Alternative / Error Flows**
