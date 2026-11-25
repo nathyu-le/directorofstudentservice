@@ -2,11 +2,15 @@
 
 **Mô tả**
 
-Biết yêu cầu đã được tiếp nhận, ai chịu trách nhiệm và có cần bổ sung thông tin. Đặc tả triển khai prototype thuộc Proposal §2.1 — gửi yêu cầu, cung cấp thông tin, theo dõi tiến độ, phản hồi kết quả; các chi tiết trường và quy tắc dưới đây là thiết kế đề xuất v5.0 để review, không phải thông tin vận hành đã được khách hàng xác nhận.
+Biết yêu cầu đã được tiếp nhận, ai chịu trách nhiệm và có cần bổ sung thông tin. Phạm vi và mục tiêu xem [tổng quan sản phẩm](../../../01-overview/scope.md). Các chi tiết nghiệp vụ đang ở trạng thái đề xuất.
 
 **Actor**
 
 Sinh viên. Quyền cụ thể kiểm ở máy chủ theo [ma trận quyền](../../../02-domain/permissions.md).
+
+**Priority**
+
+P0 theo [thang ưu tiên PRD](../../../01-overview/scope.md#ưu-tiên-yêu-cầu).
 
 **Preconditions**
 
@@ -28,26 +32,29 @@ Sinh viên. Quyền cụ thể kiểm ở máy chủ theo [ma trận quyền](..
 | status / owner / due_at | Chỉ đọc | Lấy từ bản ghi hiện hành; hạn có thể chưa xác định. |
 | public_history | Chỉ đọc | Các sự kiện và nội dung được công khai cho sinh viên. |
 
-- request_id là số nguyên dương. Chỉ chủ sinh viên xem được. Không tồn tại hoặc khác chủ trả cùng HTTP 404 REQUEST_NOT_FOUND.
-- Hiển thị title, description, category, status, đơn vị/người phụ trách, hạn, kết quả, phản hồi hiện hành và câu hỏi bổ sung đang mở. Không có câu hỏi mở thì không hiển thị nút trả lời.
-- public_history chỉ gồm visibility=public, sắp occurred_at tăng dần rồi id tăng dần. Máy chủ loại bỏ nội dung internal trước serialize JSON, không chỉ ẩn bằng CSS.
-- Nút bổ sung chỉ khi WaitingInfo và có câu hỏi mở. Nút phản hồi chỉ khi Resolved/Closed và có result_id. Các nút không cấp quyền thay máy chủ. Sau tải lại dùng dữ liệu hiện hành, không snapshot cũ.
+- request_id là số nguyên dương. Chỉ chủ sinh viên xem được. Không tồn tại hoặc khác chủ trả cùng HTTP 404 REQUEST_NOT_FOUND. **Kiểm bởi:** AC-STU-03-02, AC-STU-03-03, AC-STU-03-07.
+- Hiển thị title, description, category, status, đơn vị/người phụ trách, hạn, kết quả, phản hồi hiện hành và câu hỏi bổ sung đang mở. Không có câu hỏi mở thì không hiển thị nút trả lời. **Kiểm bởi:** AC-STU-03-01, AC-STU-03-04, AC-STU-03-06.
+- public_history chỉ gồm visibility=public, sắp occurred_at tăng dần rồi id tăng dần. Máy chủ loại bỏ nội dung internal trước serialize JSON, không chỉ ẩn bằng CSS. **Kiểm bởi:** AC-STU-03-05, AC-STU-03-06.
+- Nút bổ sung chỉ khi WaitingInfo và có câu hỏi mở. Nút phản hồi chỉ khi Resolved/Closed và có result_id. Các nút không cấp quyền thay máy chủ. Sau tải lại dùng dữ liệu hiện hành, không snapshot cũ. **Kiểm bởi:** AC-STU-03-01, AC-STU-03-06.
 
 **Alternative / Error Flows**
 
-- 401: phiên không hợp lệ; điều hướng đăng nhập, không gửi lại thao tác ghi tự động sau login.
-- 403: thiếu capability/CSRF hoặc bộ lọc ngoài scope; không trả dữ liệu trái quyền.
-- 404: request không tồn tại/ngoài quyền đối tượng; không tiết lộ hồ sơ có tồn tại hay không.
-- 422: sai trường/bộ lọc theo Business Rules; hiển thị lỗi tại trường, giữ dữ liệu đang nhập.
-- 500 hoặc mất mạng: không đánh thao tác thành công khi chưa có response xác nhận. Riêng STU-01 retry dùng cùng submission_key; các thao tác khác tải lại để xác định lần ghi đã commit, không gửi tự động vô điều kiện.
+- 401 khi phiên hết hiệu lực. Xem NFR-SEC-01 về xác thực lại và xử lý thao tác đang chờ.
+- 403 thiếu quyền dùng cổng sinh viên. **Kiểm bởi:** NFR-SEC-01.
+- 404 mã không có hoặc ngoài quyền đối tượng. **Kiểm bởi:** AC-STU-03-02, AC-STU-03-03.
+- 422 ID sai kiểu. **Kiểm bởi:** AC-STU-03-07.
+- Xử lý mất kết nối, thông báo lỗi biểu mẫu và mã đối chiếu theo [NFR-OBS-01](../../../01-overview/non-functional-requirements.md).
 
 **Acceptance Criteria**
 
 - **AC-STU-03-01:** Khi Yêu cầu được phân công rồi chuyển Đang xử lý. → Chi tiết và danh sách cùng hiển thị trạng thái/người phụ trách hiện hành sau tải lại.
 - **AC-STU-03-02:** Khi Mã yêu cầu không có trong bộ dữ liệu. → Hiển thị không tìm thấy; không tạo hoặc sửa dữ liệu.
-- **AC-STU-03-03:** Khi SV-B mở URL yêu cầu của SV-A. → Không trả tiêu đề, mô tả, lịch sử hoặc tài liệu của SV-A.
+- **AC-STU-03-03:** Khi SV-B mở URL yêu cầu của SV-A. → Không trả tiêu đề, mô tả, lịch sử hoặc dữ liệu kèm theo của SV-A.
 - **AC-STU-03-04:** Khi Xem yêu cầu mới, sau đó xem yêu cầu Chờ bổ sung. → Yêu cầu mới ghi Chưa phân công; yêu cầu chờ bổ sung ghi rõ thông tin cần cung cấp, không lộ ghi chú nội bộ.
 - **AC-STU-03-05:** Khi Ghi internal TEST-INTERNAL rồi SV gọi endpoint trực tiếp. → JSON không chứa nội dung TEST-INTERNAL hoặc các trường internal_history.
+
+- **AC-STU-03-06:** Khi Mở hồ sơ mới, chờ bổ sung có câu hỏi mở, đã giải quyết, rồi hồ sơ đã đóng. Thêm hai sự kiện công khai cùng giờ và một sự kiện nội bộ. → Chỉ hiển thị nút trả lời khi có câu hỏi mở trong WaitingInfo, nút phản hồi khi Resolved/Closed có kết quả. Lịch sử công khai theo giờ rồi ID tăng và không có nội bộ.
+- **AC-STU-03-07:** Khi Mở URL chi tiết với ID 0, chữ và ID hợp lệ nhưng không tồn tại. → ID sai định dạng trả 422. ID không có trả 404 với nội dung giống trường hợp ngoài quyền, không trả dữ liệu nghiệp vụ.
 
 **Ví dụ Edge Case**
 

@@ -2,11 +2,15 @@
 
 **Mô tả**
 
-Nêu thông tin còn thiếu và đặt yêu cầu vào trạng thái chờ trả lời. Đặc tả triển khai prototype thuộc Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử; các chi tiết trường và quy tắc dưới đây là thiết kế đề xuất v5.0 để review, không phải thông tin vận hành đã được khách hàng xác nhận.
+Nêu thông tin còn thiếu và đặt yêu cầu vào trạng thái chờ trả lời. Phạm vi và mục tiêu xem [tổng quan sản phẩm](../../../01-overview/scope.md). Các chi tiết nghiệp vụ đang ở trạng thái đề xuất.
 
 **Actor**
 
 Nhân viên được giao. Quyền cụ thể kiểm ở máy chủ theo [ma trận quyền](../../../02-domain/permissions.md).
+
+**Priority**
+
+P0 theo [thang ưu tiên PRD](../../../01-overview/scope.md#ưu-tiên-yêu-cầu).
 
 **Preconditions**
 
@@ -27,35 +31,38 @@ Nhân viên được giao. Quyền cụ thể kiểm ở máy chủ theo [ma tr�
 | question | Bắt buộc | Câu hỏi cụ thể không rỗng; 4000 ký tự. |
 | record_version | Hệ thống | Phiên bản hiện hành. |
 
-- Chỉ nhân viên được giao, Processing, chưa có question mở. question trim1–4000 phải nêu thông tin cần bổ sung.
-- Transaction tạo question gắn request, visibility public, chưa có answer; chuyển Processing→WaitingInfo, tăng version và history INFO_REQUESTED.
-- Một question mở tối đa/request được bảo vệ bởi khóa request khi ghi. Câu hỏi đã trả lời được giữ lịch sử; sau trở lại Processing có thể hỏi đợt mới với question_id khác.
-- Không tự đặt lại due_at/started_at. Không gửi mail/notification ngoài baseline. Gửi lặp hoặc WaitingInfo:409; lỗi database rollback cả question và status.
+- Chỉ nhân viên được giao, Processing, chưa có question mở. question sau khi bỏ khoảng trắng đầu/cuối, dài 1–4000 phải nêu thông tin cần bổ sung. **Kiểm bởi:** AC-DSP-07-01, AC-DSP-07-02, AC-DSP-07-03, AC-DSP-07-08.
+- Transaction tạo question gắn request, visibility public, chưa có answer; chuyển Processing→WaitingInfo, tăng version và history INFO_REQUESTED. **Kiểm bởi:** AC-DSP-07-01, AC-DSP-07-05, AC-DSP-07-06.
+- Một question mở tối đa/request được bảo vệ bởi khóa request khi ghi. Câu hỏi đã trả lời được giữ lịch sử; sau trở lại Processing có thể hỏi đợt mới với question_id khác. **Kiểm bởi:** AC-DSP-07-04, AC-DSP-07-07.
+- Không tự đặt lại due_at/started_at. Không gửi mail/notification ngoài baseline. Gửi lặp hoặc WaitingInfo:409; lỗi database rollback cả question và status. **Kiểm bởi:** AC-DSP-07-04, AC-DSP-07-05, AC-DSP-07-08.
 
 **Alternative / Error Flows**
 
-- 401: phiên không hợp lệ; điều hướng đăng nhập, không gửi lại thao tác ghi tự động sau login.
-- 403: thiếu capability/CSRF hoặc bộ lọc ngoài scope; không trả dữ liệu trái quyền.
-- 404: request không tồn tại/ngoài quyền đối tượng; không tiết lộ hồ sơ có tồn tại hay không.
-- 422: sai trường/bộ lọc theo Business Rules; hiển thị lỗi tại trường, giữ dữ liệu đang nhập.
-- 409: trạng thái/phiên bản/khóa xung đột theo quy tắc của chức năng; không ghi một phần, yêu cầu tải lại dữ liệu hiện hành.
-- 500 hoặc mất mạng: không đánh thao tác thành công khi chưa có response xác nhận. Riêng STU-01 retry dùng cùng submission_key; các thao tác khác tải lại để xác định lần ghi đã commit, không gửi tự động vô điều kiện.
+- 401 khi phiên hết hiệu lực. Xem NFR-SEC-01 về xác thực lại và xử lý thao tác đang chờ.
+- 403 thiếu quyền xử lý hoặc CSRF. **Kiểm bởi:** NFR-SEC-01.
+- 404 hồ sơ không giao cho actor. **Kiểm bởi:** AC-DSP-07-03.
+- 422 câu hỏi không hợp lệ. **Kiểm bởi:** AC-DSP-07-02, AC-DSP-07-08.
+- 409 chưa xử lý, đã chờ bổ sung hoặc phiên bản cũ. **Kiểm bởi:** AC-DSP-07-04, AC-DSP-07-06, AC-DSP-07-08.
+- 500 hoàn tác cả câu hỏi và trạng thái. **Kiểm bởi:** AC-DSP-07-05.
+- Xử lý mất kết nối, thông báo lỗi biểu mẫu và mã đối chiếu theo [NFR-OBS-01](../../../01-overview/non-functional-requirements.md).
 
 **Acceptance Criteria**
 
 - **AC-DSP-07-01:** Khi Đang xử lý, hỏi Vui lòng cung cấp mã lớp. → Có một câu hỏi mở; Chờ bổ sung; SV thấy đúng câu hỏi.
 - **AC-DSP-07-02:** Khi Nội dung chỉ có khoảng trắng. → Không lưu câu hỏi hoặc chuyển trạng thái.
 - **AC-DSP-07-03:** Khi NV-B yêu cầu bổ sung hồ sơ giao NV-A. → Từ chối; không lộ thêm dữ liệu.
-- **AC-DSP-07-04:** Khi Gửi lần thứ hai khi Chờ bổ sung. → HTTP 409 INVALID_STATE; vẫn1question mở, không có history/question thứ hai.
+- **AC-DSP-07-04:** Khi Gửi lần thứ hai khi Chờ bổ sung. → HTTP 409 INVALID_STATE; vẫn một câu hỏi mở, không có history/question thứ hai.
 - **AC-DSP-07-05:** Khi Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production. → 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
-- **AC-DSP-07-06:** Khi Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ. → TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
-- **AC-DSP-07-07:** Khi Sau STU-04 đóng question1 và Processing, NV hỏi question2. → Có question2 ID khác,1 question mở; question1/answer cũ giữ nguyên.
+- **AC-DSP-07-06:** Khi Hai tab đọc cùng version; tab A lưu hợp lệ, tab B gửi version cũ. → Tab B nhận 409 STALE_VERSION; không ghi đè dữ liệu/lịch sử của A; giao diện yêu cầu tải lại.
+- **AC-DSP-07-07:** Khi Sau STU-04 đóng câu hỏi 1 và Processing, NV hỏi câu hỏi 2. → Có câu hỏi 2 ID khác, một câu hỏi mở; câu hỏi 1/answer cũ giữ nguyên.
+
+- **AC-DSP-07-08:** Khi NV-A thử tạo câu hỏi trên hồ sơ Received đã được giao, sau đó chuyển sang Processing và thử câu hỏi 4001 ký tự. → Received trả 409, văn bản quá dài trả 422. Không đổi trạng thái/hạn/thời điểm bắt đầu, không sinh question/history.
 
 **Ví dụ Edge Case**
 
-Đợt bổ sung tiếp theo: Sau STU-04 đóng question1 và Processing, NV hỏi question2.
+Đợt bổ sung tiếp theo: Sau STU-04 đóng câu hỏi 1 và Processing, NV hỏi câu hỏi 2.
 
 **Expected Result**
 
-Có question2 ID khác,1 question mở; question1/answer cũ giữ nguyên. Kiểm theo TC-DSP-07-07; kết quả thực thi ban đầu là Not Run.
+Có câu hỏi 2 ID khác, một câu hỏi mở; câu hỏi 1/answer cũ giữ nguyên. Kiểm theo TC-DSP-07-07; kết quả thực thi ban đầu là Not Run.
 

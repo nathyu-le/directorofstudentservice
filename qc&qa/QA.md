@@ -1,10 +1,10 @@
 # UniSupport — Kế hoạch đảm bảo chất lượng QA
 
-**Phiên bản 3.0 · 04/11/2026 · Đề xuất quy trình để nhóm và người có thẩm quyền review.**
+**Phiên bản 3.1 · 25/11/2026 · Đề xuất quy trình để nhóm và người có thẩm quyền review.**
 
 ## 1. Mục đích và nguyên tắc
 
-QA quy định cách phòng ngừa sai sót, quản lý đầu ra sản phẩm, giám sát việc tuân thủ và cải tiến quy trình. [QC.md](QC.md) quy định kiểm thử sản phẩm, xử lý lỗi và bằng chứng nghiệm thu. Hai tài liệu dùng cùng PRD/Master Plan v6.0: bốn module STU, DSP, RPT, IAM; 24 FR, 149 TC chức năng và 18 kiểm tra hệ thống.
+QA quy định cách phòng ngừa sai sót, quản lý đầu ra sản phẩm, giám sát việc tuân thủ và cải tiến quy trình. [QC.md](QC.md) quy định kiểm thử sản phẩm, xử lý lỗi và bằng chứng nghiệm thu. Hai tài liệu dùng cùng PRD/Master Plan v6.1: bốn module STU, DSP, RPT, IAM; 24 FR, 187 TC chức năng và 18 kiểm tra hệ thống.
 
 Nguyên tắc áp dụng:
 
@@ -14,13 +14,13 @@ Nguyên tắc áp dụng:
 4. Chuyển bước dựa trên đầu ra và bằng chứng, không dựa riêng vào ngày đến hạn hoặc trạng thái issue.
 5. Ưu tiên xử lý lỗi chặn luồng, sai quyền hoặc làm sai/mất dữ liệu; giữ lịch sử sửa và kiểm tra lại.
 
-**Căn cứ hiện tại:** repo tại commit `12329e10ebeba603cd84152cc8c662680757aef0` có tài liệu/kế hoạch; chưa có mã ứng dụng hoặc cấu hình kiểm thử tự động trong repo được đọc. Các test nguồn còn `Not Run`. Vì vậy đây là quy trình dự kiến, không phải xác nhận đã test, đã review code hay đã nghiệm thu. Thiết kế gắn câu hỏi mở vẫn cần quyết định; không lấy việc test đúng thiết kế đề xuất để coi nghiệp vụ đã được duyệt.
+**Căn cứ hiện tại:** repo theo [baseline 6.1](../docs/05-project/requirements.json) có tài liệu/kế hoạch; chưa có mã ứng dụng hoặc cấu hình kiểm thử tự động trong repo được đọc. Các test nguồn còn `Not Run`. Vì vậy đây là quy trình dự kiến, không phải xác nhận đã test, đã review code hay đã nghiệm thu. Thiết kế gắn câu hỏi mở vẫn cần quyết định; không lấy việc test đúng thiết kế đề xuất để coi nghiệp vụ đã được duyệt.
 
 ## 2. Trách nhiệm và tuyến quyết định
 
 | Vai trò theo Team Charter | Trách nhiệm chất lượng | Báo cáo và xác nhận |
 | --- | --- | --- |
-| PM/BA | Quản lý PRD/AC, làm rõ rule; theo dõi phạm vi/đầu ra; kiểm soát thay đổi; tổ chức review mốc | Nhận báo cáo trực tiếp từ BE, FE và QA/tài liệu; ghi quyết định. Phần vượt thẩm quyền hoặc đổi cam kết phải lấy xác nhận của thầy/bên có thẩm quyền |
+| PM/BA | Quản lý PRD/AC, làm rõ rule; theo dõi phạm vi/đầu ra; kiểm soát thay đổi; tổ chức review mốc | Nhận báo cáo trực tiếp từ BE, FE và QA/tài liệu; ghi quyết định. Phần vượt thẩm quyền hoặc đổi cam kết phải lấy xác nhận của đại diện được ủy quyền của Phòng Công tác Sinh viên Aurora University (Mô phỏng) |
 | BE | Thiết kế dữ liệu/API, phiên/quyền, transaction; unit test hoặc tự kiểm phù hợp implementation; sửa lỗi BE và đóng gói môi trường | Cung cấp PR/commit, kết quả tự kiểm, build/schema/seed và phần còn vướng cho PM/QA |
 | FE | Thiết kế trạng thái màn hình, validation, tích hợp API, desktop/mobile; tự kiểm và sửa lỗi FE | Cung cấp bản giao diện/tích hợp, kết quả tự kiểm, PR và lỗi còn mở |
 | QA/tài liệu | Review khả năng kiểm thử; kiểm tuân thủ; khi thực hiện QC thì chạy test, ghi evidence, bug/retest và tổng hợp kết quả | Báo cáo chất lượng trực tiếp cho PM/BA; người khác review đầu ra của QA theo Charter |
@@ -95,7 +95,7 @@ DoD của một task chuẩn bị/tài liệu không đòi chạy toàn bộ tes
 
 PM/BA đối chiếu phản hồi với baseline: làm sai yêu cầu hiện có là defect; đề nghị hành vi mới/khác là CR; yêu cầu mơ hồ phải được làm rõ trước khi chốt expected. BE/FE/QA cung cấp tác động kỹ thuật và kiểm thử; không tự sửa expected để bỏ lỗi.
 
-CR ghi nội dung/lý do, FR/AC/TC/task bị ảnh hưởng, phương án, effort, dữ liệu/quyền, dependency và ngày mốc. PM quyết định trong phạm vi được giao; nội dung vượt thẩm quyền hoặc thay cam kết cần xác nhận đúng người trước thực hiện. Quyết định lưu cùng revision; cập nhật đồng bộ PRD, contract, test, manifest, Master và issue/milestone liên quan. QC đánh giá retest/regression; QA kiểm lại tính nhất quán. OQ-02/03/04/06/07 còn ảnh hưởng hành vi và môi trường phải có quyết định phù hợp trước kết luận nghiệm thu.
+Đánh giá, phê duyệt và đồng bộ theo [quy trình CR](../docs/05-project/change-control.md). QC đánh giá kiểm lại và hồi quy. Các OQ ảnh hưởng hành vi, nghiệm thu hoặc môi trường cần quyết định trước khi kết luận.
 
 ## 5. Chỉ số chất lượng và báo cáo
 
@@ -136,7 +136,7 @@ Hồ sơ tối thiểu gồm FR/AC/TC và liên kết task; review/decision/CR; 
 
 ## 8. Nguồn áp dụng
 
-- [PRD và kế hoạch v6.0](../docs/05-project/requirements.json); [scope](../docs/01-overview/scope.md).
+- [PRD và kế hoạch v6.1](../docs/05-project/requirements.json); [scope](../docs/01-overview/scope.md).
 - [Quyền](../docs/02-domain/permissions.md), [vòng đời](../docs/02-domain/lifecycle.md), [API](../docs/02-domain/api-contract.md), [từ điển dữ liệu](../docs/02-domain/data-dictionary.md).
 - [FR–AC–TC](../docs/04-acceptance/traceability-matrix.md); [test chức năng](../docs/04-acceptance/test-cases.md); [test hệ thống](../docs/04-acceptance/system-tests.md).
 - [Master Gantt](../UniSupport_Master_Plan.xlsx); [milestone](../docs/05-project/master-alignment.md); [Team Charter](../TeamCharter.md); [câu hỏi mở](../docs/05-project/open-questions.md).

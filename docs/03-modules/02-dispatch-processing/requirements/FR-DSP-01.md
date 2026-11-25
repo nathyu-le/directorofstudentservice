@@ -2,11 +2,15 @@
 
 **Mô tả**
 
-Nhận biết yêu cầu cần phân loại hoặc phân công. Đặc tả triển khai prototype thuộc Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử; các chi tiết trường và quy tắc dưới đây là thiết kế đề xuất v5.0 để review, không phải thông tin vận hành đã được khách hàng xác nhận.
+Nhận biết yêu cầu cần phân loại hoặc phân công. Phạm vi và mục tiêu xem [tổng quan sản phẩm](../../../01-overview/scope.md). Các chi tiết nghiệp vụ đang ở trạng thái đề xuất.
 
 **Actor**
 
 Điều phối viên. Quyền cụ thể kiểm ở máy chủ theo [ma trận quyền](../../../02-domain/permissions.md).
+
+**Priority**
+
+P0 theo [thang ưu tiên PRD](../../../01-overview/scope.md#ưu-tiên-yêu-cầu).
 
 **Preconditions**
 
@@ -27,18 +31,17 @@ Nhận biết yêu cầu cần phân loại hoặc phân công. Đặc tả tri�
 | unassigned | Tùy chọn | Lọc chưa có người phụ trách. |
 | page | Tùy chọn | Theo page_size=20. |
 
-- Điều phối là quyền dispatch của nhân viên/quản lý, không là nhóm người dùng thứ tư trong proposal. Scope lấy từ quyền máy chủ. Điều phối toàn trường mới thấy yêu cầu chưa phân công.
-- Bộ lọc category_id, department_id nguyên dương trong danh mục và phạm vi; status enum5; unassigned boolean; page>=1,20 dòng/trang. Mặc định còn mở, mọi loại, cả chưa phân công.
-- Tìm reference/title chuỗi con, keyword<=100. Sắp created_at tăng dần, id tăng dần để hồ sơ cũ không bị chìm. Tổng và danh sách cùng điều kiện.
-- unassigned=true khi assignee_id IS NULL. Sau DSP-04 thành công hồ sơ ra khỏi tập unassigned; vẫn thuộc Tất cả nếu đúng scope. Hàng chờ không tự thay trách nhiệm/trạng thái.
+- Điều phối là quyền dispatch của nhân viên/quản lý, không là nhóm người dùng thứ tư trong proposal. Scope lấy từ quyền máy chủ. Điều phối toàn trường mới thấy yêu cầu chưa phân công. **Kiểm bởi:** AC-DSP-01-01, AC-DSP-01-03, AC-DSP-01-06.
+- Bộ lọc category_id, department_id nguyên dương trong danh mục và phạm vi; status enum5; unassigned boolean; page>=1, 20 dòng/trang. Mặc định còn mở, mọi loại, cả chưa phân công. **Kiểm bởi:** AC-DSP-01-02, AC-DSP-01-05, AC-DSP-01-06.
+- Tìm reference/title chuỗi con, keyword<=100. Sắp created_at tăng dần, id tăng dần để hồ sơ cũ không bị chìm. Tổng và danh sách cùng điều kiện. **Kiểm bởi:** AC-DSP-01-05.
+- unassigned=true khi assignee_id IS NULL. Sau DSP-04 thành công hồ sơ ra khỏi tập unassigned; vẫn thuộc Tất cả nếu đúng scope. Hàng chờ không tự thay trách nhiệm/trạng thái. **Kiểm bởi:** AC-DSP-01-04.
 
 **Alternative / Error Flows**
 
-- 401: phiên không hợp lệ; điều hướng đăng nhập, không gửi lại thao tác ghi tự động sau login.
-- 403: thiếu capability/CSRF hoặc bộ lọc ngoài scope; không trả dữ liệu trái quyền.
-- 404: request không tồn tại/ngoài quyền đối tượng; không tiết lộ hồ sơ có tồn tại hay không.
-- 422: sai trường/bộ lọc theo Business Rules; hiển thị lỗi tại trường, giữ dữ liệu đang nhập.
-- 500 hoặc mất mạng: không đánh thao tác thành công khi chưa có response xác nhận. Riêng STU-01 retry dùng cùng submission_key; các thao tác khác tải lại để xác định lần ghi đã commit, không gửi tự động vô điều kiện.
+- 401 khi phiên hết hiệu lực. Xem NFR-SEC-01 về xác thực lại và xử lý thao tác đang chờ.
+- 403 thiếu quyền điều phối hoặc lọc ngoài phạm vi. **Kiểm bởi:** AC-DSP-01-03, AC-DSP-01-06.
+- 422 lọc sai. **Kiểm bởi:** AC-DSP-01-02, AC-DSP-01-05, AC-DSP-01-06.
+- Xử lý mất kết nối, thông báo lỗi biểu mẫu và mã đối chiếu theo [NFR-OBS-01](../../../01-overview/non-functional-requirements.md).
 
 **Acceptance Criteria**
 
@@ -46,6 +49,9 @@ Nhận biết yêu cầu cần phân loại hoặc phân công. Đặc tả tri�
 - **AC-DSP-01-02:** Khi category_id không tồn tại. → Báo tham số sai; không áp dụng loại khác âm thầm.
 - **AC-DSP-01-03:** Khi Sinh viên gọi trang/điểm truy cập hàng chờ. → Từ chối; không lộ danh sách toàn trường.
 - **AC-DSP-01-04:** Khi Phân công yêu cầu rồi lọc unassigned=true. → Yêu cầu rời tập chưa phân công nhưng vẫn nằm trong Tất cả nếu thuộc phạm vi.
+
+- **AC-DSP-01-05:** Khi DP-All mở hàng chờ mặc định có hồ sơ mở/đóng, hai hồ sơ mở trùng created_at và 21 hồ sơ mở. Tìm theo phần mã hoặc tiêu đề rồi thử từ khóa 101 ký tự. → Mặc định chỉ mở, có cả chưa giao; sắp created_at/ID tăng. Trang tối đa 20 và total thống nhất. Tìm đúng tập nguồn; báo 422 khi từ khóa quá dài.
+- **AC-DSP-01-06:** Khi DP-A thử lọc PB-B và đọc hàng chờ mặc định. DP-All xem cùng dữ liệu. Thử page=0, unassigned sai kiểu, status không hợp lệ và department_id=0. → DP-A không thấy hồ sơ ngoài PB-A hoặc chưa giao, lọc PB-B trả 403. DP-All thấy hồ sơ chưa giao. Các bộ lọc không hợp lệ trả 422.
 
 **Ví dụ Edge Case**
 

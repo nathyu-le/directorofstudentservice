@@ -1,6 +1,6 @@
 # Hợp đồng API v5.0
 
-Thiết kế đề xuất REST/JSON trong prototype. POST JSONUTF8+CSRF header; GET không thay dữ liệu; server lấy actor từ session.
+Thiết kế đề xuất REST/JSON trong prototype. POST gửi JSON (UTF-8) với header chống giả mạo yêu cầu (CSRF); GET không thay dữ liệu; server lấy actor từ session.
 
 | FR | Method | Path | Input | Output |
 | --- | --- | --- | --- | --- |
@@ -29,9 +29,9 @@ Thiết kế đề xuất REST/JSON trong prototype. POST JSONUTF8+CSRF header; 
 | FR-IAM-02 | POST | /api/auth/logout | CSRF khi có phiên | 204:no body |
 | FR-IAM-03 | Middleware | Tất cả protected endpoints | session/capability/scope/object/CSRF | Không endpoint mới; allow/deny trước query |
 
-Success envelope JSON {data:...}; error envelope {error:{code, message, fields:{field:message}}, correlation_id}. 204 không body. Bộ lọc không hỗ trợ 422; role/scope/student_idclient bị bỏ qua không nâng quyền. Path id không phải integer dương 422; ID hợp lệ ngoài scope 404. DateISO8601; enum dùng mã 5trạng thái. Report filters phản ánh đúng đã áp dụng và as_of một giá trị UTC.
+Success envelope JSON {data:...}; error envelope {error:{code, message, fields:{field:message}}, correlation_id}. 204 không body. Bộ lọc không hỗ trợ 422; role/scope/student_id từ máy khách bị bỏ qua không nâng quyền. Path id không phải integer dương 422; ID hợp lệ ngoài scope 404. Ngày theo ISO 8601; enum dùng mã năm trạng thái. Report filters phản ánh đúng đã áp dụng và as_of một giá trị UTC.
 
-CREATED history public; CATEGORY_CHANGED public(type cũ/mới); ASSIGNED public(đơn vị/người cũ/mới, lý do phối hợp); DUE_CHANGED public; STARTEDpublic; INFO_REQUESTED/INFO_ANSWEREDpublic; PROGRESS theo visibility; RESOLVED/CLOSEDpublic; FEEDBACK_UPDATEDpublic(chủ SV xem feedback của mình). Error không stacktrace/SQL/password. Internal history không bị trộn vào public projection.
+CREATED history public; CATEGORY_CHANGED public(type cũ/mới); ASSIGNED public(đơn vị/người cũ/mới, lý do phối hợp); DUE_CHANGED public; STARTED công khai; INFO_REQUESTED/INFO_ANSWERED công khai; PROGRESS theo visibility; RESOLVED/CLOSED công khai; FEEDBACK_UPDATED công khai(chủ SV xem feedback của mình). Error không stacktrace/SQL/password. Internal history không bị trộn vào public projection.
 
-Đồng thời: SELECT request FOR UPDATE, đọc quyền/trạng thái/version lại trongtransaction, validate invariants, ghi tất cả, commit. Idempotency create unique constraint phát hiện race và đọc submission đã commit để replay, không trả generic 500 khi unique violationđãbiết. Conflict versionnêu version hiện hành tùy quyền nhưng không ghi đè. Nếu 500 trước commit rollback; response mất saucommit xử lý theo FR.
+Đồng thời: SELECT request FOR UPDATE, đọc quyền/trạng thái/version lại trong giao dịch, validate invariants, ghi tất cả, commit. Idempotency create unique constraint phát hiện race và đọc submission đã commit để replay, không trả generic 500 khi unique violation đã biết. Conflict phiên bản nêu version hiện hành tùy quyền nhưng không ghi đè. Nếu 500 trước commit rollback; response mất sau khi commit xử lý theo FR.
 

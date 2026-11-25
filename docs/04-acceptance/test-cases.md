@@ -1,2686 +1,2558 @@
 # Test case chức năng
 
-Fixture giả lập vàendpoint ở [data](../02-domain/data-dictionary.md)/[API](../02-domain/api-contract.md). Casebulk ở JSON cósteps để nhập Master. Chưa thực thi:mọi result Not Run, actual/evidence để trống.
+Dùng [fixture và quy trình chạy](fixtures.md), [hợp đồng API](../02-domain/api-contract.md) và [ma trận truy vết](traceability-matrix.md). Mọi kết quả là Not Run. Lưu kết quả thực tế và bằng chứng riêng theo phiếu chạy QC.
 
 ## TC-STU-01-01 — Đủ trường, loại hợp lệ
 
-FR:FR-STU-01; AC:AC-STU-01-01.
+**Yêu cầu kiểm:** FR-STU-01 · AC-STU-01-01
 
-Preconditions:Sinh viên đã đăng nhập; danh mục vấn đề giả lập đã được khởi tạo.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Tạo yêu cầu mới theo JSON cơ sở trong fixture.
 
-Dữ liệu:Dữ liệu mẫu: loại Học vụ, tiêu đề Xin xác nhận sinh viên, mô tả Xin hướng dẫn thủ tục.
+1. Dữ liệu mẫu: loại Học vụ, tiêu đề Xin xác nhận sinh viên, mô tả Xin hướng dẫn thủ tục. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/requests` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm submissions, requests và history theo khóa hoặc request_id theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-01.
-2. Thiết lập chính xác dữ liệu: Dữ liệu mẫu: loại Học vụ, tiêu đề Xin xác nhận sinh viên, mô tả Xin hướng dẫn thủ tục.
-3. Thực hiện POST /api/requests theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Tạo đúng một yêu cầu có mã duy nhất, chủ từ phiên, Đã tiếp nhận; hàng chờ thấy cùng mã.
+**Mong đợi:** Tạo đúng một yêu cầu có mã duy nhất, chủ từ phiên, Đã tiếp nhận; hàng chờ thấy cùng mã.
 
-Expected:Tạo đúng một yêu cầu có mã duy nhất, chủ từ phiên, Đã tiếp nhận; hàng chờ thấy cùng mã.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-01-02 — Thiếu nội dung
 
-FR:FR-STU-01; AC:AC-STU-01-02.
+**Yêu cầu kiểm:** FR-STU-01 · AC-STU-01-02
 
-Preconditions:Sinh viên đã đăng nhập; danh mục vấn đề giả lập đã được khởi tạo.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Tạo yêu cầu mới theo JSON cơ sở trong fixture.
 
-Dữ liệu:Tiêu đề chỉ có khoảng trắng hoặc mô tả trống.
+1. Tiêu đề chỉ có khoảng trắng hoặc mô tả trống. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/requests` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm submissions, requests và history theo khóa hoặc request_id theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-01.
-2. Thiết lập chính xác dữ liệu: Tiêu đề chỉ có khoảng trắng hoặc mô tả trống.
-3. Thực hiện POST /api/requests theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Báo tại trường; không tạo yêu cầu hay lịch sử một phần.
+**Mong đợi:** Báo tại trường; không tạo yêu cầu hay lịch sử một phần.
 
-Expected:Báo tại trường; không tạo yêu cầu hay lịch sử một phần.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-01-03 — Giả mạo chủ yêu cầu
 
-FR:FR-STU-01; AC:AC-STU-01-03.
+**Yêu cầu kiểm:** FR-STU-01 · AC-STU-01-03
 
-Preconditions:Sinh viên đã đăng nhập; danh mục vấn đề giả lập đã được khởi tạo.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Tạo yêu cầu mới theo JSON cơ sở trong fixture.
 
-Dữ liệu:Phiên SV-A gửi thêm student_id=SV-B.
+1. Phiên SV-A gửi thêm student_id=SV-B. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/requests` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm submissions, requests và history theo khóa hoặc request_id theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-01.
-2. Thiết lập chính xác dữ liệu: Phiên SV-A gửi thêm student_id=SV-B.
-3. Thực hiện POST /api/requests theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Chủ vẫn là SV-A; không chấp nhận student_id từ trình duyệt.
+**Mong đợi:** Chủ vẫn là SV-A; không chấp nhận student_id từ trình duyệt.
 
-Expected:Chủ vẫn là SV-A; không chấp nhận student_id từ trình duyệt.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-01-04 — Gửi lặp
 
-FR:FR-STU-01; AC:AC-STU-01-04.
+**Yêu cầu kiểm:** FR-STU-01 · AC-STU-01-04
 
-Preconditions:Sinh viên đã đăng nhập; danh mục vấn đề giả lập đã được khởi tạo.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Tạo yêu cầu mới theo JSON cơ sở trong fixture.
 
-Dữ liệu:Gửi lại cùng submission_key hai lần.
+1. Gửi lại cùng submission_key hai lần. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/requests` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm submissions, requests và history theo khóa hoặc request_id theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-01.
-2. Thiết lập chính xác dữ liệu: Gửi lại cùng submission_key hai lần.
-3. Thực hiện POST /api/requests theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Trả cùng mã; tổng số yêu cầu tăng một, không hai.
+**Mong đợi:** Trả cùng mã; tổng số yêu cầu tăng một, không hai.
 
-Expected:Trả cùng mã; tổng số yêu cầu tăng một, không hai.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-01-05 — Mất response rồi retry
 
-FR:FR-STU-01; AC:AC-STU-01-05.
+**Yêu cầu kiểm:** FR-STU-01 · AC-STU-01-05
 
-Preconditions:Sinh viên đã đăng nhập; danh mục vấn đề giả lập đã được khởi tạo.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Tạo yêu cầu mới theo JSON cơ sở trong fixture.
 
-Dữ liệu:Commit tạo xong nhưng client không nhận response; gửi lại cùng khóa/payload.
+1. Commit tạo xong nhưng client không nhận response; gửi lại cùng khóa/payload. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/requests` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm submissions, requests và history theo khóa hoặc request_id theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-01.
-2. Thiết lập chính xác dữ liệu: Commit tạo xong nhưng client không nhận response; gửi lại cùng khóa/payload.
-3. Thực hiện POST /api/requests theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: HTTP 200 cùng reference; DB 1 request và 1 event CREATED cho khóa.
+**Mong đợi:** HTTP 200 cùng reference; DB 1 request và 1 event CREATED cho khóa.
 
-Expected:HTTP 200 cùng reference; DB 1 request và 1 event CREATED cho khóa.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-01-06 — Khóa bị tái sử dụng sai
 
-FR:FR-STU-01; AC:AC-STU-01-06.
+**Yêu cầu kiểm:** FR-STU-01 · AC-STU-01-06
 
-Preconditions:Sinh viên đã đăng nhập; danh mục vấn đề giả lập đã được khởi tạo.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Tạo yêu cầu mới theo JSON cơ sở trong fixture.
 
-Dữ liệu:Cùng student/key nhưng đổi description.
+1. Cùng student/key nhưng đổi description. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/requests` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm submissions, requests và history theo khóa hoặc request_id theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-01.
-2. Thiết lập chính xác dữ liệu: Cùng student/key nhưng đổi description.
-3. Thực hiện POST /api/requests theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 409 SUBMISSION_KEY_CONFLICT; bản đã tạo không đổi.
+**Mong đợi:** 409 SUBMISSION_KEY_CONFLICT; bản đã tạo không đổi.
 
-Expected:409 SUBMISSION_KEY_CONFLICT; bản đã tạo không đổi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-01-07 — Hai ý định riêng
 
-FR:FR-STU-01; AC:AC-STU-01-07.
+**Yêu cầu kiểm:** FR-STU-01 · AC-STU-01-07
 
-Preconditions:Sinh viên đã đăng nhập; danh mục vấn đề giả lập đã được khởi tạo.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Tạo yêu cầu mới theo JSON cơ sở trong fixture.
 
-Dữ liệu:Cùng nội dung nhưng hai UUID khác nhau.
+1. Cùng nội dung nhưng hai UUID khác nhau. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/requests` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm submissions, requests và history theo khóa hoặc request_id theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-01.
-2. Thiết lập chính xác dữ liệu: Cùng nội dung nhưng hai UUID khác nhau.
-3. Thực hiện POST /api/requests theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Tạo2 yêu cầu hợp lệ; không chống trùng theo nội dung để làm mất ý định mới.
+**Mong đợi:** Tạo 2 yêu cầu hợp lệ; không chống trùng theo nội dung để làm mất ý định mới.
 
-Expected:Tạo2 yêu cầu hợp lệ; không chống trùng theo nội dung để làm mất ý định mới.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-01-08 — Rollback giao dịch
 
-FR:FR-STU-01; AC:AC-STU-01-08.
+**Yêu cầu kiểm:** FR-STU-01 · AC-STU-01-08
 
-Preconditions:Sinh viên đã đăng nhập; danh mục vấn đề giả lập đã được khởi tạo.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Tạo yêu cầu mới theo JSON cơ sở trong fixture.
 
-Dữ liệu:Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
+1. Đọc và lưu ảnh chụp submissions, requests và history theo khóa hoặc request_id trước thao tác. Dùng payload hợp lệ của actor SV-A.
+2. Bật điểm lỗi ghi history trên build thử rồi gọi `POST /api/requests` một lần. Xác nhận log đã qua ghi nghiệp vụ trước lỗi.
+3. Tắt giả lập. Đọc từ kết nối khác, so submissions, requests và history theo khóa hoặc request_id với trước thao tác. Lưu HTTP 500, mã đối chiếu và kết quả so sánh.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-01.
-2. Thiết lập chính xác dữ liệu: Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
-3. Thực hiện POST /api/requests theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
+**Mong đợi:** 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
 
-Expected:500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-STU-01-09 — Biên nhập và danh mục
+
+**Yêu cầu kiểm:** FR-STU-01 · AC-STU-01-09
+
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Tạo yêu cầu mới theo JSON cơ sở trong fixture.
+
+1. Gửi riêng tiêu đề Unicode dài 150 và 151 ký tự, mô tả dài 4000 và 4001 ký tự, category 199 đã ngừng và category 103 Chưa xác định. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/requests` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm submissions, requests và history theo khóa hoặc request_id theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** Chỉ chấp nhận khi không quá giới hạn và danh mục hoạt động. Báo lỗi tại trường sai, giữ dữ liệu nhập và không thêm hồ sơ/lịch sử ở lượt bị từ chối.
+
+**Kết quả:** Not Run.
+
+## TC-STU-01-10 — Trường do hệ thống sở hữu
+
+**Yêu cầu kiểm:** FR-STU-01 · AC-STU-01-10
+
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Tạo yêu cầu mới theo JSON cơ sở trong fixture.
+
+1. SV-A gửi UUID hợp lệ kèm student_id=102, role=Manager, department_id=201, assignee_id=111, status=Closed và các mốc do máy khách chỉ định. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/requests` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm submissions, requests và history theo khóa hoặc request_id theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** Máy chủ lấy chủ từ phiên, tạo Received, phiên bản 1, trường trách nhiệm và hạn/mốc xử lý rỗng, giờ tạo từ máy chủ. Có đúng một submission và một CREATED công khai.
+
+**Kết quả:** Not Run.
+
+## TC-STU-01-11 — Định dạng khóa và chuẩn hóa
+
+**Yêu cầu kiểm:** FR-STU-01 · AC-STU-01-11
+
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Tạo yêu cầu mới theo JSON cơ sở trong fixture.
+
+1. Gửi submission_key không đúng UUID v4. Sau đó gửi khóa hợp lệ với khoảng trắng đầu/cuối, rồi gửi lại cùng khóa với chuỗi đã bỏ khoảng trắng. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/requests` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm submissions, requests và history theo khóa hoặc request_id theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** Khóa sai báo 422. Hai cách nhập tương đương trả 201 rồi 200 cùng mã, chỉ một submission/hồ sơ/CREATED.
+
+**Kết quả:** Not Run.
 
 ## TC-STU-02-01 — Có yêu cầu và bộ lọc
 
-FR:FR-STU-02; AC:AC-STU-02-01.
+**Yêu cầu kiểm:** FR-STU-02 · AC-STU-02-01
 
-Preconditions:Có phiên sinh viên hợp lệ; có thể chưa có yêu cầu.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng hồ sơ 310, 315 và đối chứng 316. Với tập rỗng dùng SV-C.
 
-Dữ liệu:SV-A có hai yêu cầu Đã tiếp nhận và Đang xử lý; lọc Đang xử lý.
+1. SV-A có hai yêu cầu Đã tiếp nhận và Đang xử lý; lọc Đang xử lý. Mở màn hình tương ứng bằng SV-A, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/student/requests` với các biến thể đã nêu. So JSON items/total và thứ tự các request_id trong bộ lọc trước/sau đổi bộ lọc hoặc actor theo tình huống.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-02.
-2. Thiết lập chính xác dữ liệu: SV-A có hai yêu cầu Đã tiếp nhận và Đang xử lý; lọc Đang xử lý.
-3. Thực hiện GET /api/student/requests theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Chỉ trả yêu cầu Đang xử lý của SV-A; tổng số và phân trang dùng cùng điều kiện.
+**Mong đợi:** Chỉ trả yêu cầu Đang xử lý của SV-A; tổng số và phân trang dùng cùng điều kiện.
 
-Expected:Chỉ trả yêu cầu Đang xử lý của SV-A; tổng số và phân trang dùng cùng điều kiện.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-02-02 — Tham số sai
 
-FR:FR-STU-02; AC:AC-STU-02-02.
+**Yêu cầu kiểm:** FR-STU-02 · AC-STU-02-02
 
-Preconditions:Có phiên sinh viên hợp lệ; có thể chưa có yêu cầu.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng hồ sơ 310, 315 và đối chứng 316. Với tập rỗng dùng SV-C.
 
-Dữ liệu:page=0 hoặc trạng thái không thuộc danh sách.
+1. page=0 hoặc trạng thái không thuộc danh sách. Mở màn hình tương ứng bằng SV-A, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/student/requests` với các biến thể đã nêu. So JSON items/total và thứ tự các request_id trong bộ lọc trước/sau đổi bộ lọc hoặc actor theo tình huống.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-02.
-2. Thiết lập chính xác dữ liệu: page=0 hoặc trạng thái không thuộc danh sách.
-3. Thực hiện GET /api/student/requests theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Báo bộ lọc không hợp lệ; không trả tập dữ liệu vượt quyền.
+**Mong đợi:** Báo bộ lọc không hợp lệ; không trả tập dữ liệu vượt quyền.
 
-Expected:Báo bộ lọc không hợp lệ; không trả tập dữ liệu vượt quyền.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-02-03 — Lọc theo người khác
 
-FR:FR-STU-02; AC:AC-STU-02-03.
+**Yêu cầu kiểm:** FR-STU-02 · AC-STU-02-03
 
-Preconditions:Có phiên sinh viên hợp lệ; có thể chưa có yêu cầu.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng hồ sơ 310, 315 và đối chứng 316. Với tập rỗng dùng SV-C.
 
-Dữ liệu:SV-A sửa tham số student_id thành SV-B.
+1. SV-A sửa tham số student_id thành SV-B. Mở màn hình tương ứng bằng SV-A, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/student/requests` với các biến thể đã nêu. So JSON items/total và thứ tự các request_id trong bộ lọc trước/sau đổi bộ lọc hoặc actor theo tình huống.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-02.
-2. Thiết lập chính xác dữ liệu: SV-A sửa tham số student_id thành SV-B.
-3. Thực hiện GET /api/student/requests theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Không trả bất kỳ yêu cầu của SV-B.
+**Mong đợi:** Không trả bất kỳ yêu cầu của SV-B.
 
-Expected:Không trả bất kỳ yêu cầu của SV-B.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-02-04 — Danh sách rỗng
 
-FR:FR-STU-02; AC:AC-STU-02-04.
+**Yêu cầu kiểm:** FR-STU-02 · AC-STU-02-04
 
-Preconditions:Có phiên sinh viên hợp lệ; có thể chưa có yêu cầu.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng hồ sơ 310, 315 và đối chứng 316. Với tập rỗng dùng SV-C.
 
-Dữ liệu:Tài khoản SV-C chưa có yêu cầu.
+1. Tài khoản SV-C chưa có yêu cầu. Mở màn hình tương ứng bằng SV-A, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/student/requests` với các biến thể đã nêu. So JSON items/total và thứ tự các request_id trong bộ lọc trước/sau đổi bộ lọc hoặc actor theo tình huống.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-02.
-2. Thiết lập chính xác dữ liệu: Tài khoản SV-C chưa có yêu cầu.
-3. Thực hiện GET /api/student/requests theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Hiển thị Chưa có yêu cầu và liên kết gửi yêu cầu; không báo lỗi hệ thống.
+**Mong đợi:** Hiển thị Chưa có yêu cầu và liên kết gửi yêu cầu; không báo lỗi hệ thống.
 
-Expected:Hiển thị Chưa có yêu cầu và liên kết gửi yêu cầu; không báo lỗi hệ thống.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-02-05 — Trang vượt cuối
 
-FR:FR-STU-02; AC:AC-STU-02-05.
+**Yêu cầu kiểm:** FR-STU-02 · AC-STU-02-05
 
-Preconditions:Có phiên sinh viên hợp lệ; có thể chưa có yêu cầu.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng hồ sơ 310, 315 và đối chứng 316. Với tập rỗng dùng SV-C.
 
-Dữ liệu:Có 1 request, page=2 với page_size 20.
+1. Có 1 request, page=2 với page_size 20. Mở màn hình tương ứng bằng SV-A, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/student/requests` với các biến thể đã nêu. So JSON items/total và thứ tự các request_id trong bộ lọc trước/sau đổi bộ lọc hoặc actor theo tình huống.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-02.
-2. Thiết lập chính xác dữ liệu: Có 1 request, page=2 với page_size 20.
-3. Thực hiện GET /api/student/requests theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: items=[] và total=1; không trả request người khác, không tự sửa page.
+**Mong đợi:** items=[] và total=1; không trả request người khác, không tự sửa page.
 
-Expected:items=[] và total=1; không trả request người khác, không tự sửa page.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-STU-02-06 — Tìm theo mã hoặc tiêu đề
+
+**Yêu cầu kiểm:** FR-STU-02 · AC-STU-02-06
+
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng hồ sơ 310, 315 và đối chứng 316. Với tập rỗng dùng SV-C.
+
+1. Với SV-A, tìm từ khóa có khoảng trắng đầu/cuối và khác chữ hoa/thường, khớp một phần mã US-310 hoặc tiêu đề Học vụ. Thử từ khóa 100 và 101 ký tự. Mở màn hình tương ứng bằng SV-A, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/student/requests` với các biến thể đã nêu. So JSON items/total và thứ tự các request_id trong bộ lọc trước/sau đổi bộ lọc hoặc actor theo tình huống.
+
+**Mong đợi:** Tìm trên mã/tiêu đề đúng phạm vi. 100 ký tự hợp lệ, 101 trả 422 tại bộ lọc. Không đưa hồ sơ SV-B vào items/total.
+
+**Kết quả:** Not Run.
+
+## TC-STU-02-07 — Thứ tự, phân trang và nhãn rỗng
+
+**Yêu cầu kiểm:** FR-STU-02 · AC-STU-02-07
+
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng hồ sơ 310, 315 và đối chứng 316. Với tập rỗng dùng SV-C.
+
+1. Tạo 21 hồ sơ của SV-A. Hai hồ sơ mới nhất trùng updated_at nhưng ID khác. Một hồ sơ không có người/hạn. Đọc trang 1 và 2. Mở màn hình tương ứng bằng SV-A, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/student/requests` với các biến thể đã nêu. So JSON items/total và thứ tự các request_id trong bộ lọc trước/sau đổi bộ lọc hoặc actor theo tình huống.
+
+**Mong đợi:** 20 dòng rồi 1 dòng, cùng total=21, thứ tự updated_at và ID giảm dần. Hiện Chưa phân công, Chưa đặt hạn. Không có email riêng nhân viên trong JSON.
+
+**Kết quả:** Not Run.
 
 ## TC-STU-03-01 — Tiến độ đã cập nhật
 
-FR:FR-STU-03; AC:AC-STU-03-01.
+**Yêu cầu kiểm:** FR-STU-03 · AC-STU-03-01
 
-Preconditions:Yêu cầu tồn tại và thuộc sinh viên đang đăng nhập.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Đọc 310, 311, 313 hoặc 315 theo trạng thái của tình huống.
 
-Dữ liệu:Yêu cầu được phân công rồi chuyển Đang xử lý.
+1. Yêu cầu được phân công rồi chuyển Đang xử lý. Mở màn hình tương ứng bằng SV-A, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/student/requests/{id}` với các biến thể đã nêu. So JSON chi tiết, lịch sử công khai và nút trên giao diện trước/sau đổi bộ lọc hoặc actor theo tình huống.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-03.
-2. Thiết lập chính xác dữ liệu: Yêu cầu được phân công rồi chuyển Đang xử lý.
-3. Thực hiện GET /api/student/requests/{id} theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Chi tiết và danh sách cùng hiển thị trạng thái/người phụ trách hiện hành sau tải lại.
+**Mong đợi:** Chi tiết và danh sách cùng hiển thị trạng thái/người phụ trách hiện hành sau tải lại.
 
-Expected:Chi tiết và danh sách cùng hiển thị trạng thái/người phụ trách hiện hành sau tải lại.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-03-02 — Mã không tồn tại
 
-FR:FR-STU-03; AC:AC-STU-03-02.
+**Yêu cầu kiểm:** FR-STU-03 · AC-STU-03-02
 
-Preconditions:Yêu cầu tồn tại và thuộc sinh viên đang đăng nhập.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Đọc 310, 311, 313 hoặc 315 theo trạng thái của tình huống.
 
-Dữ liệu:Mã yêu cầu không có trong bộ dữ liệu.
+1. Mã yêu cầu không có trong bộ dữ liệu. Mở màn hình tương ứng bằng SV-A, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/student/requests/{id}` với các biến thể đã nêu. So JSON chi tiết, lịch sử công khai và nút trên giao diện trước/sau đổi bộ lọc hoặc actor theo tình huống.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-03.
-2. Thiết lập chính xác dữ liệu: Mã yêu cầu không có trong bộ dữ liệu.
-3. Thực hiện GET /api/student/requests/{id} theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Hiển thị không tìm thấy; không tạo hoặc sửa dữ liệu.
+**Mong đợi:** Hiển thị không tìm thấy; không tạo hoặc sửa dữ liệu.
 
-Expected:Hiển thị không tìm thấy; không tạo hoặc sửa dữ liệu.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-03-03 — Truy cập ngang
 
-FR:FR-STU-03; AC:AC-STU-03-03.
+**Yêu cầu kiểm:** FR-STU-03 · AC-STU-03-03
 
-Preconditions:Yêu cầu tồn tại và thuộc sinh viên đang đăng nhập.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-B. Đọc 310, 311, 313 hoặc 315 theo trạng thái của tình huống.
 
-Dữ liệu:SV-B mở URL yêu cầu của SV-A.
+1. SV-B mở URL yêu cầu của SV-A. Mở màn hình tương ứng bằng SV-B, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/student/requests/{id}` với các biến thể đã nêu. So JSON chi tiết, lịch sử công khai và nút trên giao diện trước/sau đổi bộ lọc hoặc actor theo tình huống.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-03.
-2. Thiết lập chính xác dữ liệu: SV-B mở URL yêu cầu của SV-A.
-3. Thực hiện GET /api/student/requests/{id} theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Không trả tiêu đề, mô tả, lịch sử hoặc tài liệu của SV-A.
+**Mong đợi:** Không trả tiêu đề, mô tả, lịch sử hoặc dữ liệu kèm theo của SV-A.
 
-Expected:Không trả tiêu đề, mô tả, lịch sử hoặc tài liệu của SV-A.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-03-04 — Chưa phân công / chờ bổ sung
 
-FR:FR-STU-03; AC:AC-STU-03-04.
+**Yêu cầu kiểm:** FR-STU-03 · AC-STU-03-04
 
-Preconditions:Yêu cầu tồn tại và thuộc sinh viên đang đăng nhập.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Đọc 310, 311, 313 hoặc 315 theo trạng thái của tình huống.
 
-Dữ liệu:Xem yêu cầu mới, sau đó xem yêu cầu Chờ bổ sung.
+1. Xem yêu cầu mới, sau đó xem yêu cầu Chờ bổ sung. Mở màn hình tương ứng bằng SV-A, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/student/requests/{id}` với các biến thể đã nêu. So JSON chi tiết, lịch sử công khai và nút trên giao diện trước/sau đổi bộ lọc hoặc actor theo tình huống.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-03.
-2. Thiết lập chính xác dữ liệu: Xem yêu cầu mới, sau đó xem yêu cầu Chờ bổ sung.
-3. Thực hiện GET /api/student/requests/{id} theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Yêu cầu mới ghi Chưa phân công; yêu cầu chờ bổ sung ghi rõ thông tin cần cung cấp, không lộ ghi chú nội bộ.
+**Mong đợi:** Yêu cầu mới ghi Chưa phân công; yêu cầu chờ bổ sung ghi rõ thông tin cần cung cấp, không lộ ghi chú nội bộ.
 
-Expected:Yêu cầu mới ghi Chưa phân công; yêu cầu chờ bổ sung ghi rõ thông tin cần cung cấp, không lộ ghi chú nội bộ.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-03-05 — Không lộ internal JSON
 
-FR:FR-STU-03; AC:AC-STU-03-05.
+**Yêu cầu kiểm:** FR-STU-03 · AC-STU-03-05
 
-Preconditions:Yêu cầu tồn tại và thuộc sinh viên đang đăng nhập.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Đọc 310, 311, 313 hoặc 315 theo trạng thái của tình huống.
 
-Dữ liệu:Ghi internal TEST-INTERNAL rồi SV gọi endpoint trực tiếp.
+1. Ghi internal TEST-INTERNAL rồi SV gọi endpoint trực tiếp. Mở màn hình tương ứng bằng SV-A, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/student/requests/{id}` với các biến thể đã nêu. So JSON chi tiết, lịch sử công khai và nút trên giao diện trước/sau đổi bộ lọc hoặc actor theo tình huống.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-03.
-2. Thiết lập chính xác dữ liệu: Ghi internal TEST-INTERNAL rồi SV gọi endpoint trực tiếp.
-3. Thực hiện GET /api/student/requests/{id} theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: JSON không chứa nội dung TEST-INTERNAL hoặc các trường internal_history.
+**Mong đợi:** JSON không chứa nội dung TEST-INTERNAL hoặc các trường internal_history.
 
-Expected:JSON không chứa nội dung TEST-INTERNAL hoặc các trường internal_history.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-STU-03-06 — Lịch sử và hành động đúng trạng thái
+
+**Yêu cầu kiểm:** FR-STU-03 · AC-STU-03-06
+
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Đọc 310, 311, 313 hoặc 315 theo trạng thái của tình huống.
+
+1. Mở hồ sơ mới, chờ bổ sung có câu hỏi mở, đã giải quyết, rồi hồ sơ đã đóng. Thêm hai sự kiện công khai cùng giờ và một sự kiện nội bộ. Mở màn hình tương ứng bằng SV-A, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/student/requests/{id}` với các biến thể đã nêu. So JSON chi tiết, lịch sử công khai và nút trên giao diện trước/sau đổi bộ lọc hoặc actor theo tình huống.
+
+**Mong đợi:** Chỉ hiển thị nút trả lời khi có câu hỏi mở trong WaitingInfo, nút phản hồi khi Resolved/Closed có kết quả. Lịch sử công khai theo giờ rồi ID tăng và không có nội bộ.
+
+**Kết quả:** Not Run.
+
+## TC-STU-03-07 — Mã không hợp lệ
+
+**Yêu cầu kiểm:** FR-STU-03 · AC-STU-03-07
+
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Đọc 310, 311, 313 hoặc 315 theo trạng thái của tình huống.
+
+1. Mở URL chi tiết với ID 0, chữ và ID hợp lệ nhưng không tồn tại. Mở màn hình tương ứng bằng SV-A, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/student/requests/{id}` với các biến thể đã nêu. So JSON chi tiết, lịch sử công khai và nút trên giao diện trước/sau đổi bộ lọc hoặc actor theo tình huống.
+
+**Mong đợi:** ID sai định dạng trả 422. ID không có trả 404 với nội dung giống trường hợp ngoài quyền, không trả dữ liệu nghiệp vụ.
+
+**Kết quả:** Not Run.
 
 ## TC-STU-04-01 — Trả lời hợp lệ
 
-FR:FR-STU-04; AC:AC-STU-04-01.
+**Yêu cầu kiểm:** FR-STU-04 · AC-STU-04-01
 
-Preconditions:Đúng chủ yêu cầu; trạng thái Chờ bổ sung; có câu hỏi bổ sung đang mở.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng 311, question_id=401, content “Mã lớp A01” và version hiện hành.
 
-Dữ liệu:Câu hỏi đang mở: cần mã lớp; trả lời Mã lớp TEST-01.
+1. Câu hỏi đang mở: cần mã lớp; trả lời Mã lớp TEST-01. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/student/requests/{id}/answers` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, questions, answers và history theo 311/401 theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-04.
-2. Thiết lập chính xác dữ liệu: Câu hỏi đang mở: cần mã lớp; trả lời Mã lớp TEST-01.
-3. Thực hiện POST /api/student/requests/{id}/answers theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Cùng mã yêu cầu, chủ và người phụ trách; câu hỏi có trả lời; trạng thái Đang xử lý.
+**Mong đợi:** Cùng mã yêu cầu, chủ và người phụ trách; câu hỏi có trả lời; trạng thái Đang xử lý.
 
-Expected:Cùng mã yêu cầu, chủ và người phụ trách; câu hỏi có trả lời; trạng thái Đang xử lý.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-04-02 — Nội dung trống
 
-FR:FR-STU-04; AC:AC-STU-04-02.
+**Yêu cầu kiểm:** FR-STU-04 · AC-STU-04-02
 
-Preconditions:Đúng chủ yêu cầu; trạng thái Chờ bổ sung; có câu hỏi bổ sung đang mở.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng 311, question_id=401, content “Mã lớp A01” và version hiện hành.
 
-Dữ liệu:Trả lời chỉ có khoảng trắng.
+1. Trả lời chỉ có khoảng trắng. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/student/requests/{id}/answers` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, questions, answers và history theo 311/401 theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-04.
-2. Thiết lập chính xác dữ liệu: Trả lời chỉ có khoảng trắng.
-3. Thực hiện POST /api/student/requests/{id}/answers theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Báo lỗi; vẫn Chờ bổ sung; chưa đánh dấu câu hỏi đã trả lời.
+**Mong đợi:** Báo lỗi; vẫn Chờ bổ sung; chưa đánh dấu câu hỏi đã trả lời.
 
-Expected:Báo lỗi; vẫn Chờ bổ sung; chưa đánh dấu câu hỏi đã trả lời.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-04-03 — Sai chủ
 
-FR:FR-STU-04; AC:AC-STU-04-03.
+**Yêu cầu kiểm:** FR-STU-04 · AC-STU-04-03
 
-Preconditions:Đúng chủ yêu cầu; trạng thái Chờ bổ sung; có câu hỏi bổ sung đang mở.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-B. Dùng 311, question_id=401, content “Mã lớp A01” và version hiện hành.
 
-Dữ liệu:SV-B gửi câu trả lời cho yêu cầu SV-A.
+1. SV-B gửi câu trả lời cho yêu cầu SV-A. Dùng SV-B hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/student/requests/{id}/answers` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, questions, answers và history theo 311/401 theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-04.
-2. Thiết lập chính xác dữ liệu: SV-B gửi câu trả lời cho yêu cầu SV-A.
-3. Thực hiện POST /api/student/requests/{id}/answers theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; nội dung và trạng thái không đổi.
+**Mong đợi:** Từ chối; nội dung và trạng thái không đổi.
 
-Expected:Từ chối; nội dung và trạng thái không đổi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-04-04 — Gửi từ màn hình cũ
 
-FR:FR-STU-04; AC:AC-STU-04-04.
+**Yêu cầu kiểm:** FR-STU-04 · AC-STU-04-04
 
-Preconditions:Đúng chủ yêu cầu; trạng thái Chờ bổ sung; có câu hỏi bổ sung đang mở.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng 311, question_id=401, content “Mã lớp A01” và version hiện hành.
 
-Dữ liệu:Câu hỏi đã được trả lời hoặc phiên bản hồ sơ đã đổi.
+1. Câu hỏi đã được trả lời hoặc phiên bản hồ sơ đã đổi. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/student/requests/{id}/answers` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, questions, answers và history theo 311/401 theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-04.
-2. Thiết lập chính xác dữ liệu: Câu hỏi đã được trả lời hoặc phiên bản hồ sơ đã đổi.
-3. Thực hiện POST /api/student/requests/{id}/answers theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Báo tải lại/đã xử lý; không tạo hai câu trả lời hay ghi đè cập nhật mới.
+**Mong đợi:** Báo tải lại/đã xử lý; không tạo hai câu trả lời hay ghi đè cập nhật mới.
 
-Expected:Báo tải lại/đã xử lý; không tạo hai câu trả lời hay ghi đè cập nhật mới.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-04-05 — Tiếp tục không reset mốc
 
-FR:FR-STU-04; AC:AC-STU-04-05.
+**Yêu cầu kiểm:** FR-STU-04 · AC-STU-04-05
 
-Preconditions:Đúng chủ yêu cầu; trạng thái Chờ bổ sung; có câu hỏi bổ sung đang mở.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng 311, question_id=401, content “Mã lớp A01” và version hiện hành.
 
-Dữ liệu:Ghi lại started_at, due_at, owner trước khi trả lời question mở.
+1. Ghi lại started_at, due_at, owner trước khi trả lời question mở. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/student/requests/{id}/answers` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, questions, answers và history theo 311/401 theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-04.
-2. Thiết lập chính xác dữ liệu: Ghi lại started_at, due_at, owner trước khi trả lời question mở.
-3. Thực hiện POST /api/student/requests/{id}/answers theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Sau bổ sung cả 3 giá trị giữ nguyên, Processing,1answer cho question.
+**Mong đợi:** Sau bổ sung cả 3 giá trị giữ nguyên, Processing, một câu trả lời cho question.
 
-Expected:Sau bổ sung cả 3 giá trị giữ nguyên, Processing,1answer cho question.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-04-06 — Rollback giao dịch
 
-FR:FR-STU-04; AC:AC-STU-04-06.
+**Yêu cầu kiểm:** FR-STU-04 · AC-STU-04-06
 
-Preconditions:Đúng chủ yêu cầu; trạng thái Chờ bổ sung; có câu hỏi bổ sung đang mở.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng 311, question_id=401, content “Mã lớp A01” và version hiện hành.
 
-Dữ liệu:Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
+1. Đọc và lưu ảnh chụp requests, questions, answers và history theo 311/401 trước thao tác. Dùng payload hợp lệ của actor SV-A.
+2. Bật điểm lỗi ghi history trên build thử rồi gọi `POST /api/student/requests/{id}/answers` một lần. Xác nhận log đã qua ghi nghiệp vụ trước lỗi.
+3. Tắt giả lập. Đọc từ kết nối khác, so requests, questions, answers và history theo 311/401 với trước thao tác. Lưu HTTP 500, mã đối chiếu và kết quả so sánh.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-04.
-2. Thiết lập chính xác dữ liệu: Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
-3. Thực hiện POST /api/student/requests/{id}/answers theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
+**Mong đợi:** 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
 
-Expected:500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-04-07 — Cập nhật phiên bản cũ
 
-FR:FR-STU-04; AC:AC-STU-04-07.
+**Yêu cầu kiểm:** FR-STU-04 · AC-STU-04-07
 
-Preconditions:Đúng chủ yêu cầu; trạng thái Chờ bổ sung; có câu hỏi bổ sung đang mở.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng 311, question_id=401, content “Mã lớp A01” và version hiện hành.
 
-Dữ liệu:Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
+1. Đọc phiên bản trong requests, questions, answers và history theo 311/401, tạo hai payload cùng version.
+2. Gửi payload A hợp lệ qua `POST /api/student/requests/{id}/answers` và giữ phản hồi thành công cùng dữ liệu sau commit. Gửi payload B có thay đổi khác với version ban đầu.
+3. Kiểm 409 STALE_VERSION, giao diện yêu cầu tải lại và requests, questions, answers và history theo 311/401 đúng như sau A.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-04.
-2. Thiết lập chính xác dữ liệu: Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
-3. Thực hiện POST /api/student/requests/{id}/answers theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
+**Mong đợi:** Tab B nhận 409 STALE_VERSION; không ghi đè dữ liệu/lịch sử của A; giao diện yêu cầu tải lại.
 
-Expected:TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-STU-04-08 — Câu hỏi của hồ sơ khác
+
+**Yêu cầu kiểm:** FR-STU-04 · AC-STU-04-08
+
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng 311, question_id=401, content “Mã lớp A01” và version hiện hành.
+
+1. SV-A lấy câu hỏi 402 thuộc hồ sơ 312 và gửi cho hồ sơ 311 đang WaitingInfo, kèm phiên bản đúng của 311. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/student/requests/{id}/answers` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, questions, answers và history theo 311/401 theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** 422 QUESTION_INVALID. Giữ nguyên status, version và câu hỏi của hai hồ sơ. Không tạo answer hoặc history.
+
+**Kết quả:** Not Run.
+
+## TC-STU-04-09 — Biên nội dung và phiên bản
+
+**Yêu cầu kiểm:** FR-STU-04 · AC-STU-04-09
+
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng 311, question_id=401, content “Mã lớp A01” và version hiện hành.
+
+1. Dùng câu hỏi 401 của hồ sơ 311. Gửi nội dung 4001 ký tự, record_version=0 rồi nội dung 4000 ký tự với phiên bản hiện hành. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/student/requests/{id}/answers` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, questions, answers và history theo 311/401 theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** Hai lượt sai báo 422 và giữ đầu vào. Lượt hợp lệ ghi đúng một answer, đóng câu hỏi, tăng version và ghi INFO_ANSWERED công khai.
+
+**Kết quả:** Not Run.
 
 ## TC-STU-05-01 — Phản hồi hợp lệ
 
-FR:FR-STU-05; AC:AC-STU-05-01.
+**Yêu cầu kiểm:** FR-STU-05 · AC-STU-05-01
 
-Preconditions:Đúng chủ yêu cầu; trạng thái Đã giải quyết hoặc Đã đóng; kết quả xử lý đã có.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng 313, result_id=501, score=4, comment “Đã được hướng dẫn” và version hiện hành. Case Closed dùng 314/502.
 
-Dữ liệu:Yêu cầu đã có kết quả; điểm 4, nhận xét Đã được hướng dẫn.
+1. Yêu cầu đã có kết quả; điểm 4, nhận xét Đã được hướng dẫn. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/student/requests/{id}/feedback` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, results, feedback và history theo hồ sơ theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-05.
-2. Thiết lập chính xác dữ liệu: Yêu cầu đã có kết quả; điểm 4, nhận xét Đã được hướng dẫn.
-3. Thực hiện POST /api/student/requests/{id}/feedback theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Lưu phản hồi gắn đúng yêu cầu và sinh viên; hiển thị lại điểm 4.
+**Mong đợi:** Lưu phản hồi gắn đúng yêu cầu và sinh viên; hiển thị lại điểm 4.
 
-Expected:Lưu phản hồi gắn đúng yêu cầu và sinh viên; hiển thị lại điểm 4.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-05-02 — Điểm sai / chưa có kết quả
 
-FR:FR-STU-05; AC:AC-STU-05-02.
+**Yêu cầu kiểm:** FR-STU-05 · AC-STU-05-02
 
-Preconditions:Đúng chủ yêu cầu; trạng thái Đã giải quyết hoặc Đã đóng; kết quả xử lý đã có.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng 313, result_id=501, score=4, comment “Đã được hướng dẫn” và version hiện hành. Case Closed dùng 314/502.
 
-Dữ liệu:Điểm 0, 6, 2.5 hoặc yêu cầu Đang xử lý.
+1. Điểm 0, 6, 2.5 hoặc yêu cầu Đang xử lý. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/student/requests/{id}/feedback` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, results, feedback và history theo hồ sơ theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-05.
-2. Thiết lập chính xác dữ liệu: Điểm 0, 6, 2.5 hoặc yêu cầu Đang xử lý.
-3. Thực hiện POST /api/student/requests/{id}/feedback theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; không có phản hồi mới để tính báo cáo.
+**Mong đợi:** Từ chối; không có phản hồi mới để tính báo cáo.
 
-Expected:Từ chối; không có phản hồi mới để tính báo cáo.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-05-03 — Không phải chủ
 
-FR:FR-STU-05; AC:AC-STU-05-03.
+**Yêu cầu kiểm:** FR-STU-05 · AC-STU-05-03
 
-Preconditions:Đúng chủ yêu cầu; trạng thái Đã giải quyết hoặc Đã đóng; kết quả xử lý đã có.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-B. Dùng 313, result_id=501, score=4, comment “Đã được hướng dẫn” và version hiện hành. Case Closed dùng 314/502.
 
-Dữ liệu:SV-B gửi đánh giá cho yêu cầu SV-A.
+1. SV-B gửi đánh giá cho yêu cầu SV-A. Dùng SV-B hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/student/requests/{id}/feedback` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, results, feedback và history theo hồ sơ theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-05.
-2. Thiết lập chính xác dữ liệu: SV-B gửi đánh giá cho yêu cầu SV-A.
-3. Thực hiện POST /api/student/requests/{id}/feedback theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; phản hồi của SV-A không bị sửa.
+**Mong đợi:** Từ chối; phản hồi của SV-A không bị sửa.
 
-Expected:Từ chối; phản hồi của SV-A không bị sửa.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-05-04 — Cập nhật phản hồi
 
-FR:FR-STU-05; AC:AC-STU-05-04.
+**Yêu cầu kiểm:** FR-STU-05 · AC-STU-05-04
 
-Preconditions:Đúng chủ yêu cầu; trạng thái Đã giải quyết hoặc Đã đóng; kết quả xử lý đã có.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng 313, result_id=501, score=4, comment “Đã được hướng dẫn” và version hiện hành. Case Closed dùng 314/502.
 
-Dữ liệu:SV-A đổi điểm từ 4 thành 3.
+1. SV-A đổi điểm từ 4 thành 3. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/student/requests/{id}/feedback` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, results, feedback và history theo hồ sơ theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-05.
-2. Thiết lập chính xác dữ liệu: SV-A đổi điểm từ 4 thành 3.
-3. Thực hiện POST /api/student/requests/{id}/feedback theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Một phản hồi hiện hành với điểm 3; số lượt phản hồi không tăng; trạng thái xử lý không tự đổi.
+**Mong đợi:** Một phản hồi hiện hành với điểm 3; số lượt phản hồi không tăng; trạng thái xử lý không tự đổi.
 
-Expected:Một phản hồi hiện hành với điểm 3; số lượt phản hồi không tăng; trạng thái xử lý không tự đổi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-05-05 — Phản hồi khi đã đóng
 
-FR:FR-STU-05; AC:AC-STU-05-05.
+**Yêu cầu kiểm:** FR-STU-05 · AC-STU-05-05
 
-Preconditions:Đúng chủ yêu cầu; trạng thái Đã giải quyết hoặc Đã đóng; kết quả xử lý đã có.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng 313, result_id=501, score=4, comment “Đã được hướng dẫn” và version hiện hành. Case Closed dùng 314/502.
 
-Dữ liệu:Chủ SV gửi score 5 trên Closed có result.
+1. Chủ SV gửi score 5 trên Closed có result. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/student/requests/{id}/feedback` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, results, feedback và history theo hồ sơ theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-05.
-2. Thiết lập chính xác dữ liệu: Chủ SV gửi score 5 trên Closed có result.
-3. Thực hiện POST /api/student/requests/{id}/feedback theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Lưu feedback, status vẫn Closed, closed_at không đổi.
+**Mong đợi:** Lưu feedback, status vẫn Closed, closed_at không đổi.
 
-Expected:Lưu feedback, status vẫn Closed, closed_at không đổi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-05-06 — Rollback giao dịch
 
-FR:FR-STU-05; AC:AC-STU-05-06.
+**Yêu cầu kiểm:** FR-STU-05 · AC-STU-05-06
 
-Preconditions:Đúng chủ yêu cầu; trạng thái Đã giải quyết hoặc Đã đóng; kết quả xử lý đã có.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng 313, result_id=501, score=4, comment “Đã được hướng dẫn” và version hiện hành. Case Closed dùng 314/502.
 
-Dữ liệu:Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
+1. Đọc và lưu ảnh chụp requests, results, feedback và history theo hồ sơ trước thao tác. Dùng payload hợp lệ của actor SV-A.
+2. Bật điểm lỗi ghi history trên build thử rồi gọi `POST /api/student/requests/{id}/feedback` một lần. Xác nhận log đã qua ghi nghiệp vụ trước lỗi.
+3. Tắt giả lập. Đọc từ kết nối khác, so requests, results, feedback và history theo hồ sơ với trước thao tác. Lưu HTTP 500, mã đối chiếu và kết quả so sánh.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-05.
-2. Thiết lập chính xác dữ liệu: Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
-3. Thực hiện POST /api/student/requests/{id}/feedback theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
+**Mong đợi:** 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
 
-Expected:500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-STU-05-07 — Cập nhật phiên bản cũ
 
-FR:FR-STU-05; AC:AC-STU-05-07.
+**Yêu cầu kiểm:** FR-STU-05 · AC-STU-05-07
 
-Preconditions:Đúng chủ yêu cầu; trạng thái Đã giải quyết hoặc Đã đóng; kết quả xử lý đã có.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng 313, result_id=501, score=4, comment “Đã được hướng dẫn” và version hiện hành. Case Closed dùng 314/502.
 
-Dữ liệu:Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
+1. Đọc phiên bản trong requests, results, feedback và history theo hồ sơ, tạo hai payload cùng version.
+2. Gửi payload A hợp lệ qua `POST /api/student/requests/{id}/feedback` và giữ phản hồi thành công cùng dữ liệu sau commit. Gửi payload B có thay đổi khác với version ban đầu.
+3. Kiểm 409 STALE_VERSION, giao diện yêu cầu tải lại và requests, results, feedback và history theo hồ sơ đúng như sau A.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-STU-05.
-2. Thiết lập chính xác dữ liệu: Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
-3. Thực hiện POST /api/student/requests/{id}/feedback theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
+**Mong đợi:** Tab B nhận 409 STALE_VERSION; không ghi đè dữ liệu/lịch sử của A; giao diện yêu cầu tải lại.
 
-Expected:TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-STU-05-08 — Độ dài nhận xét và kết quả hiện hành
+
+**Yêu cầu kiểm:** FR-STU-05 · AC-STU-05-08
+
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng 313, result_id=501, score=4, comment “Đã được hướng dẫn” và version hiện hành. Case Closed dùng 314/502.
+
+1. Trên hồ sơ 313 gửi nhận xét có khoảng trắng đầu/cuối với 4000 rồi 4001 ký tự sau bỏ khoảng trắng. Thử result_id của hồ sơ khác và version hiện hành. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/student/requests/{id}/feedback` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, results, feedback và history theo hồ sơ theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** Chấp nhận nhận xét hợp lệ, báo trường sai cho nhận xét 4001, từ chối result_id sai. Giữ kết quả, trạng thái và phản hồi cũ ở các lượt lỗi.
+
+**Kết quả:** Not Run.
+
+## TC-STU-05-09 — Cập nhật thời điểm và báo cáo
+
+**Yêu cầu kiểm:** FR-STU-05 · AC-STU-05-09
+
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng 313, result_id=501, score=4, comment “Đã được hướng dẫn” và version hiện hành. Case Closed dùng 314/502.
+
+1. Thêm phản hồi 4 điểm trên hồ sơ 313, đổi thành 3 ở ngày hôm sau. Đọc nguồn của RPT-06 cho hai ngày. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/student/requests/{id}/feedback` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, results, feedback và history theo hồ sơ theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** Giữ feedback_id và created_at, cập nhật updated_at, không sinh dòng phản hồi thứ hai. Hồ sơ và kết quả giữ nguyên; báo cáo dùng kỳ cập nhật mới.
+
+**Kết quả:** Not Run.
 
 ## TC-DSP-01-01 — Yêu cầu mới
 
-FR:FR-DSP-01; AC:AC-DSP-01-01.
+**Yêu cầu kiểm:** FR-DSP-01 · AC-DSP-01-01
 
-Preconditions:Có quyền điều phối trong phạm vi được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Nạp 310 chưa giao, 315 đã giao và 316 thuộc phòng B.
 
-Dữ liệu:Tạo yêu cầu Chưa xác định bằng STU-01.
+1. Tạo yêu cầu Chưa xác định bằng STU-01. Mở màn hình tương ứng bằng DP-All, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/dispatch/requests` với các biến thể đã nêu. So items/total theo quyền, đối chiếu requests trước/sau đổi bộ lọc hoặc actor theo tình huống.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-01.
-2. Thiết lập chính xác dữ liệu: Tạo yêu cầu Chưa xác định bằng STU-01.
-3. Thực hiện GET /api/dispatch/requests theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Yêu cầu xuất hiện trong hàng chờ chưa phân loại/chưa phân công với đúng mã.
+**Mong đợi:** Yêu cầu xuất hiện trong hàng chờ chưa phân loại/chưa phân công với đúng mã.
 
-Expected:Yêu cầu xuất hiện trong hàng chờ chưa phân loại/chưa phân công với đúng mã.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-01-02 — Lọc sai
 
-FR:FR-DSP-01; AC:AC-DSP-01-02.
+**Yêu cầu kiểm:** FR-DSP-01 · AC-DSP-01-02
 
-Preconditions:Có quyền điều phối trong phạm vi được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Nạp 310 chưa giao, 315 đã giao và 316 thuộc phòng B.
 
-Dữ liệu:category_id không tồn tại.
+1. category_id không tồn tại. Mở màn hình tương ứng bằng DP-All, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/dispatch/requests` với các biến thể đã nêu. So items/total theo quyền, đối chiếu requests trước/sau đổi bộ lọc hoặc actor theo tình huống.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-01.
-2. Thiết lập chính xác dữ liệu: category_id không tồn tại.
-3. Thực hiện GET /api/dispatch/requests theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Báo tham số sai; không áp dụng loại khác âm thầm.
+**Mong đợi:** Báo tham số sai; không áp dụng loại khác âm thầm.
 
-Expected:Báo tham số sai; không áp dụng loại khác âm thầm.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-01-03 — Vai trò không được phép
 
-FR:FR-DSP-01; AC:AC-DSP-01-03.
+**Yêu cầu kiểm:** FR-DSP-01 · AC-DSP-01-03
 
-Preconditions:Có quyền điều phối trong phạm vi được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Nạp 310 chưa giao, 315 đã giao và 316 thuộc phòng B.
 
-Dữ liệu:Sinh viên gọi trang/điểm truy cập hàng chờ.
+1. Sinh viên gọi trang/điểm truy cập hàng chờ. Mở màn hình tương ứng bằng SV-A, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/dispatch/requests` với các biến thể đã nêu. So items/total theo quyền, đối chiếu requests trước/sau đổi bộ lọc hoặc actor theo tình huống.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-01.
-2. Thiết lập chính xác dữ liệu: Sinh viên gọi trang/điểm truy cập hàng chờ.
-3. Thực hiện GET /api/dispatch/requests theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; không lộ danh sách toàn trường.
+**Mong đợi:** Từ chối; không lộ danh sách toàn trường.
 
-Expected:Từ chối; không lộ danh sách toàn trường.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-01-04 — Sau phân công
 
-FR:FR-DSP-01; AC:AC-DSP-01-04.
+**Yêu cầu kiểm:** FR-DSP-01 · AC-DSP-01-04
 
-Preconditions:Có quyền điều phối trong phạm vi được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Nạp 310 chưa giao, 315 đã giao và 316 thuộc phòng B.
 
-Dữ liệu:Phân công yêu cầu rồi lọc unassigned=true.
+1. Phân công yêu cầu rồi lọc unassigned=true. Mở màn hình tương ứng bằng DP-All, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/dispatch/requests` với các biến thể đã nêu. So items/total theo quyền, đối chiếu requests trước/sau đổi bộ lọc hoặc actor theo tình huống.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-01.
-2. Thiết lập chính xác dữ liệu: Phân công yêu cầu rồi lọc unassigned=true.
-3. Thực hiện GET /api/dispatch/requests theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Yêu cầu rời tập chưa phân công nhưng vẫn nằm trong Tất cả nếu thuộc phạm vi.
+**Mong đợi:** Yêu cầu rời tập chưa phân công nhưng vẫn nằm trong Tất cả nếu thuộc phạm vi.
 
-Expected:Yêu cầu rời tập chưa phân công nhưng vẫn nằm trong Tất cả nếu thuộc phạm vi.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-DSP-01-05 — Tìm kiếm, thứ tự và phân trang
+
+**Yêu cầu kiểm:** FR-DSP-01 · AC-DSP-01-05
+
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Nạp 310 chưa giao, 315 đã giao và 316 thuộc phòng B.
+
+1. DP-All mở hàng chờ mặc định có hồ sơ mở/đóng, hai hồ sơ mở trùng created_at và 21 hồ sơ mở. Tìm theo phần mã hoặc tiêu đề rồi thử từ khóa 101 ký tự. Mở màn hình tương ứng bằng DP-All, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/dispatch/requests` với các biến thể đã nêu. So items/total theo quyền, đối chiếu requests trước/sau đổi bộ lọc hoặc actor theo tình huống.
+
+**Mong đợi:** Mặc định chỉ mở, có cả chưa giao; sắp created_at/ID tăng. Trang tối đa 20 và total thống nhất. Tìm đúng tập nguồn; báo 422 khi từ khóa quá dài.
+
+**Kết quả:** Not Run.
+
+## TC-DSP-01-06 — Điều phối trong phạm vi
+
+**Yêu cầu kiểm:** FR-DSP-01 · AC-DSP-01-06
+
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Nạp 310 chưa giao, 315 đã giao và 316 thuộc phòng B.
+
+1. DP-A thử lọc PB-B và đọc hàng chờ mặc định. DP-All xem cùng dữ liệu. Thử page=0, unassigned sai kiểu, status không hợp lệ và department_id=0. Mở màn hình tương ứng bằng DP-All, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/dispatch/requests` với các biến thể đã nêu. So items/total theo quyền, đối chiếu requests trước/sau đổi bộ lọc hoặc actor theo tình huống.
+
+**Mong đợi:** DP-A không thấy hồ sơ ngoài PB-A hoặc chưa giao, lọc PB-B trả 403. DP-All thấy hồ sơ chưa giao. Các bộ lọc không hợp lệ trả 422.
+
+**Kết quả:** Not Run.
 
 ## TC-DSP-02-01 — Có lịch sử
 
-FR:FR-DSP-02; AC:AC-DSP-02-01.
+**Yêu cầu kiểm:** FR-DSP-02 · AC-DSP-02-01
 
-Preconditions:Có quyền trên yêu cầu theo vai trò và phạm vi công việc.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315, thêm lịch sử CREATED, CATEGORY_CHANGED và ASSIGNED.
 
-Dữ liệu:Yêu cầu đã tiếp nhận, phân loại, phân công.
+1. Yêu cầu đã tiếp nhận, phân loại, phân công. Mở màn hình tương ứng bằng NV-A, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/staff/requests/{id}` với các biến thể đã nêu. So JSON history và các trường trên hồ sơ 315 trước/sau đổi bộ lọc hoặc actor theo tình huống.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-02.
-2. Thiết lập chính xác dữ liệu: Yêu cầu đã tiếp nhận, phân loại, phân công.
-3. Thực hiện GET /api/staff/requests/{id} theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Hiển thị ba loại sự kiện đúng người, thời điểm và giá trị thay đổi.
+**Mong đợi:** Hiển thị ba loại sự kiện đúng người, thời điểm và giá trị thay đổi.
 
-Expected:Hiển thị ba loại sự kiện đúng người, thời điểm và giá trị thay đổi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-02-02 — Mã không có
 
-FR:FR-DSP-02; AC:AC-DSP-02-02.
+**Yêu cầu kiểm:** FR-DSP-02 · AC-DSP-02-02
 
-Preconditions:Có quyền trên yêu cầu theo vai trò và phạm vi công việc.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315, thêm lịch sử CREATED, CATEGORY_CHANGED và ASSIGNED.
 
-Dữ liệu:Mở mã không tồn tại.
+1. Mở mã không tồn tại. Mở màn hình tương ứng bằng NV-A, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/staff/requests/{id}` với các biến thể đã nêu. So JSON history và các trường trên hồ sơ 315 trước/sau đổi bộ lọc hoặc actor theo tình huống.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-02.
-2. Thiết lập chính xác dữ liệu: Mở mã không tồn tại.
-3. Thực hiện GET /api/staff/requests/{id} theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Không tìm thấy; không sinh dữ liệu.
+**Mong đợi:** Không tìm thấy; không sinh dữ liệu.
 
-Expected:Không tìm thấy; không sinh dữ liệu.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-02-03 — Ngoài phạm vi
 
-FR:FR-DSP-02; AC:AC-DSP-02-03.
+**Yêu cầu kiểm:** FR-DSP-02 · AC-DSP-02-03
 
-Preconditions:Có quyền trên yêu cầu theo vai trò và phạm vi công việc.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-B. Dùng 315, thêm lịch sử CREATED, CATEGORY_CHANGED và ASSIGNED.
 
-Dữ liệu:Nhân viên phòng ban B đọc hồ sơ không được giao ở phòng ban A.
+1. Nhân viên phòng ban B đọc hồ sơ không được giao ở phòng ban A. Mở màn hình tương ứng bằng NV-B, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/staff/requests/{id}` với các biến thể đã nêu. So JSON history và các trường trên hồ sơ 315 trước/sau đổi bộ lọc hoặc actor theo tình huống.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-02.
-2. Thiết lập chính xác dữ liệu: Nhân viên phòng ban B đọc hồ sơ không được giao ở phòng ban A.
-3. Thực hiện GET /api/staff/requests/{id} theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối, không trả nội dung sinh viên.
+**Mong đợi:** Từ chối, không trả nội dung sinh viên.
 
-Expected:Từ chối, không trả nội dung sinh viên.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-02-04 — Ghi chú nội bộ
 
-FR:FR-DSP-02; AC:AC-DSP-02-04.
+**Yêu cầu kiểm:** FR-DSP-02 · AC-DSP-02-04
 
-Preconditions:Có quyền trên yêu cầu theo vai trò và phạm vi công việc.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315, thêm lịch sử CREATED, CATEGORY_CHANGED và ASSIGNED.
 
-Dữ liệu:Thêm tiến độ nội bộ qua DSP-08 rồi SV xem STU-03.
+1. Thêm tiến độ nội bộ qua DSP-08 rồi SV xem STU-03. Mở màn hình tương ứng bằng NV-A, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/staff/requests/{id}` với các biến thể đã nêu. So JSON history và các trường trên hồ sơ 315 trước/sau đổi bộ lọc hoặc actor theo tình huống.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-02.
-2. Thiết lập chính xác dữ liệu: Thêm tiến độ nội bộ qua DSP-08 rồi SV xem STU-03.
-3. Thực hiện GET /api/staff/requests/{id} theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Người xử lý có quyền thấy nội bộ; sinh viên không thấy cả qua API trực tiếp.
+**Mong đợi:** Người xử lý có quyền thấy nội bộ; sinh viên không thấy cả qua API trực tiếp.
 
-Expected:Người xử lý có quyền thấy nội bộ; sinh viên không thấy cả qua API trực tiếp.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-DSP-02-05 — Phạm vi quản lý và thứ tự lịch sử
+
+**Yêu cầu kiểm:** FR-DSP-02 · AC-DSP-02-05
+
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315, thêm lịch sử CREATED, CATEGORY_CHANGED và ASSIGNED.
+
+1. QL-A mở hồ sơ PB-A khi chưa có quyền chi tiết. NV-A và DP-All đọc hồ sơ đã giao lại có hai sự kiện cùng giờ. Mở màn hình tương ứng bằng NV-A, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/staff/requests/{id}` với các biến thể đã nêu. So JSON history và các trường trên hồ sơ 315 trước/sau đổi bộ lọc hoặc actor theo tình huống.
+
+**Mong đợi:** Quyền báo cáo riêng không cho đọc chi tiết. Người có quyền nhận đầy đủ trạng thái, version, bổ sung/kết quả và nội dung lịch sử đúng thứ tự giờ rồi ID. Lịch sử cũ giữ sau phân công.
+
+**Kết quả:** Not Run.
+
+## TC-DSP-02-06 — ID sai định dạng
+
+**Yêu cầu kiểm:** FR-DSP-02 · AC-DSP-02-06
+
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315, thêm lịch sử CREATED, CATEGORY_CHANGED và ASSIGNED.
+
+1. Gọi GET chi tiết với ID 0 hoặc chữ. Mở màn hình tương ứng bằng NV-A, ghi tham số hoặc ID từ fixture.
+2. Gọi `GET /api/staff/requests/{id}` với các biến thể đã nêu. So JSON history và các trường trên hồ sơ 315 trước/sau đổi bộ lọc hoặc actor theo tình huống.
+
+**Mong đợi:** 422, không trả lịch sử hoặc thông tin sinh viên.
+
+**Kết quả:** Not Run.
 
 ## TC-DSP-03-01 — Gán loại
 
-FR:FR-DSP-03; AC:AC-DSP-03-01.
+**Yêu cầu kiểm:** FR-DSP-03 · AC-DSP-03-01
 
-Preconditions:Yêu cầu chưa kết thúc, thuộc phạm vi điều phối; danh mục giả lập đang dùng.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310, loại đích 101, reason “Chuyển đúng nghiệp vụ” nếu cần và version hiện hành.
 
-Dữ liệu:Yêu cầu Chưa xác định được gán Học vụ.
+1. Yêu cầu Chưa xác định được gán Học vụ. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/category` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.category_id/record_version và history CATEGORY_CHANGED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-03.
-2. Thiết lập chính xác dữ liệu: Yêu cầu Chưa xác định được gán Học vụ.
-3. Thực hiện POST /api/dispatch/requests/{id}/category theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Loại hiện hành là Học vụ; ghi lịch sử; báo cáo nhóm dùng loại này.
+**Mong đợi:** Loại hiện hành là Học vụ; ghi lịch sử; báo cáo nhóm dùng loại này.
 
-Expected:Loại hiện hành là Học vụ; ghi lịch sử; báo cáo nhóm dùng loại này.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-03-02 — Danh mục sai
 
-FR:FR-DSP-03; AC:AC-DSP-03-02.
+**Yêu cầu kiểm:** FR-DSP-03 · AC-DSP-03-02
 
-Preconditions:Yêu cầu chưa kết thúc, thuộc phạm vi điều phối; danh mục giả lập đang dùng.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310, loại đích 101, reason “Chuyển đúng nghiệp vụ” nếu cần và version hiện hành.
 
-Dữ liệu:Gửi loại đã ngừng dùng hoặc ID không có.
+1. Gửi loại đã ngừng dùng hoặc ID không có. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/category` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.category_id/record_version và history CATEGORY_CHANGED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-03.
-2. Thiết lập chính xác dữ liệu: Gửi loại đã ngừng dùng hoặc ID không có.
-3. Thực hiện POST /api/dispatch/requests/{id}/category theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; loại và lịch sử không thay đổi.
+**Mong đợi:** Từ chối; loại và lịch sử không thay đổi.
 
-Expected:Từ chối; loại và lịch sử không thay đổi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-03-03 — Không có quyền
 
-FR:FR-DSP-03; AC:AC-DSP-03-03.
+**Yêu cầu kiểm:** FR-DSP-03 · AC-DSP-03-03
 
-Preconditions:Yêu cầu chưa kết thúc, thuộc phạm vi điều phối; danh mục giả lập đang dùng.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng 310, loại đích 101, reason “Chuyển đúng nghiệp vụ” nếu cần và version hiện hành.
 
-Dữ liệu:Nhân viên thường hoặc sinh viên tự đổi loại.
+1. Nhân viên thường hoặc sinh viên tự đổi loại. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/category` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.category_id/record_version và history CATEGORY_CHANGED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-03.
-2. Thiết lập chính xác dữ liệu: Nhân viên thường hoặc sinh viên tự đổi loại.
-3. Thực hiện POST /api/dispatch/requests/{id}/category theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; loại hiện hành giữ nguyên.
+**Mong đợi:** Từ chối; loại hiện hành giữ nguyên.
 
-Expected:Từ chối; loại hiện hành giữ nguyên.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-03-04 — Đã phân công / thao tác đồng thời
 
-FR:FR-DSP-03; AC:AC-DSP-03-04.
+**Yêu cầu kiểm:** FR-DSP-03 · AC-DSP-03-04
 
-Preconditions:Yêu cầu chưa kết thúc, thuộc phạm vi điều phối; danh mục giả lập đang dùng.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310, loại đích 101, reason “Chuyển đúng nghiệp vụ” nếu cần và version hiện hành.
 
-Dữ liệu:Đổi loại hồ sơ có người; một lần lưu khác đã tăng phiên bản.
+1. Đổi loại hồ sơ có người; một lần lưu khác đã tăng phiên bản. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/category` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.category_id/record_version và history CATEGORY_CHANGED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-03.
-2. Thiết lập chính xác dữ liệu: Đổi loại hồ sơ có người; một lần lưu khác đã tăng phiên bản.
-3. Thực hiện POST /api/dispatch/requests/{id}/category theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Đổi loại hợp lệ giữ trách nhiệm; bản gửi dùng phiên bản cũ bị yêu cầu tải lại.
+**Mong đợi:** Đổi loại hợp lệ giữ trách nhiệm; bản gửi dùng phiên bản cũ bị yêu cầu tải lại.
 
-Expected:Đổi loại hợp lệ giữ trách nhiệm; bản gửi dùng phiên bản cũ bị yêu cầu tải lại.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-03-05 — Không đổi giá trị
 
-FR:FR-DSP-03; AC:AC-DSP-03-05.
+**Yêu cầu kiểm:** FR-DSP-03 · AC-DSP-03-05
 
-Preconditions:Yêu cầu chưa kết thúc, thuộc phạm vi điều phối; danh mục giả lập đang dùng.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310, loại đích 101, reason “Chuyển đúng nghiệp vụ” nếu cần và version hiện hành.
 
-Dữ liệu:Gửi lại cùng giá trị hiện hành với version mới nhất.
+1. Gửi lại cùng giá trị hiện hành với version mới nhất. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/category` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.category_id/record_version và history CATEGORY_CHANGED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-03.
-2. Thiết lập chính xác dữ liệu: Gửi lại cùng giá trị hiện hành với version mới nhất.
-3. Thực hiện POST /api/dispatch/requests/{id}/category theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 200 no_change; version và số history không tăng.
+**Mong đợi:** 200 no_change; version và số history không tăng.
 
-Expected:200 no_change; version và số history không tăng.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-03-06 — Thiếu lý do đổi
 
-FR:FR-DSP-03; AC:AC-DSP-03-06.
+**Yêu cầu kiểm:** FR-DSP-03 · AC-DSP-03-06
 
-Preconditions:Yêu cầu chưa kết thúc, thuộc phạm vi điều phối; danh mục giả lập đang dùng.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310, loại đích 101, reason “Chuyển đúng nghiệp vụ” nếu cần và version hiện hành.
 
-Dữ liệu:Đã có giá trị xác định; đổi sang giá trị khác, reason chỉ khoảng trắng.
+1. Đã có giá trị xác định; đổi sang giá trị khác, reason chỉ khoảng trắng. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/category` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.category_id/record_version và history CATEGORY_CHANGED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-03.
-2. Thiết lập chính xác dữ liệu: Đã có giá trị xác định; đổi sang giá trị khác, reason chỉ khoảng trắng.
-3. Thực hiện POST /api/dispatch/requests/{id}/category theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 422 reason; giá trị/version/history giữ nguyên.
+**Mong đợi:** 422 reason; giá trị/version/history giữ nguyên.
 
-Expected:422 reason; giá trị/version/history giữ nguyên.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-03-07 — Rollback giao dịch
 
-FR:FR-DSP-03; AC:AC-DSP-03-07.
+**Yêu cầu kiểm:** FR-DSP-03 · AC-DSP-03-07
 
-Preconditions:Yêu cầu chưa kết thúc, thuộc phạm vi điều phối; danh mục giả lập đang dùng.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310, loại đích 101, reason “Chuyển đúng nghiệp vụ” nếu cần và version hiện hành.
 
-Dữ liệu:Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
+1. Đọc và lưu ảnh chụp requests.category_id/record_version và history CATEGORY_CHANGED trước thao tác. Dùng payload hợp lệ của actor DP-All.
+2. Bật điểm lỗi ghi history trên build thử rồi gọi `POST /api/dispatch/requests/{id}/category` một lần. Xác nhận log đã qua ghi nghiệp vụ trước lỗi.
+3. Tắt giả lập. Đọc từ kết nối khác, so requests.category_id/record_version và history CATEGORY_CHANGED với trước thao tác. Lưu HTTP 500, mã đối chiếu và kết quả so sánh.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-03.
-2. Thiết lập chính xác dữ liệu: Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
-3. Thực hiện POST /api/dispatch/requests/{id}/category theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
+**Mong đợi:** 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
 
-Expected:500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-03-08 — Cập nhật phiên bản cũ
 
-FR:FR-DSP-03; AC:AC-DSP-03-08.
+**Yêu cầu kiểm:** FR-DSP-03 · AC-DSP-03-08
 
-Preconditions:Yêu cầu chưa kết thúc, thuộc phạm vi điều phối; danh mục giả lập đang dùng.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310, loại đích 101, reason “Chuyển đúng nghiệp vụ” nếu cần và version hiện hành.
 
-Dữ liệu:Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
+1. Đọc phiên bản trong requests.category_id/record_version và history CATEGORY_CHANGED, tạo hai payload cùng version.
+2. Gửi payload A hợp lệ qua `POST /api/dispatch/requests/{id}/category` và giữ phản hồi thành công cùng dữ liệu sau commit. Gửi payload B có thay đổi khác với version ban đầu.
+3. Kiểm 409 STALE_VERSION, giao diện yêu cầu tải lại và requests.category_id/record_version và history CATEGORY_CHANGED đúng như sau A.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-03.
-2. Thiết lập chính xác dữ liệu: Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
-3. Thực hiện POST /api/dispatch/requests/{id}/category theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
+**Mong đợi:** Tab B nhận 409 STALE_VERSION; không ghi đè dữ liệu/lịch sử của A; giao diện yêu cầu tải lại.
 
-Expected:TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-DSP-03-09 — Giới hạn trạng thái và loại đích
+
+**Yêu cầu kiểm:** FR-DSP-03 · AC-DSP-03-09
+
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310, loại đích 101, reason “Chuyển đúng nghiệp vụ” nếu cần và version hiện hành.
+
+1. DP-All phân loại hồ sơ Resolved, Closed và hồ sơ Received với loại đích Chưa xác định. Thử đổi loại hợp lệ với lý do 4000 và 4001 ký tự. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/category` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.category_id/record_version và history CATEGORY_CHANGED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** Hồ sơ kết thúc trả 409, loại đích không hợp lệ hoặc lý do quá dài trả 422. Đổi hợp lệ ghi CATEGORY_CHANGED và giữ trách nhiệm, trạng thái, hạn.
+
+**Kết quả:** Not Run.
 
 ## TC-DSP-04-01 — Phân công lần đầu
 
-FR:FR-DSP-04; AC:AC-DSP-04-01.
+**Yêu cầu kiểm:** FR-DSP-04 · AC-DSP-04-01
 
-Preconditions:Yêu cầu chưa kết thúc; người nhận đang dùng và thuộc đơn vị được chọn.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310 hoặc hồ sơ 311 khi đang chờ. Bộ chuẩn PB-A/NV-A = 201/111, bộ thay thế 202/112.
 
-Dữ liệu:Giao yêu cầu cho NV-A thuộc PB-A.
+1. Giao yêu cầu cho NV-A thuộc PB-A. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/assignment` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.department_id/assignee_id/record_version và history ASSIGNED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-04.
-2. Thiết lập chính xác dữ liệu: Giao yêu cầu cho NV-A thuộc PB-A.
-3. Thực hiện POST /api/dispatch/requests/{id}/assignment theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Có đúng một đơn vị/người hiện hành, giữ trạng thái; SV thấy trách nhiệm mới.
+**Mong đợi:** Có đúng một đơn vị/người hiện hành, giữ trạng thái; SV thấy trách nhiệm mới.
 
-Expected:Có đúng một đơn vị/người hiện hành, giữ trạng thái; SV thấy trách nhiệm mới.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-04-02 — Người không thuộc đơn vị
 
-FR:FR-DSP-04; AC:AC-DSP-04-02.
+**Yêu cầu kiểm:** FR-DSP-04 · AC-DSP-04-02
 
-Preconditions:Yêu cầu chưa kết thúc; người nhận đang dùng và thuộc đơn vị được chọn.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310 hoặc hồ sơ 311 khi đang chờ. Bộ chuẩn PB-A/NV-A = 201/111, bộ thay thế 202/112.
 
-Dữ liệu:Chọn PB-A với nhân viên PB-B.
+1. Chọn PB-A với nhân viên PB-B. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/assignment` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.department_id/assignee_id/record_version và history ASSIGNED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-04.
-2. Thiết lập chính xác dữ liệu: Chọn PB-A với nhân viên PB-B.
-3. Thực hiện POST /api/dispatch/requests/{id}/assignment theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; không tạo trách nhiệm không nhất quán.
+**Mong đợi:** Từ chối; không tạo trách nhiệm không nhất quán.
 
-Expected:Từ chối; không tạo trách nhiệm không nhất quán.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-04-03 — Tự chiếm yêu cầu
 
-FR:FR-DSP-04; AC:AC-DSP-04-03.
+**Yêu cầu kiểm:** FR-DSP-04 · AC-DSP-04-03
 
-Preconditions:Yêu cầu chưa kết thúc; người nhận đang dùng và thuộc đơn vị được chọn.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 310 hoặc hồ sơ 311 khi đang chờ. Bộ chuẩn PB-A/NV-A = 201/111, bộ thay thế 202/112.
 
-Dữ liệu:Nhân viên không có quyền điều phối gửi assignee_id của mình.
+1. Nhân viên không có quyền điều phối gửi assignee_id của mình. Dùng NV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/assignment` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.department_id/assignee_id/record_version và history ASSIGNED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-04.
-2. Thiết lập chính xác dữ liệu: Nhân viên không có quyền điều phối gửi assignee_id của mình.
-3. Thực hiện POST /api/dispatch/requests/{id}/assignment theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; không thay trách nhiệm.
+**Mong đợi:** Từ chối; không thay trách nhiệm.
 
-Expected:Từ chối; không thay trách nhiệm.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-04-04 — Đổi trách nhiệm đồng thời
 
-FR:FR-DSP-04; AC:AC-DSP-04-04.
+**Yêu cầu kiểm:** FR-DSP-04 · AC-DSP-04-04
 
-Preconditions:Yêu cầu chưa kết thúc; người nhận đang dùng và thuộc đơn vị được chọn.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310 hoặc hồ sơ 311 khi đang chờ. Bộ chuẩn PB-A/NV-A = 201/111, bộ thay thế 202/112.
 
-Dữ liệu:Đổi PB-A/NV-A sang PB-B/NV-B với lý do; NV-A sửa từ màn hình cũ.
+1. Đổi PB-A/NV-A sang PB-B/NV-B với lý do; NV-A sửa từ màn hình cũ. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/assignment` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.department_id/assignee_id/record_version và history ASSIGNED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-04.
-2. Thiết lập chính xác dữ liệu: Đổi PB-A/NV-A sang PB-B/NV-B với lý do; NV-A sửa từ màn hình cũ.
-3. Thực hiện POST /api/dispatch/requests/{id}/assignment theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Lịch sử giữ bộ cũ/mới; NV-A mất quyền sửa; cập nhật cũ bị chặn; không có hai người hiện hành.
+**Mong đợi:** Lịch sử giữ bộ cũ/mới; NV-A mất quyền sửa; cập nhật cũ bị chặn; không có hai người hiện hành.
 
-Expected:Lịch sử giữ bộ cũ/mới; NV-A mất quyền sửa; cập nhật cũ bị chặn; không có hai người hiện hành.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-04-05 — Không đổi giá trị
 
-FR:FR-DSP-04; AC:AC-DSP-04-05.
+**Yêu cầu kiểm:** FR-DSP-04 · AC-DSP-04-05
 
-Preconditions:Yêu cầu chưa kết thúc; người nhận đang dùng và thuộc đơn vị được chọn.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310 hoặc hồ sơ 311 khi đang chờ. Bộ chuẩn PB-A/NV-A = 201/111, bộ thay thế 202/112.
 
-Dữ liệu:Gửi lại cùng giá trị hiện hành với version mới nhất.
+1. Gửi lại cùng giá trị hiện hành với version mới nhất. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/assignment` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.department_id/assignee_id/record_version và history ASSIGNED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-04.
-2. Thiết lập chính xác dữ liệu: Gửi lại cùng giá trị hiện hành với version mới nhất.
-3. Thực hiện POST /api/dispatch/requests/{id}/assignment theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 200 no_change; version và số history không tăng.
+**Mong đợi:** 200 no_change; version và số history không tăng.
 
-Expected:200 no_change; version và số history không tăng.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-04-06 — Thiếu lý do đổi
 
-FR:FR-DSP-04; AC:AC-DSP-04-06.
+**Yêu cầu kiểm:** FR-DSP-04 · AC-DSP-04-06
 
-Preconditions:Yêu cầu chưa kết thúc; người nhận đang dùng và thuộc đơn vị được chọn.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310 hoặc hồ sơ 311 khi đang chờ. Bộ chuẩn PB-A/NV-A = 201/111, bộ thay thế 202/112.
 
-Dữ liệu:Đã có giá trị xác định; đổi sang giá trị khác, reason chỉ khoảng trắng.
+1. Đã có giá trị xác định; đổi sang giá trị khác, reason chỉ khoảng trắng. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/assignment` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.department_id/assignee_id/record_version và history ASSIGNED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-04.
-2. Thiết lập chính xác dữ liệu: Đã có giá trị xác định; đổi sang giá trị khác, reason chỉ khoảng trắng.
-3. Thực hiện POST /api/dispatch/requests/{id}/assignment theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 422 reason; giá trị/version/history giữ nguyên.
+**Mong đợi:** 422 reason; giá trị/version/history giữ nguyên.
 
-Expected:422 reason; giá trị/version/history giữ nguyên.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-04-07 — Rollback giao dịch
 
-FR:FR-DSP-04; AC:AC-DSP-04-07.
+**Yêu cầu kiểm:** FR-DSP-04 · AC-DSP-04-07
 
-Preconditions:Yêu cầu chưa kết thúc; người nhận đang dùng và thuộc đơn vị được chọn.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310 hoặc hồ sơ 311 khi đang chờ. Bộ chuẩn PB-A/NV-A = 201/111, bộ thay thế 202/112.
 
-Dữ liệu:Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
+1. Đọc và lưu ảnh chụp requests.department_id/assignee_id/record_version và history ASSIGNED trước thao tác. Dùng payload hợp lệ của actor DP-All.
+2. Bật điểm lỗi ghi history trên build thử rồi gọi `POST /api/dispatch/requests/{id}/assignment` một lần. Xác nhận log đã qua ghi nghiệp vụ trước lỗi.
+3. Tắt giả lập. Đọc từ kết nối khác, so requests.department_id/assignee_id/record_version và history ASSIGNED với trước thao tác. Lưu HTTP 500, mã đối chiếu và kết quả so sánh.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-04.
-2. Thiết lập chính xác dữ liệu: Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
-3. Thực hiện POST /api/dispatch/requests/{id}/assignment theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
+**Mong đợi:** 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
 
-Expected:500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-04-08 — Cập nhật phiên bản cũ
 
-FR:FR-DSP-04; AC:AC-DSP-04-08.
+**Yêu cầu kiểm:** FR-DSP-04 · AC-DSP-04-08
 
-Preconditions:Yêu cầu chưa kết thúc; người nhận đang dùng và thuộc đơn vị được chọn.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310 hoặc hồ sơ 311 khi đang chờ. Bộ chuẩn PB-A/NV-A = 201/111, bộ thay thế 202/112.
 
-Dữ liệu:Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
+1. Đọc phiên bản trong requests.department_id/assignee_id/record_version và history ASSIGNED, tạo hai payload cùng version.
+2. Gửi payload A hợp lệ qua `POST /api/dispatch/requests/{id}/assignment` và giữ phản hồi thành công cùng dữ liệu sau commit. Gửi payload B có thay đổi khác với version ban đầu.
+3. Kiểm 409 STALE_VERSION, giao diện yêu cầu tải lại và requests.department_id/assignee_id/record_version và history ASSIGNED đúng như sau A.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-04.
-2. Thiết lập chính xác dữ liệu: Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
-3. Thực hiện POST /api/dispatch/requests/{id}/assignment theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
+**Mong đợi:** Tab B nhận 409 STALE_VERSION; không ghi đè dữ liệu/lịch sử của A; giao diện yêu cầu tải lại.
 
-Expected:TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-DSP-04-09 — Phân công lần đầu và giữ câu hỏi
+
+**Yêu cầu kiểm:** FR-DSP-04 · AC-DSP-04-09
+
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310 hoặc hồ sơ 311 khi đang chờ. Bộ chuẩn PB-A/NV-A = 201/111, bộ thay thế 202/112.
+
+1. DP-All giao hồ sơ Received chưa có người mà bỏ reason. Sau đó chuyển hồ sơ WaitingInfo 311 sang PB-B/NV-B có lý do. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/assignment` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.department_id/assignee_id/record_version và history ASSIGNED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** Lần đầu thành công. Khi chuyển, cùng ID, câu hỏi 401, hạn và lịch sử cũ. Quyền xử lý chuyển sang NV-B; nguồn RPT-05 chỉ có bộ trách nhiệm mới.
+
+**Kết quả:** Not Run.
+
+## TC-DSP-04-10 — Chặn phân công hồ sơ kết thúc
+
+**Yêu cầu kiểm:** FR-DSP-04 · AC-DSP-04-10
+
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310 hoặc hồ sơ 311 khi đang chờ. Bộ chuẩn PB-A/NV-A = 201/111, bộ thay thế 202/112.
+
+1. Dùng hồ sơ 313 Resolved và 314 Closed, gửi bộ PB-B/NV-B hợp lệ, lý do đủ và phiên bản đúng. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/assignment` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.department_id/assignee_id/record_version và history ASSIGNED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** 409 ở cả hai, không đổi phòng/người, status, result, version hay số sự kiện.
+
+**Kết quả:** Not Run.
+
+## TC-DSP-04-11 — Người hoặc đơn vị ngừng hoạt động
+
+**Yêu cầu kiểm:** FR-DSP-04 · AC-DSP-04-11
+
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310 hoặc hồ sơ 311 khi đang chờ. Bộ chuẩn PB-A/NV-A = 201/111, bộ thay thế 202/112.
+
+1. Thử department_id=299, assignee_id=199, ID 0 hoặc nhân viên không có quyền xử lý. Sau đó thử lý do đổi dài 4001 ký tự. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/assignment` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.department_id/assignee_id/record_version và history ASSIGNED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** 422 từng lượt, không có bộ trách nhiệm nửa hợp lệ và không thêm lịch sử.
+
+**Kết quả:** Not Run.
 
 ## TC-DSP-05-01 — Hạn hợp lệ
 
-FR:FR-DSP-05; AC:AC-DSP-05-01.
+**Yêu cầu kiểm:** FR-DSP-05 · AC-DSP-05-01
 
-Preconditions:Yêu cầu chưa kết thúc và thuộc phạm vi điều phối.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310, hạn mẫu 2026-12-03T08:00:00+07:00 và version hiện hành.
 
-Dữ liệu:Hạn hai ngày sau created_at.
+1. Hạn hai ngày sau created_at. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/due` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.due_at/record_version và history DUE_CHANGED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-05.
-2. Thiết lập chính xác dữ liệu: Hạn hai ngày sau created_at.
-3. Thực hiện POST /api/dispatch/requests/{id}/due theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Lưu đúng thời điểm; hiện ở tiến độ; giữ trách nhiệm và trạng thái.
+**Mong đợi:** Lưu đúng thời điểm; hiện ở tiến độ; giữ trách nhiệm và trạng thái.
 
-Expected:Lưu đúng thời điểm; hiện ở tiến độ; giữ trách nhiệm và trạng thái.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-05-02 — Hạn trước khi tạo
 
-FR:FR-DSP-05; AC:AC-DSP-05-02.
+**Yêu cầu kiểm:** FR-DSP-05 · AC-DSP-05-02
 
-Preconditions:Yêu cầu chưa kết thúc và thuộc phạm vi điều phối.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310, hạn mẫu 2026-12-03T08:00:00+07:00 và version hiện hành.
 
-Dữ liệu:due_at nhỏ hơn created_at.
+1. due_at nhỏ hơn created_at. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/due` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.due_at/record_version và history DUE_CHANGED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-05.
-2. Thiết lập chính xác dữ liệu: due_at nhỏ hơn created_at.
-3. Thực hiện POST /api/dispatch/requests/{id}/due theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; hạn cũ giữ nguyên.
+**Mong đợi:** Từ chối; hạn cũ giữ nguyên.
 
-Expected:Từ chối; hạn cũ giữ nguyên.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-05-03 — Sai quyền
 
-FR:FR-DSP-05; AC:AC-DSP-05-03.
+**Yêu cầu kiểm:** FR-DSP-05 · AC-DSP-05-03
 
-Preconditions:Yêu cầu chưa kết thúc và thuộc phạm vi điều phối.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng 310, hạn mẫu 2026-12-03T08:00:00+07:00 và version hiện hành.
 
-Dữ liệu:Sinh viên hoặc nhân viên không điều phối sửa hạn.
+1. Sinh viên hoặc nhân viên không điều phối sửa hạn. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/due` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.due_at/record_version và history DUE_CHANGED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-05.
-2. Thiết lập chính xác dữ liệu: Sinh viên hoặc nhân viên không điều phối sửa hạn.
-3. Thực hiện POST /api/dispatch/requests/{id}/due theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; không thay hạn.
+**Mong đợi:** Từ chối; không thay hạn.
 
-Expected:Từ chối; không thay hạn.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-05-04 — Không hạn / đúng ranh giới
 
-FR:FR-DSP-05; AC:AC-DSP-05-04.
+**Yêu cầu kiểm:** FR-DSP-05 · AC-DSP-05-04
 
-Preconditions:Yêu cầu chưa kết thúc và thuộc phạm vi điều phối.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310, hạn mẫu 2026-12-03T08:00:00+07:00 và version hiện hành.
 
-Dữ liệu:Hồ sơ không hạn, rồi hồ sơ có due_at bằng thời điểm đo.
+1. Hồ sơ không hạn, rồi hồ sơ có due_at bằng thời điểm đo. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/due` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.due_at/record_version và history DUE_CHANGED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-05.
-2. Thiết lập chính xác dữ liệu: Hồ sơ không hạn, rồi hồ sơ có due_at bằng thời điểm đo.
-3. Thực hiện POST /api/dispatch/requests/{id}/due theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Không hạn không tính quá hạn; đúng bằng hạn chưa quá hạn; chỉ now > due_at và còn mở mới quá hạn.
+**Mong đợi:** Không hạn không tính quá hạn; đúng bằng hạn chưa quá hạn; chỉ now > due_at và còn mở mới quá hạn.
 
-Expected:Không hạn không tính quá hạn; đúng bằng hạn chưa quá hạn; chỉ now > due_at và còn mở mới quá hạn.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-05-05 — Không đổi giá trị
 
-FR:FR-DSP-05; AC:AC-DSP-05-05.
+**Yêu cầu kiểm:** FR-DSP-05 · AC-DSP-05-05
 
-Preconditions:Yêu cầu chưa kết thúc và thuộc phạm vi điều phối.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310, hạn mẫu 2026-12-03T08:00:00+07:00 và version hiện hành.
 
-Dữ liệu:Gửi lại cùng giá trị hiện hành với version mới nhất.
+1. Gửi lại cùng giá trị hiện hành với version mới nhất. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/due` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.due_at/record_version và history DUE_CHANGED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-05.
-2. Thiết lập chính xác dữ liệu: Gửi lại cùng giá trị hiện hành với version mới nhất.
-3. Thực hiện POST /api/dispatch/requests/{id}/due theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 200 no_change; version và số history không tăng.
+**Mong đợi:** 200 no_change; version và số history không tăng.
 
-Expected:200 no_change; version và số history không tăng.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-05-06 — Thiếu lý do đổi
 
-FR:FR-DSP-05; AC:AC-DSP-05-06.
+**Yêu cầu kiểm:** FR-DSP-05 · AC-DSP-05-06
 
-Preconditions:Yêu cầu chưa kết thúc và thuộc phạm vi điều phối.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310, hạn mẫu 2026-12-03T08:00:00+07:00 và version hiện hành.
 
-Dữ liệu:Đã có giá trị xác định; đổi sang giá trị khác, reason chỉ khoảng trắng.
+1. Đã có giá trị xác định; đổi sang giá trị khác, reason chỉ khoảng trắng. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/due` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.due_at/record_version và history DUE_CHANGED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-05.
-2. Thiết lập chính xác dữ liệu: Đã có giá trị xác định; đổi sang giá trị khác, reason chỉ khoảng trắng.
-3. Thực hiện POST /api/dispatch/requests/{id}/due theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 422 reason; giá trị/version/history giữ nguyên.
+**Mong đợi:** 422 reason; giá trị/version/history giữ nguyên.
 
-Expected:422 reason; giá trị/version/history giữ nguyên.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-05-07 — Rollback giao dịch
 
-FR:FR-DSP-05; AC:AC-DSP-05-07.
+**Yêu cầu kiểm:** FR-DSP-05 · AC-DSP-05-07
 
-Preconditions:Yêu cầu chưa kết thúc và thuộc phạm vi điều phối.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310, hạn mẫu 2026-12-03T08:00:00+07:00 và version hiện hành.
 
-Dữ liệu:Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
+1. Đọc và lưu ảnh chụp requests.due_at/record_version và history DUE_CHANGED trước thao tác. Dùng payload hợp lệ của actor DP-All.
+2. Bật điểm lỗi ghi history trên build thử rồi gọi `POST /api/dispatch/requests/{id}/due` một lần. Xác nhận log đã qua ghi nghiệp vụ trước lỗi.
+3. Tắt giả lập. Đọc từ kết nối khác, so requests.due_at/record_version và history DUE_CHANGED với trước thao tác. Lưu HTTP 500, mã đối chiếu và kết quả so sánh.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-05.
-2. Thiết lập chính xác dữ liệu: Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
-3. Thực hiện POST /api/dispatch/requests/{id}/due theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
+**Mong đợi:** 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
 
-Expected:500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-05-08 — Cập nhật phiên bản cũ
 
-FR:FR-DSP-05; AC:AC-DSP-05-08.
+**Yêu cầu kiểm:** FR-DSP-05 · AC-DSP-05-08
 
-Preconditions:Yêu cầu chưa kết thúc và thuộc phạm vi điều phối.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310, hạn mẫu 2026-12-03T08:00:00+07:00 và version hiện hành.
 
-Dữ liệu:Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
+1. Đọc phiên bản trong requests.due_at/record_version và history DUE_CHANGED, tạo hai payload cùng version.
+2. Gửi payload A hợp lệ qua `POST /api/dispatch/requests/{id}/due` và giữ phản hồi thành công cùng dữ liệu sau commit. Gửi payload B có thay đổi khác với version ban đầu.
+3. Kiểm 409 STALE_VERSION, giao diện yêu cầu tải lại và requests.due_at/record_version và history DUE_CHANGED đúng như sau A.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-05.
-2. Thiết lập chính xác dữ liệu: Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
-3. Thực hiện POST /api/dispatch/requests/{id}/due theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
+**Mong đợi:** Tab B nhận 409 STALE_VERSION; không ghi đè dữ liệu/lịch sử của A; giao diện yêu cầu tải lại.
 
-Expected:TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-DSP-05-09 — Múi giờ và hạn bằng giờ tạo
+
+**Yêu cầu kiểm:** FR-DSP-05 · AC-DSP-05-09
+
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310, hạn mẫu 2026-12-03T08:00:00+07:00 và version hiện hành.
+
+1. Trên hồ sơ 310 có created_at 2026-12-01T01:00:00Z, đặt hạn 2026-12-01T08:00:00+07:00, sau đó thử chuỗi không có múi giờ. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/due` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.due_at/record_version và history DUE_CHANGED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** Lượt đầu lưu đúng 01:00Z và giữ owner/status; hạn thiếu múi giờ trả 422. Ghi thay đổi cùng version và lịch sử ở lượt hợp lệ.
+
+**Kết quả:** Not Run.
+
+## TC-DSP-05-10 — Chặn đặt hạn hồ sơ kết thúc
+
+**Yêu cầu kiểm:** FR-DSP-05 · AC-DSP-05-10
+
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 310, hạn mẫu 2026-12-03T08:00:00+07:00 và version hiện hành.
+
+1. DP-All thử đặt hạn cho 313 Resolved và 314 Closed với giờ hợp lệ và phiên bản hiện hành. Trên hồ sơ mở thử đổi hạn với lý do 4001 ký tự. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/due` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.due_at/record_version và history DUE_CHANGED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** Hai hồ sơ kết thúc trả 409, lý do dài trả 422. Dữ liệu/hạn/version/lịch sử giữ như trước.
+
+**Kết quả:** Not Run.
 
 ## TC-DSP-06-01 — Bắt đầu đúng
 
-FR:FR-DSP-06; AC:AC-DSP-06-01.
+**Yêu cầu kiểm:** FR-DSP-06 · AC-DSP-06-01
 
-Preconditions:Đã tiếp nhận, có người phụ trách; người thao tác chính là người được giao.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 317 đã giao và version hiện hành.
 
-Dữ liệu:NV-A bắt đầu yêu cầu Đã tiếp nhận được giao cho mình.
+1. NV-A bắt đầu yêu cầu Đã tiếp nhận được giao cho mình. Dùng NV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/start` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.status/started_at/record_version và history STARTED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-06.
-2. Thiết lập chính xác dữ liệu: NV-A bắt đầu yêu cầu Đã tiếp nhận được giao cho mình.
-3. Thực hiện POST /api/staff/requests/{id}/start theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Đang xử lý, có started_at và lịch sử; sinh viên thấy tiến độ.
+**Mong đợi:** Đang xử lý, có started_at và lịch sử; sinh viên thấy tiến độ.
 
-Expected:Đang xử lý, có started_at và lịch sử; sinh viên thấy tiến độ.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-06-02 — Trạng thái sai
 
-FR:FR-DSP-06; AC:AC-DSP-06-02.
+**Yêu cầu kiểm:** FR-DSP-06 · AC-DSP-06-02
 
-Preconditions:Đã tiếp nhận, có người phụ trách; người thao tác chính là người được giao.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 317 đã giao và version hiện hành.
 
-Dữ liệu:Bắt đầu hồ sơ Đã đóng.
+1. Bắt đầu hồ sơ Đã đóng. Dùng NV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/start` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.status/started_at/record_version và history STARTED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-06.
-2. Thiết lập chính xác dữ liệu: Bắt đầu hồ sơ Đã đóng.
-3. Thực hiện POST /api/staff/requests/{id}/start theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; không thay trạng thái và thời điểm.
+**Mong đợi:** Từ chối; không thay trạng thái và thời điểm.
 
-Expected:Từ chối; không thay trạng thái và thời điểm.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-06-03 — Người khác thao tác
 
-FR:FR-DSP-06; AC:AC-DSP-06-03.
+**Yêu cầu kiểm:** FR-DSP-06 · AC-DSP-06-03
 
-Preconditions:Đã tiếp nhận, có người phụ trách; người thao tác chính là người được giao.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-B. Dùng 317 đã giao và version hiện hành.
 
-Dữ liệu:NV-B bắt đầu hồ sơ giao NV-A.
+1. NV-B bắt đầu hồ sơ giao NV-A. Dùng NV-B hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/start` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.status/started_at/record_version và history STARTED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-06.
-2. Thiết lập chính xác dữ liệu: NV-B bắt đầu hồ sơ giao NV-A.
-3. Thực hiện POST /api/staff/requests/{id}/start theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; trách nhiệm giữ nguyên.
+**Mong đợi:** Từ chối; trách nhiệm giữ nguyên.
 
-Expected:Từ chối; trách nhiệm giữ nguyên.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-06-04 — Bấm hai lần
 
-FR:FR-DSP-06; AC:AC-DSP-06-04.
+**Yêu cầu kiểm:** FR-DSP-06 · AC-DSP-06-04
 
-Preconditions:Đã tiếp nhận, có người phụ trách; người thao tác chính là người được giao.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 317 đã giao và version hiện hành.
 
-Dữ liệu:Gửi lặp lần bắt đầu.
+1. Gửi lặp lần bắt đầu. Dùng NV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/start` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.status/started_at/record_version và history STARTED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-06.
-2. Thiết lập chính xác dữ liệu: Gửi lặp lần bắt đầu.
-3. Thực hiện POST /api/staff/requests/{id}/start theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Không tạo hai lần bắt đầu; started_at ban đầu giữ nguyên.
+**Mong đợi:** Không tạo hai lần bắt đầu; started_at ban đầu giữ nguyên.
 
-Expected:Không tạo hai lần bắt đầu; started_at ban đầu giữ nguyên.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-06-05 — Rollback giao dịch
 
-FR:FR-DSP-06; AC:AC-DSP-06-05.
+**Yêu cầu kiểm:** FR-DSP-06 · AC-DSP-06-05
 
-Preconditions:Đã tiếp nhận, có người phụ trách; người thao tác chính là người được giao.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 317 đã giao và version hiện hành.
 
-Dữ liệu:Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
+1. Đọc và lưu ảnh chụp requests.status/started_at/record_version và history STARTED trước thao tác. Dùng payload hợp lệ của actor NV-A.
+2. Bật điểm lỗi ghi history trên build thử rồi gọi `POST /api/staff/requests/{id}/start` một lần. Xác nhận log đã qua ghi nghiệp vụ trước lỗi.
+3. Tắt giả lập. Đọc từ kết nối khác, so requests.status/started_at/record_version và history STARTED với trước thao tác. Lưu HTTP 500, mã đối chiếu và kết quả so sánh.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-06.
-2. Thiết lập chính xác dữ liệu: Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
-3. Thực hiện POST /api/staff/requests/{id}/start theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
+**Mong đợi:** 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
 
-Expected:500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-06-06 — Cập nhật phiên bản cũ
 
-FR:FR-DSP-06; AC:AC-DSP-06-06.
+**Yêu cầu kiểm:** FR-DSP-06 · AC-DSP-06-06
 
-Preconditions:Đã tiếp nhận, có người phụ trách; người thao tác chính là người được giao.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 317 đã giao và version hiện hành.
 
-Dữ liệu:Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
+1. Đọc phiên bản trong requests.status/started_at/record_version và history STARTED, tạo hai payload cùng version.
+2. Gửi payload A hợp lệ qua `POST /api/staff/requests/{id}/start` và giữ phản hồi thành công cùng dữ liệu sau commit. Gửi payload B có thay đổi khác với version ban đầu.
+3. Kiểm 409 STALE_VERSION, giao diện yêu cầu tải lại và requests.status/started_at/record_version và history STARTED đúng như sau A.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-06.
-2. Thiết lập chính xác dữ liệu: Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
-3. Thực hiện POST /api/staff/requests/{id}/start theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
+**Mong đợi:** Tab B nhận 409 STALE_VERSION; không ghi đè dữ liệu/lịch sử của A; giao diện yêu cầu tải lại.
 
-Expected:TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-DSP-06-07 — Hồ sơ chưa có trách nhiệm
+
+**Yêu cầu kiểm:** FR-DSP-06 · AC-DSP-06-07
+
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 317 đã giao và version hiện hành.
+
+1. NV-A thử bắt đầu hồ sơ 310 chưa phân công rồi kiểm lại hồ sơ hợp lệ đã bắt đầu. Dùng NV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/start` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.status/started_at/record_version và history STARTED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** Lượt không có quyền đối tượng không thay dữ liệu. Với hồ sơ hợp lệ, started_at lấy đồng hồ máy chủ lần đầu, giữ due_at và student_id.
+
+**Kết quả:** Not Run.
 
 ## TC-DSP-07-01 — Câu hỏi hợp lệ
 
-FR:FR-DSP-07; AC:AC-DSP-07-01.
+**Yêu cầu kiểm:** FR-DSP-07 · AC-DSP-07-01
 
-Preconditions:Đang xử lý; người thao tác được giao; chưa có câu hỏi bổ sung đang mở.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315, question “Vui lòng cung cấp mã lớp” và version hiện hành.
 
-Dữ liệu:Đang xử lý, hỏi Vui lòng cung cấp mã lớp.
+1. Đang xử lý, hỏi Vui lòng cung cấp mã lớp. Dùng NV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/questions` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, questions và history INFO_REQUESTED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-07.
-2. Thiết lập chính xác dữ liệu: Đang xử lý, hỏi Vui lòng cung cấp mã lớp.
-3. Thực hiện POST /api/staff/requests/{id}/questions theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Có một câu hỏi mở; Chờ bổ sung; SV thấy đúng câu hỏi.
+**Mong đợi:** Có một câu hỏi mở; Chờ bổ sung; SV thấy đúng câu hỏi.
 
-Expected:Có một câu hỏi mở; Chờ bổ sung; SV thấy đúng câu hỏi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-07-02 — Câu hỏi rỗng
 
-FR:FR-DSP-07; AC:AC-DSP-07-02.
+**Yêu cầu kiểm:** FR-DSP-07 · AC-DSP-07-02
 
-Preconditions:Đang xử lý; người thao tác được giao; chưa có câu hỏi bổ sung đang mở.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315, question “Vui lòng cung cấp mã lớp” và version hiện hành.
 
-Dữ liệu:Nội dung chỉ có khoảng trắng.
+1. Nội dung chỉ có khoảng trắng. Dùng NV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/questions` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, questions và history INFO_REQUESTED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-07.
-2. Thiết lập chính xác dữ liệu: Nội dung chỉ có khoảng trắng.
-3. Thực hiện POST /api/staff/requests/{id}/questions theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Không lưu câu hỏi hoặc chuyển trạng thái.
+**Mong đợi:** Không lưu câu hỏi hoặc chuyển trạng thái.
 
-Expected:Không lưu câu hỏi hoặc chuyển trạng thái.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-07-03 — Ngoài trách nhiệm
 
-FR:FR-DSP-07; AC:AC-DSP-07-03.
+**Yêu cầu kiểm:** FR-DSP-07 · AC-DSP-07-03
 
-Preconditions:Đang xử lý; người thao tác được giao; chưa có câu hỏi bổ sung đang mở.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-B. Dùng 315, question “Vui lòng cung cấp mã lớp” và version hiện hành.
 
-Dữ liệu:NV-B yêu cầu bổ sung hồ sơ giao NV-A.
+1. NV-B yêu cầu bổ sung hồ sơ giao NV-A. Dùng NV-B hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/questions` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, questions và history INFO_REQUESTED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-07.
-2. Thiết lập chính xác dữ liệu: NV-B yêu cầu bổ sung hồ sơ giao NV-A.
-3. Thực hiện POST /api/staff/requests/{id}/questions theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; không lộ thêm dữ liệu.
+**Mong đợi:** Từ chối; không lộ thêm dữ liệu.
 
-Expected:Từ chối; không lộ thêm dữ liệu.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-07-04 — Đã có câu hỏi mở
 
-FR:FR-DSP-07; AC:AC-DSP-07-04.
+**Yêu cầu kiểm:** FR-DSP-07 · AC-DSP-07-04
 
-Preconditions:Đang xử lý; người thao tác được giao; chưa có câu hỏi bổ sung đang mở.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315, question “Vui lòng cung cấp mã lớp” và version hiện hành.
 
-Dữ liệu:Gửi lần thứ hai khi Chờ bổ sung.
+1. Gửi lần thứ hai khi Chờ bổ sung. Dùng NV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/questions` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, questions và history INFO_REQUESTED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-07.
-2. Thiết lập chính xác dữ liệu: Gửi lần thứ hai khi Chờ bổ sung.
-3. Thực hiện POST /api/staff/requests/{id}/questions theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: HTTP 409 INVALID_STATE; vẫn1question mở, không có history/question thứ hai.
+**Mong đợi:** HTTP 409 INVALID_STATE; vẫn một câu hỏi mở, không có history/question thứ hai.
 
-Expected:HTTP 409 INVALID_STATE; vẫn1question mở, không có history/question thứ hai.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-07-05 — Rollback giao dịch
 
-FR:FR-DSP-07; AC:AC-DSP-07-05.
+**Yêu cầu kiểm:** FR-DSP-07 · AC-DSP-07-05
 
-Preconditions:Đang xử lý; người thao tác được giao; chưa có câu hỏi bổ sung đang mở.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315, question “Vui lòng cung cấp mã lớp” và version hiện hành.
 
-Dữ liệu:Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
+1. Đọc và lưu ảnh chụp requests, questions và history INFO_REQUESTED trước thao tác. Dùng payload hợp lệ của actor NV-A.
+2. Bật điểm lỗi ghi history trên build thử rồi gọi `POST /api/staff/requests/{id}/questions` một lần. Xác nhận log đã qua ghi nghiệp vụ trước lỗi.
+3. Tắt giả lập. Đọc từ kết nối khác, so requests, questions và history INFO_REQUESTED với trước thao tác. Lưu HTTP 500, mã đối chiếu và kết quả so sánh.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-07.
-2. Thiết lập chính xác dữ liệu: Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
-3. Thực hiện POST /api/staff/requests/{id}/questions theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
+**Mong đợi:** 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
 
-Expected:500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-07-06 — Cập nhật phiên bản cũ
 
-FR:FR-DSP-07; AC:AC-DSP-07-06.
+**Yêu cầu kiểm:** FR-DSP-07 · AC-DSP-07-06
 
-Preconditions:Đang xử lý; người thao tác được giao; chưa có câu hỏi bổ sung đang mở.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315, question “Vui lòng cung cấp mã lớp” và version hiện hành.
 
-Dữ liệu:Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
+1. Đọc phiên bản trong requests, questions và history INFO_REQUESTED, tạo hai payload cùng version.
+2. Gửi payload A hợp lệ qua `POST /api/staff/requests/{id}/questions` và giữ phản hồi thành công cùng dữ liệu sau commit. Gửi payload B có thay đổi khác với version ban đầu.
+3. Kiểm 409 STALE_VERSION, giao diện yêu cầu tải lại và requests, questions và history INFO_REQUESTED đúng như sau A.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-07.
-2. Thiết lập chính xác dữ liệu: Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
-3. Thực hiện POST /api/staff/requests/{id}/questions theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
+**Mong đợi:** Tab B nhận 409 STALE_VERSION; không ghi đè dữ liệu/lịch sử của A; giao diện yêu cầu tải lại.
 
-Expected:TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-07-07 — Đợt bổ sung tiếp theo
 
-FR:FR-DSP-07; AC:AC-DSP-07-07.
+**Yêu cầu kiểm:** FR-DSP-07 · AC-DSP-07-07
 
-Preconditions:Đang xử lý; người thao tác được giao; chưa có câu hỏi bổ sung đang mở.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315, question “Vui lòng cung cấp mã lớp” và version hiện hành.
 
-Dữ liệu:Sau STU-04 đóng question1 và Processing, NV hỏi question2.
+1. Sau STU-04 đóng câu hỏi 1 và Processing, NV hỏi câu hỏi 2. Dùng NV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/questions` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, questions và history INFO_REQUESTED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-07.
-2. Thiết lập chính xác dữ liệu: Sau STU-04 đóng question1 và Processing, NV hỏi question2.
-3. Thực hiện POST /api/staff/requests/{id}/questions theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Có question2 ID khác,1 question mở; question1/answer cũ giữ nguyên.
+**Mong đợi:** Có câu hỏi 2 ID khác, một câu hỏi mở; câu hỏi 1/answer cũ giữ nguyên.
 
-Expected:Có question2 ID khác,1 question mở; question1/answer cũ giữ nguyên.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-DSP-07-08 — Không hỏi khi mới tiếp nhận
+
+**Yêu cầu kiểm:** FR-DSP-07 · AC-DSP-07-08
+
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315, question “Vui lòng cung cấp mã lớp” và version hiện hành.
+
+1. NV-A thử tạo câu hỏi trên hồ sơ Received đã được giao, sau đó chuyển sang Processing và thử câu hỏi 4001 ký tự. Dùng NV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/questions` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, questions và history INFO_REQUESTED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** Received trả 409, văn bản quá dài trả 422. Không đổi trạng thái/hạn/thời điểm bắt đầu, không sinh question/history.
+
+**Kết quả:** Not Run.
 
 ## TC-DSP-08-01 — Tiến độ công khai
 
-FR:FR-DSP-08; AC:AC-DSP-08-01.
+**Yêu cầu kiểm:** FR-DSP-08 · AC-DSP-08-01
 
-Preconditions:Đang xử lý hoặc Chờ bổ sung; người thao tác được giao.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315, content “Đã kiểm tra hồ sơ”, visibility=public và version hiện hành.
 
-Dữ liệu:Ghi Đang kiểm tra thủ tục, visibility=public.
+1. Ghi Đang kiểm tra thủ tục, visibility=public. Dùng NV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/progress` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, progress_notes và history với phạm vi công khai/nội bộ theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-08.
-2. Thiết lập chính xác dữ liệu: Ghi Đang kiểm tra thủ tục, visibility=public.
-3. Thực hiện POST /api/staff/requests/{id}/progress theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Lịch sử xử lý và lịch sử SV có nội dung, người và thời điểm phù hợp; trạng thái không đổi.
+**Mong đợi:** Lịch sử xử lý và lịch sử SV có nội dung, người và thời điểm phù hợp; trạng thái không đổi.
 
-Expected:Lịch sử xử lý và lịch sử SV có nội dung, người và thời điểm phù hợp; trạng thái không đổi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-08-02 — Giá trị sai
 
-FR:FR-DSP-08; AC:AC-DSP-08-02.
+**Yêu cầu kiểm:** FR-DSP-08 · AC-DSP-08-02
 
-Preconditions:Đang xử lý hoặc Chờ bổ sung; người thao tác được giao.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315, content “Đã kiểm tra hồ sơ”, visibility=public và version hiện hành.
 
-Dữ liệu:Nội dung trống hoặc visibility=secret.
+1. Nội dung trống hoặc visibility=secret. Dùng NV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/progress` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, progress_notes và history với phạm vi công khai/nội bộ theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-08.
-2. Thiết lập chính xác dữ liệu: Nội dung trống hoặc visibility=secret.
-3. Thực hiện POST /api/staff/requests/{id}/progress theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; không thêm lịch sử.
+**Mong đợi:** Từ chối; không thêm lịch sử.
 
-Expected:Từ chối; không thêm lịch sử.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-08-03 — Mất trách nhiệm
 
-FR:FR-DSP-08; AC:AC-DSP-08-03.
+**Yêu cầu kiểm:** FR-DSP-08 · AC-DSP-08-03
 
-Preconditions:Đang xử lý hoặc Chờ bổ sung; người thao tác được giao.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-B. Dùng 315, content “Đã kiểm tra hồ sơ”, visibility=public và version hiện hành.
 
-Dữ liệu:NV-A gửi cập nhật sau khi yêu cầu đã giao NV-B.
+1. NV-A gửi cập nhật sau khi yêu cầu đã giao NV-B. Dùng NV-B hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/progress` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, progress_notes và history với phạm vi công khai/nội bộ theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-08.
-2. Thiết lập chính xác dữ liệu: NV-A gửi cập nhật sau khi yêu cầu đã giao NV-B.
-3. Thực hiện POST /api/staff/requests/{id}/progress theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; không ghi nội dung mới.
+**Mong đợi:** Từ chối; không ghi nội dung mới.
 
-Expected:Từ chối; không ghi nội dung mới.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-08-04 — Tiến độ nội bộ
 
-FR:FR-DSP-08; AC:AC-DSP-08-04.
+**Yêu cầu kiểm:** FR-DSP-08 · AC-DSP-08-04
 
-Preconditions:Đang xử lý hoặc Chờ bổ sung; người thao tác được giao.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315, content “Đã kiểm tra hồ sơ”, visibility=public và version hiện hành.
 
-Dữ liệu:Ghi ghi chú internal có dấu TEST-INTERNAL.
+1. Ghi ghi chú internal có dấu TEST-INTERNAL. Dùng NV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/progress` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, progress_notes và history với phạm vi công khai/nội bộ theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-08.
-2. Thiết lập chính xác dữ liệu: Ghi ghi chú internal có dấu TEST-INTERNAL.
-3. Thực hiện POST /api/staff/requests/{id}/progress theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Người có quyền nghiệp vụ đọc được; STU-03/API SV không có dấu TEST-INTERNAL.
+**Mong đợi:** Người có quyền nghiệp vụ đọc được; STU-03/API SV không có dấu TEST-INTERNAL.
 
-Expected:Người có quyền nghiệp vụ đọc được; STU-03/API SV không có dấu TEST-INTERNAL.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-08-05 — Rollback giao dịch
 
-FR:FR-DSP-08; AC:AC-DSP-08-05.
+**Yêu cầu kiểm:** FR-DSP-08 · AC-DSP-08-05
 
-Preconditions:Đang xử lý hoặc Chờ bổ sung; người thao tác được giao.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315, content “Đã kiểm tra hồ sơ”, visibility=public và version hiện hành.
 
-Dữ liệu:Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
+1. Đọc và lưu ảnh chụp requests, progress_notes và history với phạm vi công khai/nội bộ trước thao tác. Dùng payload hợp lệ của actor NV-A.
+2. Bật điểm lỗi ghi history trên build thử rồi gọi `POST /api/staff/requests/{id}/progress` một lần. Xác nhận log đã qua ghi nghiệp vụ trước lỗi.
+3. Tắt giả lập. Đọc từ kết nối khác, so requests, progress_notes và history với phạm vi công khai/nội bộ với trước thao tác. Lưu HTTP 500, mã đối chiếu và kết quả so sánh.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-08.
-2. Thiết lập chính xác dữ liệu: Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
-3. Thực hiện POST /api/staff/requests/{id}/progress theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
+**Mong đợi:** 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
 
-Expected:500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-08-06 — Cập nhật phiên bản cũ
 
-FR:FR-DSP-08; AC:AC-DSP-08-06.
+**Yêu cầu kiểm:** FR-DSP-08 · AC-DSP-08-06
 
-Preconditions:Đang xử lý hoặc Chờ bổ sung; người thao tác được giao.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315, content “Đã kiểm tra hồ sơ”, visibility=public và version hiện hành.
 
-Dữ liệu:Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
+1. Đọc phiên bản trong requests, progress_notes và history với phạm vi công khai/nội bộ, tạo hai payload cùng version.
+2. Gửi payload A hợp lệ qua `POST /api/staff/requests/{id}/progress` và giữ phản hồi thành công cùng dữ liệu sau commit. Gửi payload B có thay đổi khác với version ban đầu.
+3. Kiểm 409 STALE_VERSION, giao diện yêu cầu tải lại và requests, progress_notes và history với phạm vi công khai/nội bộ đúng như sau A.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-08.
-2. Thiết lập chính xác dữ liệu: Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
-3. Thực hiện POST /api/staff/requests/{id}/progress theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
+**Mong đợi:** Tab B nhận 409 STALE_VERSION; không ghi đè dữ liệu/lịch sử của A; giao diện yêu cầu tải lại.
 
-Expected:TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-DSP-08-07 — Mặc định nội bộ và bảo toàn luồng
+
+**Yêu cầu kiểm:** FR-DSP-08 · AC-DSP-08-07
+
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315, content “Đã kiểm tra hồ sơ”, visibility=public và version hiện hành.
+
+1. Trên hồ sơ WaitingInfo 311, NV-A gửi hai ghi chú cùng nội dung bằng hai thao tác với phiên bản mới, lần đầu bỏ visibility. Thử thêm nội dung 4001 ký tự và hồ sơ Closed. Dùng NV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/progress` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, progress_notes và history với phạm vi công khai/nội bộ theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** Ghi chú mặc định internal, hai thao tác riêng có hai mục. Giữ nguyên câu hỏi, hạn, trạng thái và người xử lý. Trả 422 cho nội dung quá dài và 409 cho Closed.
+
+**Kết quả:** Not Run.
 
 ## TC-DSP-09-01 — Có kết quả
 
-FR:FR-DSP-09; AC:AC-DSP-09-01.
+**Yêu cầu kiểm:** FR-DSP-09 · AC-DSP-09-01
 
-Preconditions:Đang xử lý; không còn câu hỏi bổ sung mở; người thao tác được giao.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315 không có câu hỏi mở, result_content “Đã xác nhận thông tin” và version hiện hành.
 
-Dữ liệu:Đang xử lý; ghi Đã hướng dẫn thủ tục xác nhận.
+1. Đang xử lý; ghi Đã hướng dẫn thủ tục xác nhận. Dùng NV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/resolve` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, results và history RESOLVED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-09.
-2. Thiết lập chính xác dữ liệu: Đang xử lý; ghi Đã hướng dẫn thủ tục xác nhận.
-3. Thực hiện POST /api/staff/requests/{id}/resolve theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Đã giải quyết, có kết quả và resolved_at; STU-03 hiển thị đúng nội dung.
+**Mong đợi:** Đã giải quyết, có kết quả và resolved_at; STU-03 hiển thị đúng nội dung.
 
-Expected:Đã giải quyết, có kết quả và resolved_at; STU-03 hiển thị đúng nội dung.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-09-02 — Còn thiếu thông tin / kết quả trống
 
-FR:FR-DSP-09; AC:AC-DSP-09-02.
+**Yêu cầu kiểm:** FR-DSP-09 · AC-DSP-09-02
 
-Preconditions:Đang xử lý; không còn câu hỏi bổ sung mở; người thao tác được giao.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315 không có câu hỏi mở, result_content “Đã xác nhận thông tin” và version hiện hành.
 
-Dữ liệu:Chờ bổ sung hoặc resolution rỗng.
+1. Chờ bổ sung hoặc resolution rỗng. Dùng NV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/resolve` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, results và history RESOLVED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-09.
-2. Thiết lập chính xác dữ liệu: Chờ bổ sung hoặc resolution rỗng.
-3. Thực hiện POST /api/staff/requests/{id}/resolve theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; không chuyển Đã giải quyết hay ghi kết quả một phần.
+**Mong đợi:** Từ chối; không chuyển Đã giải quyết hay ghi kết quả một phần.
 
-Expected:Từ chối; không chuyển Đã giải quyết hay ghi kết quả một phần.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-09-03 — Sai người xử lý
 
-FR:FR-DSP-09; AC:AC-DSP-09-03.
+**Yêu cầu kiểm:** FR-DSP-09 · AC-DSP-09-03
 
-Preconditions:Đang xử lý; không còn câu hỏi bổ sung mở; người thao tác được giao.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-B. Dùng 315 không có câu hỏi mở, result_content “Đã xác nhận thông tin” và version hiện hành.
 
-Dữ liệu:NV-B ghi kết quả cho hồ sơ NV-A.
+1. NV-B ghi kết quả cho hồ sơ NV-A. Dùng NV-B hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/resolve` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, results và history RESOLVED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-09.
-2. Thiết lập chính xác dữ liệu: NV-B ghi kết quả cho hồ sơ NV-A.
-3. Thực hiện POST /api/staff/requests/{id}/resolve theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; không thay kết quả.
+**Mong đợi:** Từ chối; không thay kết quả.
 
-Expected:Từ chối; không thay kết quả.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-09-04 — Gửi lại / dữ liệu cũ
 
-FR:FR-DSP-09; AC:AC-DSP-09-04.
+**Yêu cầu kiểm:** FR-DSP-09 · AC-DSP-09-04
 
-Preconditions:Đang xử lý; không còn câu hỏi bổ sung mở; người thao tác được giao.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315 không có câu hỏi mở, result_content “Đã xác nhận thông tin” và version hiện hành.
 
-Dữ liệu:Gửi lại cùng thao tác hoặc dùng record_version cũ.
+1. Gửi lại cùng thao tác hoặc dùng record_version cũ. Dùng NV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/resolve` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, results và history RESOLVED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-09.
-2. Thiết lập chính xác dữ liệu: Gửi lại cùng thao tác hoặc dùng record_version cũ.
-3. Thực hiện POST /api/staff/requests/{id}/resolve theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Không tạo hai kết quả; bản cũ không ghi đè kết quả mới.
+**Mong đợi:** Không tạo hai kết quả; bản cũ không ghi đè kết quả mới.
 
-Expected:Không tạo hai kết quả; bản cũ không ghi đè kết quả mới.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-09-05 — Rollback giao dịch
 
-FR:FR-DSP-09; AC:AC-DSP-09-05.
+**Yêu cầu kiểm:** FR-DSP-09 · AC-DSP-09-05
 
-Preconditions:Đang xử lý; không còn câu hỏi bổ sung mở; người thao tác được giao.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315 không có câu hỏi mở, result_content “Đã xác nhận thông tin” và version hiện hành.
 
-Dữ liệu:Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
+1. Đọc và lưu ảnh chụp requests, results và history RESOLVED trước thao tác. Dùng payload hợp lệ của actor NV-A.
+2. Bật điểm lỗi ghi history trên build thử rồi gọi `POST /api/staff/requests/{id}/resolve` một lần. Xác nhận log đã qua ghi nghiệp vụ trước lỗi.
+3. Tắt giả lập. Đọc từ kết nối khác, so requests, results và history RESOLVED với trước thao tác. Lưu HTTP 500, mã đối chiếu và kết quả so sánh.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-09.
-2. Thiết lập chính xác dữ liệu: Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
-3. Thực hiện POST /api/staff/requests/{id}/resolve theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
+**Mong đợi:** 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
 
-Expected:500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-09-06 — Cập nhật phiên bản cũ
 
-FR:FR-DSP-09; AC:AC-DSP-09-06.
+**Yêu cầu kiểm:** FR-DSP-09 · AC-DSP-09-06
 
-Preconditions:Đang xử lý; không còn câu hỏi bổ sung mở; người thao tác được giao.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315 không có câu hỏi mở, result_content “Đã xác nhận thông tin” và version hiện hành.
 
-Dữ liệu:Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
+1. Đọc phiên bản trong requests, results và history RESOLVED, tạo hai payload cùng version.
+2. Gửi payload A hợp lệ qua `POST /api/staff/requests/{id}/resolve` và giữ phản hồi thành công cùng dữ liệu sau commit. Gửi payload B có thay đổi khác với version ban đầu.
+3. Kiểm 409 STALE_VERSION, giao diện yêu cầu tải lại và requests, results và history RESOLVED đúng như sau A.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-09.
-2. Thiết lập chính xác dữ liệu: Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
-3. Thực hiện POST /api/staff/requests/{id}/resolve theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
+**Mong đợi:** Tab B nhận 409 STALE_VERSION; không ghi đè dữ liệu/lịch sử của A; giao diện yêu cầu tải lại.
 
-Expected:TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-09-07 — Không giải quyết khi chờ
 
-FR:FR-DSP-09; AC:AC-DSP-09-07.
+**Yêu cầu kiểm:** FR-DSP-09 · AC-DSP-09-07
 
-Preconditions:Đang xử lý; không còn câu hỏi bổ sung mở; người thao tác được giao.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315 không có câu hỏi mở, result_content “Đã xác nhận thông tin” và version hiện hành.
 
-Dữ liệu:WaitingInfo có question mở; NV gửi result_content.
+1. WaitingInfo có question mở; NV gửi result_content. Dùng NV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/resolve` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, results và history RESOLVED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-09.
-2. Thiết lập chính xác dữ liệu: WaitingInfo có question mở; NV gửi result_content.
-3. Thực hiện POST /api/staff/requests/{id}/resolve theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 409 INVALID_STATE; không result và không resolved_at mới.
+**Mong đợi:** 409 INVALID_STATE; không result và không resolved_at mới.
 
-Expected:409 INVALID_STATE; không result và không resolved_at mới.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-DSP-09-08 — Bảo toàn hồ sơ khi có kết quả
+
+**Yêu cầu kiểm:** FR-DSP-09 · AC-DSP-09-08
+
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 315 không có câu hỏi mở, result_content “Đã xác nhận thông tin” và version hiện hành.
+
+1. NV-A giải quyết hồ sơ 315 đang Processing với nội dung 4000 ký tự rồi thử lặp. Trên fixture độc lập thử nội dung 4001 ký tự. Dùng NV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/staff/requests/{id}/resolve` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests, results và history RESOLVED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** Một kết quả và một RESOLVED công khai. Giữ hạn, giờ bắt đầu, trách nhiệm, không tự đóng hoặc tạo phản hồi. Lặp trả 409, quá dài trả 422.
+
+**Kết quả:** Not Run.
 
 ## TC-DSP-10-01 — Đóng đúng
 
-FR:FR-DSP-10; AC:AC-DSP-10-01.
+**Yêu cầu kiểm:** FR-DSP-10 · AC-DSP-10-01
 
-Preconditions:Đã giải quyết và có kết quả; điều phối viên có quyền trên hồ sơ.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 313 có kết quả 501 và version hiện hành.
 
-Dữ liệu:Điều phối viên đóng yêu cầu Đã giải quyết có kết quả.
+1. Điều phối viên đóng yêu cầu Đã giải quyết có kết quả. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/close` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.status/closed_at/record_version, results và history CLOSED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-10.
-2. Thiết lập chính xác dữ liệu: Điều phối viên đóng yêu cầu Đã giải quyết có kết quả.
-3. Thực hiện POST /api/dispatch/requests/{id}/close theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Đã đóng; có closed_at; kết quả và lịch sử giữ nguyên.
+**Mong đợi:** Đã đóng; có closed_at; kết quả và lịch sử giữ nguyên.
 
-Expected:Đã đóng; có closed_at; kết quả và lịch sử giữ nguyên.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-10-02 — Đóng trước khi giải quyết
 
-FR:FR-DSP-10; AC:AC-DSP-10-02.
+**Yêu cầu kiểm:** FR-DSP-10 · AC-DSP-10-02
 
-Preconditions:Đã giải quyết và có kết quả; điều phối viên có quyền trên hồ sơ.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 313 có kết quả 501 và version hiện hành.
 
-Dữ liệu:Hồ sơ Đang xử lý chưa có kết quả.
+1. Hồ sơ Đang xử lý chưa có kết quả. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/close` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.status/closed_at/record_version, results và history CLOSED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-10.
-2. Thiết lập chính xác dữ liệu: Hồ sơ Đang xử lý chưa có kết quả.
-3. Thực hiện POST /api/dispatch/requests/{id}/close theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; không bỏ qua bước giải quyết.
+**Mong đợi:** Từ chối; không bỏ qua bước giải quyết.
 
-Expected:Từ chối; không bỏ qua bước giải quyết.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-10-03 — Sai vai trò
 
-FR:FR-DSP-10; AC:AC-DSP-10-03.
+**Yêu cầu kiểm:** FR-DSP-10 · AC-DSP-10-03
 
-Preconditions:Đã giải quyết và có kết quả; điều phối viên có quyền trên hồ sơ.
+**Chuẩn bị:** Fixture độc lập. Actor chính NV-A. Dùng 313 có kết quả 501 và version hiện hành.
 
-Dữ liệu:Sinh viên hoặc nhân viên thường gọi thao tác đóng.
+1. Sinh viên hoặc nhân viên thường gọi thao tác đóng. Dùng NV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/close` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.status/closed_at/record_version, results và history CLOSED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-10.
-2. Thiết lập chính xác dữ liệu: Sinh viên hoặc nhân viên thường gọi thao tác đóng.
-3. Thực hiện POST /api/dispatch/requests/{id}/close theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; trạng thái không đổi.
+**Mong đợi:** Từ chối; trạng thái không đổi.
 
-Expected:Từ chối; trạng thái không đổi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-10-04 — Đóng lặp
 
-FR:FR-DSP-10; AC:AC-DSP-10-04.
+**Yêu cầu kiểm:** FR-DSP-10 · AC-DSP-10-04
 
-Preconditions:Đã giải quyết và có kết quả; điều phối viên có quyền trên hồ sơ.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 313 có kết quả 501 và version hiện hành.
 
-Dữ liệu:Gửi lại thao tác đóng; sau đó thử ghi tiến độ.
+1. Gửi lại thao tác đóng; sau đó thử ghi tiến độ. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/close` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.status/closed_at/record_version, results và history CLOSED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-10.
-2. Thiết lập chính xác dữ liệu: Gửi lại thao tác đóng; sau đó thử ghi tiến độ.
-3. Thực hiện POST /api/dispatch/requests/{id}/close theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Không tạo hai lần đóng; tiến độ mới bị từ chối; phản hồi kết quả vẫn được phép.
+**Mong đợi:** Không tạo hai lần đóng; tiến độ mới bị từ chối; phản hồi kết quả vẫn được phép.
 
-Expected:Không tạo hai lần đóng; tiến độ mới bị từ chối; phản hồi kết quả vẫn được phép.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-10-05 — Rollback giao dịch
 
-FR:FR-DSP-10; AC:AC-DSP-10-05.
+**Yêu cầu kiểm:** FR-DSP-10 · AC-DSP-10-05
 
-Preconditions:Đã giải quyết và có kết quả; điều phối viên có quyền trên hồ sơ.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 313 có kết quả 501 và version hiện hành.
 
-Dữ liệu:Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
+1. Đọc và lưu ảnh chụp requests.status/closed_at/record_version, results và history CLOSED trước thao tác. Dùng payload hợp lệ của actor DP-All.
+2. Bật điểm lỗi ghi history trên build thử rồi gọi `POST /api/dispatch/requests/{id}/close` một lần. Xác nhận log đã qua ghi nghiệp vụ trước lỗi.
+3. Tắt giả lập. Đọc từ kết nối khác, so requests.status/closed_at/record_version, results và history CLOSED với trước thao tác. Lưu HTTP 500, mã đối chiếu và kết quả so sánh.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-10.
-2. Thiết lập chính xác dữ liệu: Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production.
-3. Thực hiện POST /api/dispatch/requests/{id}/close theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
+**Mong đợi:** 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
 
-Expected:500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-DSP-10-06 — Cập nhật phiên bản cũ
 
-FR:FR-DSP-10; AC:AC-DSP-10-06.
+**Yêu cầu kiểm:** FR-DSP-10 · AC-DSP-10-06
 
-Preconditions:Đã giải quyết và có kết quả; điều phối viên có quyền trên hồ sơ.
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 313 có kết quả 501 và version hiện hành.
 
-Dữ liệu:Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
+1. Đọc phiên bản trong requests.status/closed_at/record_version, results và history CLOSED, tạo hai payload cùng version.
+2. Gửi payload A hợp lệ qua `POST /api/dispatch/requests/{id}/close` và giữ phản hồi thành công cùng dữ liệu sau commit. Gửi payload B có thay đổi khác với version ban đầu.
+3. Kiểm 409 STALE_VERSION, giao diện yêu cầu tải lại và requests.status/closed_at/record_version, results và history CLOSED đúng như sau A.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-DSP-10.
-2. Thiết lập chính xác dữ liệu: Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
-3. Thực hiện POST /api/dispatch/requests/{id}/close theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
+**Mong đợi:** Tab B nhận 409 STALE_VERSION; không ghi đè dữ liệu/lịch sử của A; giao diện yêu cầu tải lại.
 
-Expected:TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-DSP-10-07 — Điều kiện đóng và giữ dữ liệu
+
+**Yêu cầu kiểm:** FR-DSP-10 · AC-DSP-10-07
+
+**Chuẩn bị:** Fixture độc lập. Actor chính DP-All. Dùng 313 có kết quả 501 và version hiện hành.
+
+1. DP-All đóng hồ sơ 313 Resolved có result nhưng chưa có feedback. Trên fixture âm độc lập thử Resolved thiếu result. Dùng DP-All hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/dispatch/requests/{id}/close` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm requests.status/closed_at/record_version, results và history CLOSED theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** Hồ sơ hợp lệ đóng và giữ nguyên result/dữ liệu. Fixture thiếu kết quả bị chặn. Không tạo feedback tự động, không tăng version khi bị từ chối.
+
+**Kết quả:** Not Run.
 
 ## TC-RPT-01-01 — Đối chiếu phép tính
 
-FR:FR-RPT-01; AC:AC-RPT-01-01.
+**Yêu cầu kiểm:** FR-RPT-01 · AC-RPT-01-01
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-01 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Tạo 10 yêu cầu: 2 mỗi trạng thái.
+1. Tạo 10 yêu cầu: 2 mỗi trạng thái. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/01` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-01.
-2. Thiết lập chính xác dữ liệu: Tạo 10 yêu cầu: 2 mỗi trạng thái.
-3. Thực hiện GET /api/reports/01 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Mỗi nhóm bằng 2, tổng bằng 10.
+**Mong đợi:** Mỗi nhóm bằng 2, tổng bằng 10.
 
-Expected:Mỗi nhóm bằng 2, tổng bằng 10.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-01-02 — Bộ lọc không hợp lệ
 
-FR:FR-RPT-01; AC:AC-RPT-01-02.
+**Yêu cầu kiểm:** FR-RPT-01 · AC-RPT-01-02
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-01 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:from_date sau to_date hoặc đơn vị không tồn tại.
+1. from_date sau to_date hoặc đơn vị không tồn tại. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/01` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-01.
-2. Thiết lập chính xác dữ liệu: from_date sau to_date hoặc đơn vị không tồn tại.
-3. Thực hiện GET /api/reports/01 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác.
+**Mong đợi:** Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác.
 
-Expected:Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-01-03 — Vượt quyền báo cáo
 
-FR:FR-RPT-01; AC:AC-RPT-01-03.
+**Yêu cầu kiểm:** FR-RPT-01 · AC-RPT-01-03
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-01 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi.
+1. Đăng nhập QL-A, gọi `GET /api/reports/01` lọc department_id=202. Đổi sang actor NV-A và thử lại không có lọc.
+2. Đối chiếu 403 và JSON không chứa số đếm, mã nguồn hoặc thông tin nội bộ.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-01.
-2. Thiết lập chính xác dữ liệu: Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi.
-3. Thực hiện GET /api/reports/01 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
+**Mong đợi:** Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
 
-Expected:Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-01-04 — Không có yêu cầu
 
-FR:FR-RPT-01; AC:AC-RPT-01-04.
+**Yêu cầu kiểm:** FR-RPT-01 · AC-RPT-01-04
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-01 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Không có yêu cầu
+1. Không có yêu cầu. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/01` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-01.
-2. Thiết lập chính xác dữ liệu: Không có yêu cầu
-3. Thực hiện GET /api/reports/01 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Mỗi nhóm bằng 0; không chia cho 0; hiển thị bộ lọc đang áp dụng.
+**Mong đợi:** Mỗi nhóm bằng 0; không chia cho 0; hiển thị bộ lọc đang áp dụng.
 
-Expected:Mỗi nhóm bằng 0; không chia cho 0; hiển thị bộ lọc đang áp dụng.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-01-05 — Ranh giới kỳ
 
-FR:FR-RPT-01; AC:AC-RPT-01-05.
+**Yêu cầu kiểm:** FR-RPT-01 · AC-RPT-01-05
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-01 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Hai record có created_at lần lượt đúng00:00 from và đúng00:00 ngày sau to theo giờ Việt Nam.
+1. Hai record có created_at lần lượt đúng00:00 from và đúng00:00 ngày sau to theo giờ Việt Nam. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/01` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-01.
-2. Thiết lập chính xác dữ liệu: Hai record có created_at lần lượt đúng00:00 from và đúng00:00 ngày sau to theo giờ Việt Nam.
-3. Thực hiện GET /api/reports/01 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Chỉ record tại biên đầu được tính; biên cuối bị loại. Không lệch múi giờ.
+**Mong đợi:** Chỉ record tại biên đầu được tính; biên cuối bị loại. Không lệch múi giờ.
 
-Expected:Chỉ record tại biên đầu được tính; biên cuối bị loại. Không lệch múi giờ.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-01-06 — Join không nhân bản
 
-FR:FR-RPT-01; AC:AC-RPT-01-06.
+**Yêu cầu kiểm:** FR-RPT-01 · AC-RPT-01-06
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-01 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Một request có 3 notes,2 questions và 5 history events.
+1. Chụp tập source_references, sample_count, metrics và bộ lọc thực áp dụng của lần gọi `GET /api/reports/01` với fixture gốc.
+2. Thêm hai history và hai ghi chú cho một hồ sơ thuộc mẫu. Gọi lại cùng actor/bộ lọc.
+3. Đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng trước/sau và kiểm mã nguồn chỉ tính một lần.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-01.
-2. Thiết lập chính xác dữ liệu: Một request có 3 notes,2 questions và 5 history events.
-3. Thực hiện GET /api/reports/01 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Chỉ tính request đó một lần, không nhân bản bởi dữ liệu con.
+**Mong đợi:** Chỉ tính request đó một lần, không nhân bản bởi dữ liệu con.
 
-Expected:Chỉ tính request đó một lần, không nhân bản bởi dữ liệu con.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-RPT-01-07 — Trạng thái hiện tại và nhóm bằng không
+
+**Yêu cầu kiểm:** FR-RPT-01 · AC-RPT-01-07
+
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-01 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
+
+1. Tạo hồ sơ trong kỳ, chuyển Received sang Processing sau cuối kỳ rồi đo kỳ cũ. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/01` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
+
+**Mong đợi:** Hồ sơ được nhóm theo Processing hiện tại, có đủ năm nhóm, nhóm không có nguồn đếm 0, tổng đúng mẫu.
+
+**Kết quả:** Not Run.
 
 ## TC-RPT-02-01 — Đối chiếu phép tính
 
-FR:FR-RPT-02; AC:AC-RPT-02-01.
+**Yêu cầu kiểm:** FR-RPT-02 · AC-RPT-02-01
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-02 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Có một yêu cầu mở quá hạn, một đúng hạn, một không hạn, một Đã giải quyết quá hạn.
+1. Có một yêu cầu mở quá hạn, một đúng hạn, một không hạn, một Đã giải quyết quá hạn. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/02` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-02.
-2. Thiết lập chính xác dữ liệu: Có một yêu cầu mở quá hạn, một đúng hạn, một không hạn, một Đã giải quyết quá hạn.
-3. Thực hiện GET /api/reports/02 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Chỉ yêu cầu mở quá hạn xuất hiện.
+**Mong đợi:** Chỉ yêu cầu mở quá hạn xuất hiện.
 
-Expected:Chỉ yêu cầu mở quá hạn xuất hiện.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-02-02 — Tham số không hỗ trợ
 
-FR:FR-RPT-02; AC:AC-RPT-02-02.
+**Yêu cầu kiểm:** FR-RPT-02 · AC-RPT-02-02
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-02 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Gửi from_date/to_date vào báo cáo backlog hiện hành.
+1. Gửi from_date/to_date vào báo cáo backlog hiện hành. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/02` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-02.
-2. Thiết lập chính xác dữ liệu: Gửi from_date/to_date vào báo cáo backlog hiện hành.
-3. Thực hiện GET /api/reports/02 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: HTTP 422 UNSUPPORTED_FILTER; không lọc sai để giấu hồ sơ cũ.
+**Mong đợi:** HTTP 422 UNSUPPORTED_FILTER; không lọc sai để giấu hồ sơ cũ.
 
-Expected:HTTP 422 UNSUPPORTED_FILTER; không lọc sai để giấu hồ sơ cũ.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-02-03 — Vượt quyền báo cáo
 
-FR:FR-RPT-02; AC:AC-RPT-02-03.
+**Yêu cầu kiểm:** FR-RPT-02 · AC-RPT-02-03
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-02 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi.
+1. Đăng nhập QL-A, gọi `GET /api/reports/02` lọc department_id=202. Đổi sang actor NV-A và thử lại không có lọc.
+2. Đối chiếu 403 và JSON không chứa số đếm, mã nguồn hoặc thông tin nội bộ.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-02.
-2. Thiết lập chính xác dữ liệu: Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi.
-3. Thực hiện GET /api/reports/02 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
+**Mong đợi:** Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
 
-Expected:Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-02-04 — now bằng due_at
 
-FR:FR-RPT-02; AC:AC-RPT-02-04.
+**Yêu cầu kiểm:** FR-RPT-02 · AC-RPT-02-04
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-02 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:now bằng due_at
+1. now bằng due_at. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/02` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-02.
-2. Thiết lập chính xác dữ liệu: now bằng due_at
-3. Thực hiện GET /api/reports/02 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Yêu cầu chưa bị tính quá hạn tại đúng ranh giới.
+**Mong đợi:** Yêu cầu chưa bị tính quá hạn tại đúng ranh giới.
 
-Expected:Yêu cầu chưa bị tính quá hạn tại đúng ranh giới.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-02-05 — Hồ sơ cũ còn mở
 
-FR:FR-RPT-02; AC:AC-RPT-02-05.
+**Yêu cầu kiểm:** FR-RPT-02 · AC-RPT-02-05
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-02 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Một request từ tháng trước còn mở trong scope; due_at nhỏ hơn as_of.
+1. Một request từ tháng trước còn mở trong scope; due_at nhỏ hơn as_of. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/02` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-02.
-2. Thiết lập chính xác dữ liệu: Một request từ tháng trước còn mở trong scope; due_at nhỏ hơn as_of.
-3. Thực hiện GET /api/reports/02 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Vẫn được tính trong backlog hiện hành; không loại vì ngày tạo cũ.
+**Mong đợi:** Vẫn được tính trong backlog hiện hành; không loại vì ngày tạo cũ.
 
-Expected:Vẫn được tính trong backlog hiện hành; không loại vì ngày tạo cũ.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-02-06 — Join không nhân bản
 
-FR:FR-RPT-02; AC:AC-RPT-02-06.
+**Yêu cầu kiểm:** FR-RPT-02 · AC-RPT-02-06
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-02 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Một request có 3 notes,2 questions và 5 history events.
+1. Chụp tập source_references, sample_count, metrics và bộ lọc thực áp dụng của lần gọi `GET /api/reports/02` với fixture gốc.
+2. Thêm hai history và hai ghi chú cho một hồ sơ thuộc mẫu. Gọi lại cùng actor/bộ lọc.
+3. Đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng trước/sau và kiểm mã nguồn chỉ tính một lần.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-02.
-2. Thiết lập chính xác dữ liệu: Một request có 3 notes,2 questions và 5 history events.
-3. Thực hiện GET /api/reports/02 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Chỉ tính request đó một lần, không nhân bản bởi dữ liệu con.
+**Mong đợi:** Chỉ tính request đó một lần, không nhân bản bởi dữ liệu con.
 
-Expected:Chỉ tính request đó một lần, không nhân bản bởi dữ liệu con.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-RPT-02-07 — Nguồn rỗng và thứ tự quá hạn
+
+**Yêu cầu kiểm:** FR-RPT-02 · AC-RPT-02-07
+
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-02 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
+
+1. Đo tập trống rồi đo ba hồ sơ quá hạn, hai hồ sơ cùng due_at. Thêm một hồ sơ Closed, một hồ sơ không hạn và một hồ sơ đúng as_of. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/02` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
+
+**Mong đợi:** Tập trống có sample_count và overdue_count bằng 0. Ba dòng quá hạn sắp theo hạn rồi ID tăng, giờ quá hạn tính theo cùng một as_of. Không đưa ba hồ sơ đối chứng vào nguồn.
+
+**Kết quả:** Not Run.
 
 ## TC-RPT-03-01 — Đối chiếu phép tính
 
-FR:FR-RPT-03; AC:AC-RPT-03-01.
+**Yêu cầu kiểm:** FR-RPT-03 · AC-RPT-03-01
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-03 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Hai hồ sơ có thời gian 2 giờ và 4 giờ; một hồ sơ còn mở.
+1. Hai hồ sơ có thời gian 2 giờ và 4 giờ; một hồ sơ còn mở. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/03` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-03.
-2. Thiết lập chính xác dữ liệu: Hai hồ sơ có thời gian 2 giờ và 4 giờ; một hồ sơ còn mở.
-3. Thực hiện GET /api/reports/03 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Cỡ mẫu 2, trung bình 3 giờ; hồ sơ mở bị loại.
+**Mong đợi:** Cỡ mẫu 2, trung bình 3 giờ; hồ sơ mở bị loại.
 
-Expected:Cỡ mẫu 2, trung bình 3 giờ; hồ sơ mở bị loại.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-03-02 — Bộ lọc không hợp lệ
 
-FR:FR-RPT-03; AC:AC-RPT-03-02.
+**Yêu cầu kiểm:** FR-RPT-03 · AC-RPT-03-02
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-03 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:from_date sau to_date hoặc đơn vị không tồn tại.
+1. from_date sau to_date hoặc đơn vị không tồn tại. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/03` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-03.
-2. Thiết lập chính xác dữ liệu: from_date sau to_date hoặc đơn vị không tồn tại.
-3. Thực hiện GET /api/reports/03 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác.
+**Mong đợi:** Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác.
 
-Expected:Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-03-03 — Vượt quyền báo cáo
 
-FR:FR-RPT-03; AC:AC-RPT-03-03.
+**Yêu cầu kiểm:** FR-RPT-03 · AC-RPT-03-03
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-03 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi.
+1. Đăng nhập QL-A, gọi `GET /api/reports/03` lọc department_id=202. Đổi sang actor NV-A và thử lại không có lọc.
+2. Đối chiếu 403 và JSON không chứa số đếm, mã nguồn hoặc thông tin nội bộ.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-03.
-2. Thiết lập chính xác dữ liệu: Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi.
-3. Thực hiện GET /api/reports/03 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
+**Mong đợi:** Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
 
-Expected:Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-03-04 — Không hồ sơ đã giải quyết
 
-FR:FR-RPT-03; AC:AC-RPT-03-04.
+**Yêu cầu kiểm:** FR-RPT-03 · AC-RPT-03-04
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-03 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Không hồ sơ đã giải quyết
+1. Không hồ sơ đã giải quyết. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/03` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-03.
-2. Thiết lập chính xác dữ liệu: Không hồ sơ đã giải quyết
-3. Thực hiện GET /api/reports/03 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Hiện Không có dữ liệu, cỡ mẫu 0; không biểu diễn trung bình là 0 giờ.
+**Mong đợi:** Hiện Không có dữ liệu, cỡ mẫu 0; không biểu diễn trung bình là 0 giờ.
 
-Expected:Hiện Không có dữ liệu, cỡ mẫu 0; không biểu diễn trung bình là 0 giờ.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-03-05 — Ranh giới kỳ
 
-FR:FR-RPT-03; AC:AC-RPT-03-05.
+**Yêu cầu kiểm:** FR-RPT-03 · AC-RPT-03-05
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-03 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Hai record có resolved_at lần lượt đúng00:00 from và đúng00:00 ngày sau to theo giờ Việt Nam.
+1. Hai record có resolved_at lần lượt đúng00:00 from và đúng00:00 ngày sau to theo giờ Việt Nam. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/03` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-03.
-2. Thiết lập chính xác dữ liệu: Hai record có resolved_at lần lượt đúng00:00 from và đúng00:00 ngày sau to theo giờ Việt Nam.
-3. Thực hiện GET /api/reports/03 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Chỉ record tại biên đầu được tính; biên cuối bị loại. Không lệch múi giờ.
+**Mong đợi:** Chỉ record tại biên đầu được tính; biên cuối bị loại. Không lệch múi giờ.
 
-Expected:Chỉ record tại biên đầu được tính; biên cuối bị loại. Không lệch múi giờ.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-03-06 — Join không nhân bản
 
-FR:FR-RPT-03; AC:AC-RPT-03-06.
+**Yêu cầu kiểm:** FR-RPT-03 · AC-RPT-03-06
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-03 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Một request có 3 notes,2 questions và 5 history events.
+1. Chụp tập source_references, sample_count, metrics và bộ lọc thực áp dụng của lần gọi `GET /api/reports/03` với fixture gốc.
+2. Thêm hai history và hai ghi chú cho một hồ sơ thuộc mẫu. Gọi lại cùng actor/bộ lọc.
+3. Đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng trước/sau và kiểm mã nguồn chỉ tính một lần.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-03.
-2. Thiết lập chính xác dữ liệu: Một request có 3 notes,2 questions và 5 history events.
-3. Thực hiện GET /api/reports/03 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Chỉ tính request đó một lần, không nhân bản bởi dữ liệu con.
+**Mong đợi:** Chỉ tính request đó một lần, không nhân bản bởi dữ liệu con.
 
-Expected:Chỉ tính request đó một lần, không nhân bản bởi dữ liệu con.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-RPT-03-07 — Độ chính xác giờ xử lý
+
+**Yêu cầu kiểm:** FR-RPT-03 · AC-RPT-03-07
+
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-03 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
+
+1. Tạo hai hồ sơ có khoảng tạo đến giải quyết 3618 và 3636 giây, một hồ sơ đi qua WaitingInfo. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/03` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
+
+**Mong đợi:** Tính trung bình từ giá trị chưa làm tròn, giữ thời gian chờ trong mẫu. UI hiện hai chữ số thập phân, nhãn giờ từ gửi đến giải quyết.
+
+**Kết quả:** Not Run.
 
 ## TC-RPT-04-01 — Đối chiếu phép tính
 
-FR:FR-RPT-04; AC:AC-RPT-04-01.
+**Yêu cầu kiểm:** FR-RPT-04 · AC-RPT-04-01
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-04 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Ba Học vụ, hai CNTT và một Chưa xác định.
+1. Ba Học vụ, hai CNTT và một Chưa xác định. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/04` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-04.
-2. Thiết lập chính xác dữ liệu: Ba Học vụ, hai CNTT và một Chưa xác định.
-3. Thực hiện GET /api/reports/04 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Các nhóm 3, 2, 1; tổng 6; sắp số lượng giảm dần.
+**Mong đợi:** Các nhóm 3, 2, 1; tổng 6; sắp số lượng giảm dần.
 
-Expected:Các nhóm 3, 2, 1; tổng 6; sắp số lượng giảm dần.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-04-02 — Bộ lọc không hợp lệ
 
-FR:FR-RPT-04; AC:AC-RPT-04-02.
+**Yêu cầu kiểm:** FR-RPT-04 · AC-RPT-04-02
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-04 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:from_date sau to_date hoặc đơn vị không tồn tại.
+1. from_date sau to_date hoặc đơn vị không tồn tại. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/04` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-04.
-2. Thiết lập chính xác dữ liệu: from_date sau to_date hoặc đơn vị không tồn tại.
-3. Thực hiện GET /api/reports/04 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác.
+**Mong đợi:** Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác.
 
-Expected:Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-04-03 — Vượt quyền báo cáo
 
-FR:FR-RPT-04; AC:AC-RPT-04-03.
+**Yêu cầu kiểm:** FR-RPT-04 · AC-RPT-04-03
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-04 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi.
+1. Đăng nhập QL-A, gọi `GET /api/reports/04` lọc department_id=202. Đổi sang actor NV-A và thử lại không có lọc.
+2. Đối chiếu 403 và JSON không chứa số đếm, mã nguồn hoặc thông tin nội bộ.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-04.
-2. Thiết lập chính xác dữ liệu: Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi.
-3. Thực hiện GET /api/reports/04 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
+**Mong đợi:** Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
 
-Expected:Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-04-04 — Hai nhóm bằng số lượng
 
-FR:FR-RPT-04; AC:AC-RPT-04-04.
+**Yêu cầu kiểm:** FR-RPT-04 · AC-RPT-04-04
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-04 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Hai nhóm bằng số lượng
+1. Hai nhóm bằng số lượng. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/04` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-04.
-2. Thiết lập chính xác dữ liệu: Hai nhóm bằng số lượng
-3. Thực hiện GET /api/reports/04 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Nhóm count bằng nhau sắp category_id tăng dần; không bỏ Chưa xác định.
+**Mong đợi:** Nhóm count bằng nhau sắp category_id tăng dần; không bỏ Chưa xác định.
 
-Expected:Nhóm count bằng nhau sắp category_id tăng dần; không bỏ Chưa xác định.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-04-05 — Ranh giới kỳ
 
-FR:FR-RPT-04; AC:AC-RPT-04-05.
+**Yêu cầu kiểm:** FR-RPT-04 · AC-RPT-04-05
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-04 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Hai record có created_at lần lượt đúng00:00 from và đúng00:00 ngày sau to theo giờ Việt Nam.
+1. Hai record có created_at lần lượt đúng00:00 from và đúng00:00 ngày sau to theo giờ Việt Nam. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/04` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-04.
-2. Thiết lập chính xác dữ liệu: Hai record có created_at lần lượt đúng00:00 from và đúng00:00 ngày sau to theo giờ Việt Nam.
-3. Thực hiện GET /api/reports/04 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Chỉ record tại biên đầu được tính; biên cuối bị loại. Không lệch múi giờ.
+**Mong đợi:** Chỉ record tại biên đầu được tính; biên cuối bị loại. Không lệch múi giờ.
 
-Expected:Chỉ record tại biên đầu được tính; biên cuối bị loại. Không lệch múi giờ.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-04-06 — Join không nhân bản
 
-FR:FR-RPT-04; AC:AC-RPT-04-06.
+**Yêu cầu kiểm:** FR-RPT-04 · AC-RPT-04-06
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-04 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Một request có 3 notes,2 questions và 5 history events.
+1. Chụp tập source_references, sample_count, metrics và bộ lọc thực áp dụng của lần gọi `GET /api/reports/04` với fixture gốc.
+2. Thêm hai history và hai ghi chú cho một hồ sơ thuộc mẫu. Gọi lại cùng actor/bộ lọc.
+3. Đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng trước/sau và kiểm mã nguồn chỉ tính một lần.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-04.
-2. Thiết lập chính xác dữ liệu: Một request có 3 notes,2 questions và 5 history events.
-3. Thực hiện GET /api/reports/04 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Chỉ tính request đó một lần, không nhân bản bởi dữ liệu con.
+**Mong đợi:** Chỉ tính request đó một lần, không nhân bản bởi dữ liệu con.
 
-Expected:Chỉ tính request đó một lần, không nhân bản bởi dữ liệu con.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-RPT-04-07 — Loại hiện hành và nhóm mặc định
+
+**Yêu cầu kiểm:** FR-RPT-04 · AC-RPT-04-07
+
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-04 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
+
+1. Tạo ba hồ sơ trong kỳ; một hồ sơ đổi loại sau cuối kỳ và hồ sơ khác giữ Chưa xác định. Đo lại kỳ cũ. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/04` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
+
+**Mong đợi:** Nhóm theo danh mục hiện hành, vẫn tính Chưa xác định. Tổng nhóm bằng sample_count.
+
+**Kết quả:** Not Run.
 
 ## TC-RPT-05-01 — Đối chiếu phép tính
 
-FR:FR-RPT-05; AC:AC-RPT-05-01.
+**Yêu cầu kiểm:** FR-RPT-05 · AC-RPT-05-01
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-05 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:PB-A có 2 mở,1Resolved; PB-B có 1 mở;1 chưa giao.
+1. PB-A có 2 mở,1Resolved; PB-B có 1 mở;1 chưa giao. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/05` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-05.
-2. Thiết lập chính xác dữ liệu: PB-A có 2 mở,1Resolved; PB-B có 1 mở;1 chưa giao.
-3. Thực hiện GET /api/reports/05 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Backlog PB-A=2, PB-B=1, chưa giao=1, tổng4; request Resolved không tính.
+**Mong đợi:** Backlog PB-A=2, PB-B=1, chưa giao=1, tổng4; request Resolved không tính.
 
-Expected:Backlog PB-A=2, PB-B=1, chưa giao=1, tổng4; request Resolved không tính.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-05-02 — Tham số không hỗ trợ
 
-FR:FR-RPT-05; AC:AC-RPT-05-02.
+**Yêu cầu kiểm:** FR-RPT-05 · AC-RPT-05-02
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-05 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Gửi from_date/to_date vào báo cáo backlog hiện hành.
+1. Gửi from_date/to_date vào báo cáo backlog hiện hành. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/05` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-05.
-2. Thiết lập chính xác dữ liệu: Gửi from_date/to_date vào báo cáo backlog hiện hành.
-3. Thực hiện GET /api/reports/05 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: HTTP 422 UNSUPPORTED_FILTER; không lọc sai để giấu hồ sơ cũ.
+**Mong đợi:** HTTP 422 UNSUPPORTED_FILTER; không lọc sai để giấu hồ sơ cũ.
 
-Expected:HTTP 422 UNSUPPORTED_FILTER; không lọc sai để giấu hồ sơ cũ.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-05-03 — Vượt quyền báo cáo
 
-FR:FR-RPT-05; AC:AC-RPT-05-03.
+**Yêu cầu kiểm:** FR-RPT-05 · AC-RPT-05-03
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-05 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi.
+1. Đăng nhập QL-A, gọi `GET /api/reports/05` lọc department_id=202. Đổi sang actor NV-A và thử lại không có lọc.
+2. Đối chiếu 403 và JSON không chứa số đếm, mã nguồn hoặc thông tin nội bộ.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-05.
-2. Thiết lập chính xác dữ liệu: Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi.
-3. Thực hiện GET /api/reports/05 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
+**Mong đợi:** Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
 
-Expected:Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-05-04 — Chuyển một hồ sơ PB-A sang PB-B
 
-FR:FR-RPT-05; AC:AC-RPT-05-04.
+**Yêu cầu kiểm:** FR-RPT-05 · AC-RPT-05-04
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-05 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Chuyển một hồ sơ PB-A sang PB-B
+1. Chuyển một hồ sơ PB-A sang PB-B. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/05` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-05.
-2. Thiết lập chính xác dữ liệu: Chuyển một hồ sơ PB-A sang PB-B
-3. Thực hiện GET /api/reports/05 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Sau chuyển, tổng toàn hệ thống giữ nguyên; chỉ nhóm hiện hành tăng/giảm tương ứng.
+**Mong đợi:** Sau chuyển, tổng toàn hệ thống giữ nguyên; chỉ nhóm hiện hành tăng/giảm tương ứng.
 
-Expected:Sau chuyển, tổng toàn hệ thống giữ nguyên; chỉ nhóm hiện hành tăng/giảm tương ứng.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-05-05 — Hồ sơ cũ còn mở
 
-FR:FR-RPT-05; AC:AC-RPT-05-05.
+**Yêu cầu kiểm:** FR-RPT-05 · AC-RPT-05-05
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-05 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Một request từ tháng trước còn mở trong scope; được giao PB-A.
+1. Một request từ tháng trước còn mở trong scope; được giao PB-A. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/05` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-05.
-2. Thiết lập chính xác dữ liệu: Một request từ tháng trước còn mở trong scope; được giao PB-A.
-3. Thực hiện GET /api/reports/05 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Vẫn được tính trong backlog hiện hành; không loại vì ngày tạo cũ.
+**Mong đợi:** Vẫn được tính trong backlog hiện hành; không loại vì ngày tạo cũ.
 
-Expected:Vẫn được tính trong backlog hiện hành; không loại vì ngày tạo cũ.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-05-06 — Join không nhân bản
 
-FR:FR-RPT-05; AC:AC-RPT-05-06.
+**Yêu cầu kiểm:** FR-RPT-05 · AC-RPT-05-06
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-05 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Một request có 3 notes,2 questions và 5 history events.
+1. Chụp tập source_references, sample_count, metrics và bộ lọc thực áp dụng của lần gọi `GET /api/reports/05` với fixture gốc.
+2. Thêm hai history và hai ghi chú cho một hồ sơ thuộc mẫu. Gọi lại cùng actor/bộ lọc.
+3. Đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng trước/sau và kiểm mã nguồn chỉ tính một lần.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-05.
-2. Thiết lập chính xác dữ liệu: Một request có 3 notes,2 questions và 5 history events.
-3. Thực hiện GET /api/reports/05 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Chỉ tính request đó một lần, không nhân bản bởi dữ liệu con.
+**Mong đợi:** Chỉ tính request đó một lần, không nhân bản bởi dữ liệu con.
 
-Expected:Chỉ tính request đó một lần, không nhân bản bởi dữ liệu con.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-RPT-05-07 — Nhóm chưa giao và tập rỗng
+
+**Yêu cầu kiểm:** FR-RPT-05 · AC-RPT-05-07
+
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-05 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
+
+1. QL-All và QL-A xem tập có hồ sơ chưa giao, hồ sơ mở PB-A và hồ sơ đã đóng. Lọc danh mục không có hồ sơ. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/05` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
+
+**Mong đợi:** Chỉ QL-All thấy nhóm chưa giao có ID phòng/người rỗng. Không tính hồ sơ đã đóng. Tập trống open_total=0.
+
+**Kết quả:** Not Run.
 
 ## TC-RPT-06-01 — Đối chiếu phép tính
 
-FR:FR-RPT-06; AC:AC-RPT-06-01.
+**Yêu cầu kiểm:** FR-RPT-06 · AC-RPT-06-01
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-06 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Có điểm 5 và 3; yêu cầu chưa đánh giá không tính.
+1. Có điểm 5 và 3; yêu cầu chưa đánh giá không tính. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/06` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-06.
-2. Thiết lập chính xác dữ liệu: Có điểm 5 và 3; yêu cầu chưa đánh giá không tính.
-3. Thực hiện GET /api/reports/06 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Cỡ mẫu 2, trung bình 4, một mức 5 và một mức 3.
+**Mong đợi:** Cỡ mẫu 2, trung bình 4, một mức 5 và một mức 3.
 
-Expected:Cỡ mẫu 2, trung bình 4, một mức 5 và một mức 3.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-06-02 — Bộ lọc không hợp lệ
 
-FR:FR-RPT-06; AC:AC-RPT-06-02.
+**Yêu cầu kiểm:** FR-RPT-06 · AC-RPT-06-02
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-06 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:from_date sau to_date hoặc đơn vị không tồn tại.
+1. from_date sau to_date hoặc đơn vị không tồn tại. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/06` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-06.
-2. Thiết lập chính xác dữ liệu: from_date sau to_date hoặc đơn vị không tồn tại.
-3. Thực hiện GET /api/reports/06 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác.
+**Mong đợi:** Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác.
 
-Expected:Báo lỗi bộ lọc; không âm thầm chạy một kỳ khác.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-06-03 — Vượt quyền báo cáo
 
-FR:FR-RPT-06; AC:AC-RPT-06-03.
+**Yêu cầu kiểm:** FR-RPT-06 · AC-RPT-06-03
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-06 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi.
+1. Đăng nhập QL-A, gọi `GET /api/reports/06` lọc department_id=202. Đổi sang actor NV-A và thử lại không có lọc.
+2. Đối chiếu 403 và JSON không chứa số đếm, mã nguồn hoặc thông tin nội bộ.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-06.
-2. Thiết lập chính xác dữ liệu: Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi.
-3. Thực hiện GET /api/reports/06 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
+**Mong đợi:** Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
 
-Expected:Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-06-04 — Chưa có phản hồi hoặc đổi điểm
 
-FR:FR-RPT-06; AC:AC-RPT-06-04.
+**Yêu cầu kiểm:** FR-RPT-06 · AC-RPT-06-04
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-06 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Chưa có phản hồi hoặc đổi điểm
+1. Chưa có phản hồi hoặc đổi điểm. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/06` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-06.
-2. Thiết lập chính xác dữ liệu: Chưa có phản hồi hoặc đổi điểm
-3. Thực hiện GET /api/reports/06 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Không phản hồi: Không có dữ liệu; đổi điểm: số mẫu giữ nguyên, tổng điểm đổi.
+**Mong đợi:** Không phản hồi: Không có dữ liệu; đổi điểm: số mẫu giữ nguyên, tổng điểm đổi.
 
-Expected:Không phản hồi: Không có dữ liệu; đổi điểm: số mẫu giữ nguyên, tổng điểm đổi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-06-05 — Ranh giới kỳ
 
-FR:FR-RPT-06; AC:AC-RPT-06-05.
+**Yêu cầu kiểm:** FR-RPT-06 · AC-RPT-06-05
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-06 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Hai record có feedback.updated_at lần lượt đúng00:00 from và đúng00:00 ngày sau to theo giờ Việt Nam.
+1. Hai record có feedback.updated_at lần lượt đúng00:00 from và đúng00:00 ngày sau to theo giờ Việt Nam. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/06` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-06.
-2. Thiết lập chính xác dữ liệu: Hai record có feedback.updated_at lần lượt đúng00:00 from và đúng00:00 ngày sau to theo giờ Việt Nam.
-3. Thực hiện GET /api/reports/06 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Chỉ record tại biên đầu được tính; biên cuối bị loại. Không lệch múi giờ.
+**Mong đợi:** Chỉ record tại biên đầu được tính; biên cuối bị loại. Không lệch múi giờ.
 
-Expected:Chỉ record tại biên đầu được tính; biên cuối bị loại. Không lệch múi giờ.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-06-06 — Join không nhân bản
 
-FR:FR-RPT-06; AC:AC-RPT-06-06.
+**Yêu cầu kiểm:** FR-RPT-06 · AC-RPT-06-06
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-06 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Một request có 3 notes,2 questions và 5 history events.
+1. Chụp tập source_references, sample_count, metrics và bộ lọc thực áp dụng của lần gọi `GET /api/reports/06` với fixture gốc.
+2. Thêm hai history và hai ghi chú cho một hồ sơ thuộc mẫu. Gọi lại cùng actor/bộ lọc.
+3. Đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng trước/sau và kiểm mã nguồn chỉ tính một lần.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-06.
-2. Thiết lập chính xác dữ liệu: Một request có 3 notes,2 questions và 5 history events.
-3. Thực hiện GET /api/reports/06 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Chỉ tính feedback hiện hành của request đó một lần, không nhân bản bởi dữ liệu con.
+**Mong đợi:** Chỉ tính feedback hiện hành của request đó một lần, không nhân bản bởi dữ liệu con.
 
-Expected:Chỉ tính feedback hiện hành của request đó một lần, không nhân bản bởi dữ liệu con.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-RPT-06-07 — Sửa điểm và kỳ cập nhật
 
-FR:FR-RPT-06; AC:AC-RPT-06-07.
+**Yêu cầu kiểm:** FR-RPT-06 · AC-RPT-06-07
 
-Preconditions:Có quyền quản lý trong phạm vi báo cáo được cấu hình.
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-06 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
 
-Dữ liệu:Feedback4 tại kỳA đổi thành3 tại kỳB không trùng A.
+1. Feedback4 tại kỳA đổi thành3 tại kỳB không trùng A. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/06` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-RPT-06.
-2. Thiết lập chính xác dữ liệu: Feedback4 tại kỳA đổi thành3 tại kỳB không trùng A.
-3. Thực hiện GET /api/reports/06 theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Cùng feedback_id/request_id; kỳA không còn dòng này, kỳB có điểm3; mẫu toàn thời gian vẫn1.
+**Mong đợi:** Cùng feedback_id/request_id; kỳA không còn dòng này, kỳB có điểm3; mẫu toàn thời gian vẫn1.
 
-Expected:Cùng feedback_id/request_id; kỳA không còn dòng này, kỳB có điểm3; mẫu toàn thời gian vẫn1.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-RPT-06-08 — Phân bố đủ năm mức
+
+**Yêu cầu kiểm:** FR-RPT-06 · AC-RPT-06-08
+
+**Chuẩn bị:** Fixture độc lập. Actor chính QL-A. Tạo tập nguồn của RPT-06 theo [fixture báo cáo](fixtures.md#nguồn-tính-báo-cáo).
+
+1. Tạo phản hồi 1 và 5, một hồ sơ không có phản hồi, rồi lọc bộ dữ liệu không có mẫu. Dùng giá trị nguồn, đồng hồ hoặc biến thể ghi trong fixture.
+2. Gọi `GET /api/reports/06` bằng QL-A; đối chiếu tập source_references, sample_count, metrics và bộ lọc thực áp dụng với dữ liệu test theo công thức riêng của FR. Khi từ chối, đối chiếu status và trường sai.
+
+**Mong đợi:** Mẫu là 2, mean_score=3.00, có đủ năm nhóm điểm, tổng nhóm là 2. Không tính hồ sơ chưa đánh giá. Không mẫu thì mean_score=null.
+
+**Kết quả:** Not Run.
 
 ## TC-IAM-01-01 — Đúng tài khoản
 
-FR:FR-IAM-01; AC:AC-IAM-01-01.
+**Yêu cầu kiểm:** FR-IAM-01 · AC-IAM-01-01
 
-Preconditions:Tài khoản giả lập đã khởi tạo với mật khẩu băm; chưa có phiên hợp lệ.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng email sv-a@example.test và mật khẩu test cấp từ seed. Với case giới hạn, cô lập bộ đếm email/IP.
 
-Dữ liệu:Lần lượt đăng nhập bốn vai trò bằng tài khoản giả lập.
+1. Lần lượt đăng nhập bốn vai trò bằng tài khoản giả lập. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/auth/login` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm mã HTTP, cookie, log và API được bảo vệ theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-IAM-01.
-2. Thiết lập chính xác dữ liệu: Lần lượt đăng nhập bốn vai trò bằng tài khoản giả lập.
-3. Thực hiện POST /api/auth/login theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Có phiên mới cho đúng người, đúng khu vực; không sử dụng vai trò do trình duyệt tự khai.
+**Mong đợi:** Có phiên mới cho đúng người, đúng khu vực; không sử dụng vai trò do trình duyệt tự khai.
 
-Expected:Có phiên mới cho đúng người, đúng khu vực; không sử dụng vai trò do trình duyệt tự khai.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-IAM-01-02 — Sai thông tin
 
-FR:FR-IAM-01; AC:AC-IAM-01-02.
+**Yêu cầu kiểm:** FR-IAM-01 · AC-IAM-01-02
 
-Preconditions:Tài khoản giả lập đã khởi tạo với mật khẩu băm; chưa có phiên hợp lệ.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng email sv-a@example.test và mật khẩu test cấp từ seed. Với case giới hạn, cô lập bộ đếm email/IP.
 
-Dữ liệu:Sai mật khẩu hoặc email không có.
+1. Sai mật khẩu hoặc email không có. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/auth/login` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm mã HTTP, cookie, log và API được bảo vệ theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-IAM-01.
-2. Thiết lập chính xác dữ liệu: Sai mật khẩu hoặc email không có.
-3. Thực hiện POST /api/auth/login theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Thông báo chung; không tạo phiên được phép nghiệp vụ.
+**Mong đợi:** Thông báo chung; không tạo phiên được phép nghiệp vụ.
 
-Expected:Thông báo chung; không tạo phiên được phép nghiệp vụ.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-IAM-01-03 — Chưa xác thực
 
-FR:FR-IAM-01; AC:AC-IAM-01-03.
+**Yêu cầu kiểm:** FR-IAM-01 · AC-IAM-01-03
 
-Preconditions:Tài khoản giả lập đã khởi tạo với mật khẩu băm; chưa có phiên hợp lệ.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng email sv-a@example.test và mật khẩu test cấp từ seed. Với case giới hạn, cô lập bộ đếm email/IP.
 
-Dữ liệu:Mở trang nghiệp vụ hoặc gọi API trực tiếp không phiên.
+1. Mở trang nghiệp vụ hoặc gọi API trực tiếp không phiên. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/auth/login` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm mã HTTP, cookie, log và API được bảo vệ theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-IAM-01.
-2. Thiết lập chính xác dữ liệu: Mở trang nghiệp vụ hoặc gọi API trực tiếp không phiên.
-3. Thực hiện POST /api/auth/login theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Yêu cầu xác thực; không trả dữ liệu nghiệp vụ.
+**Mong đợi:** Yêu cầu xác thực; không trả dữ liệu nghiệp vụ.
 
-Expected:Yêu cầu xác thực; không trả dữ liệu nghiệp vụ.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-IAM-01-04 — Cố định phiên / hết hạn
 
-FR:FR-IAM-01; AC:AC-IAM-01-04.
+**Yêu cầu kiểm:** FR-IAM-01 · AC-IAM-01-04
 
-Preconditions:Tài khoản giả lập đã khởi tạo với mật khẩu băm; chưa có phiên hợp lệ.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng email sv-a@example.test và mật khẩu test cấp từ seed. Với case giới hạn, cô lập bộ đếm email/IP.
 
-Dữ liệu:Dùng mã phiên trước đăng nhập hoặc phiên hết hạn idle 30 phút, absolute 8 giờ.
+1. Dùng mã phiên trước đăng nhập hoặc phiên hết hạn idle 30 phút, absolute 8 giờ. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/auth/login` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm mã HTTP, cookie, log và API được bảo vệ theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-IAM-01.
-2. Thiết lập chính xác dữ liệu: Dùng mã phiên trước đăng nhập hoặc phiên hết hạn idle 30 phút, absolute 8 giờ.
-3. Thực hiện POST /api/auth/login theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Mã phiên cũ không có quyền; phiên hết hạn không ghi nghiệp vụ; yêu cầu đăng nhập lại.
+**Mong đợi:** Mã phiên cũ không có quyền; phiên hết hạn không ghi nghiệp vụ; yêu cầu đăng nhập lại.
 
-Expected:Mã phiên cũ không có quyền; phiên hết hạn không ghi nghiệp vụ; yêu cầu đăng nhập lại.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-IAM-01-05 — Tài khoản inactive
 
-FR:FR-IAM-01; AC:AC-IAM-01-05.
+**Yêu cầu kiểm:** FR-IAM-01 · AC-IAM-01-05
 
-Preconditions:Tài khoản giả lập đã khởi tạo với mật khẩu băm; chưa có phiên hợp lệ.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng email sv-a@example.test và mật khẩu test cấp từ seed. Với case giới hạn, cô lập bộ đếm email/IP.
 
-Dữ liệu:Đúng password nhưng active=false.
+1. Đúng password nhưng active=false. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/auth/login` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm mã HTTP, cookie, log và API được bảo vệ theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-IAM-01.
-2. Thiết lập chính xác dữ liệu: Đúng password nhưng active=false.
-3. Thực hiện POST /api/auth/login theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 401 INVALID_CREDENTIALS như email không có; không cấp session.
+**Mong đợi:** 401 INVALID_CREDENTIALS như email không có; không cấp session.
 
-Expected:401 INVALID_CREDENTIALS như email không có; không cấp session.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-IAM-01-06 — Giới hạn thử sai
 
-FR:FR-IAM-01; AC:AC-IAM-01-06.
+**Yêu cầu kiểm:** FR-IAM-01 · AC-IAM-01-06
 
-Preconditions:Tài khoản giả lập đã khởi tạo với mật khẩu băm; chưa có phiên hợp lệ.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng email sv-a@example.test và mật khẩu test cấp từ seed. Với case giới hạn, cô lập bộ đếm email/IP.
 
-Dữ liệu:5 lần sai trong15 phút, sau đó thử lần6 cùng email+IP.
+1. 5 lần sai trong15 phút, sau đó thử lần6 cùng email+IP. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/auth/login` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm mã HTTP, cookie, log và API được bảo vệ theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-IAM-01.
-2. Thiết lập chính xác dữ liệu: 5 lần sai trong15 phút, sau đó thử lần6 cùng email+IP.
-3. Thực hiện POST /api/auth/login theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Lần6 trả 429 có thời gian thử lại; hết cửa sổ mới được thử, không khóa tài khoản vĩnh viễn.
+**Mong đợi:** Lần6 trả 429 có thời gian thử lại; hết cửa sổ mới được thử, không khóa tài khoản vĩnh viễn.
 
-Expected:Lần6 trả 429 có thời gian thử lại; hết cửa sổ mới được thử, không khóa tài khoản vĩnh viễn.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-IAM-01-07 — Biên dữ liệu đăng nhập
+
+**Yêu cầu kiểm:** FR-IAM-01 · AC-IAM-01-07
+
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng email sv-a@example.test và mật khẩu test cấp từ seed. Với case giới hạn, cô lập bộ đếm email/IP.
+
+1. Dùng email seed với khoảng trắng đầu/cuối và chữ hoa. Gửi email sai định dạng hoặc 255 ký tự, mật khẩu rỗng hoặc 257 ký tự, rồi nối khoảng trắng vào mật khẩu seed hợp lệ. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/auth/login` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm mã HTTP, cookie, log và API được bảo vệ theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** Email đúng được chuẩn hóa. Dữ liệu sai báo 422. Mật khẩu có phần thêm bị đối chiếu nguyên văn và trả 401 nếu sai. Không ghi mật khẩu vào log.
+
+**Kết quả:** Not Run.
+
+## TC-IAM-01-08 — Thuộc tính cookie và phiên
+
+**Yêu cầu kiểm:** FR-IAM-01 · AC-IAM-01-08
+
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Dùng email sv-a@example.test và mật khẩu test cấp từ seed. Với case giới hạn, cô lập bộ đếm email/IP.
+
+1. Trên cấu hình HTTPS thử đăng nhập đúng một actor seed, đọc thuộc tính cookie và gọi một điểm truy cập có bảo vệ sau mốc idle và sau mốc tuyệt đối. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/auth/login` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm mã HTTP, cookie, log và API được bảo vệ theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** Cookie HttpOnly, SameSite=Lax, Secure khi HTTPS. Phiên cũ đổi khi đăng nhập, các phiên quá hạn idle hoặc tuyệt đối bị từ chối.
+
+**Kết quả:** Not Run.
 
 ## TC-IAM-02-01 — Đăng xuất đúng
 
-FR:FR-IAM-02; AC:AC-IAM-02-01.
+**Yêu cầu kiểm:** FR-IAM-02 · AC-IAM-02-01
 
-Preconditions:Đã đăng nhập hợp lệ.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Tạo hai phiên độc lập của SV-A, giữ cookie A/B để đối chiếu khi cần.
 
-Dữ liệu:Đăng nhập rồi chọn Đăng xuất.
+1. Đăng nhập rồi chọn Đăng xuất. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/auth/logout` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm status, cookie, hiệu lực phiên và dữ liệu cache theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-IAM-02.
-2. Thiết lập chính xác dữ liệu: Đăng nhập rồi chọn Đăng xuất.
-3. Thực hiện POST /api/auth/logout theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Trở về đăng nhập; phiên máy chủ bị vô hiệu.
+**Mong đợi:** Trở về đăng nhập; phiên máy chủ bị vô hiệu.
 
-Expected:Trở về đăng nhập; phiên máy chủ bị vô hiệu.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-IAM-02-02 — Không có phiên
 
-FR:FR-IAM-02; AC:AC-IAM-02-02.
+**Yêu cầu kiểm:** FR-IAM-02 · AC-IAM-02-02
 
-Preconditions:Đã đăng nhập hợp lệ.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Tạo hai phiên độc lập của SV-A, giữ cookie A/B để đối chiếu khi cần.
 
-Dữ liệu:Gọi đăng xuất khi đã thoát.
+1. Gọi đăng xuất khi đã thoát. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/auth/logout` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm status, cookie, hiệu lực phiên và dữ liệu cache theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-IAM-02.
-2. Thiết lập chính xác dữ liệu: Gọi đăng xuất khi đã thoát.
-3. Thực hiện POST /api/auth/logout theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Kết quả an toàn về đăng nhập, không lỗi hệ thống hay ảnh hưởng tài khoản khác.
+**Mong đợi:** Kết quả an toàn về đăng nhập, không lỗi hệ thống hay ảnh hưởng tài khoản khác.
 
-Expected:Kết quả an toàn về đăng nhập, không lỗi hệ thống hay ảnh hưởng tài khoản khác.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-IAM-02-03 — Dùng lại phiên
 
-FR:FR-IAM-02; AC:AC-IAM-02-03.
+**Yêu cầu kiểm:** FR-IAM-02 · AC-IAM-02-03
 
-Preconditions:Đã đăng nhập hợp lệ.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Tạo hai phiên độc lập của SV-A, giữ cookie A/B để đối chiếu khi cần.
 
-Dữ liệu:Gọi cập nhật nghiệp vụ bằng phiên đã đăng xuất.
+1. Gọi cập nhật nghiệp vụ bằng phiên đã đăng xuất. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/auth/logout` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm status, cookie, hiệu lực phiên và dữ liệu cache theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-IAM-02.
-2. Thiết lập chính xác dữ liệu: Gọi cập nhật nghiệp vụ bằng phiên đã đăng xuất.
-3. Thực hiện POST /api/auth/logout theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Bị chặn; dữ liệu không thay đổi.
+**Mong đợi:** Bị chặn; dữ liệu không thay đổi.
 
-Expected:Bị chặn; dữ liệu không thay đổi.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-IAM-02-04 — Back / đăng nhập lại
 
-FR:FR-IAM-02; AC:AC-IAM-02-04.
+**Yêu cầu kiểm:** FR-IAM-02 · AC-IAM-02-04
 
-Preconditions:Đã đăng nhập hợp lệ.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Tạo hai phiên độc lập của SV-A, giữ cookie A/B để đối chiếu khi cần.
 
-Dữ liệu:Back trang trước rồi đăng nhập lại.
+1. Back trang trước rồi đăng nhập lại. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/auth/logout` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm status, cookie, hiệu lực phiên và dữ liệu cache theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-IAM-02.
-2. Thiết lập chính xác dữ liệu: Back trang trước rồi đăng nhập lại.
-3. Thực hiện POST /api/auth/logout theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Back không khôi phục quyền; đăng nhập mới tạo phiên mới hợp lệ.
+**Mong đợi:** Back không khôi phục quyền; đăng nhập mới tạo phiên mới hợp lệ.
 
-Expected:Back không khôi phục quyền; đăng nhập mới tạo phiên mới hợp lệ.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-IAM-02-05 — Đăng xuất hai phiên và CSRF
+
+**Yêu cầu kiểm:** FR-IAM-02 · AC-IAM-02-05
+
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Tạo hai phiên độc lập của SV-A, giữ cookie A/B để đối chiếu khi cần.
+
+1. Mở hai phiên độc lập của SV-A. Đăng xuất phiên A với token thiếu/sai rồi với token đúng. Thử đọc hồ sơ bằng cả hai phiên. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/auth/logout` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm status, cookie, hiệu lực phiên và dữ liệu cache theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** Token sai trả 403, A còn hiệu lực. Token đúng trả 204, A bị vô hiệu và xóa cookie, B vẫn có quyền. Kiểm header private, no-store ở màn hình dữ liệu.
+
+**Kết quả:** Not Run.
+
+## TC-IAM-02-06 — Xử lý lỗi máy chủ khi đăng xuất
+
+**Yêu cầu kiểm:** FR-IAM-02 · AC-IAM-02-06
+
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Tạo hai phiên độc lập của SV-A, giữ cookie A/B để đối chiếu khi cần.
+
+1. Giả lập lỗi lưu trạng thái phiên trước khi xác nhận logout ở môi trường test, rồi thử lại bình thường. Dùng SV-A hoặc actor đối chứng được nêu trong tình huống.
+2. Gửi qua `POST /api/auth/logout` với các trường thay đổi đã nêu. Với nhiều lượt, ghi riêng payload, status và ID/phiên bản trả về.
+3. Kiểm status, cookie, hiệu lực phiên và dữ liệu cache theo expected; nếu bị từ chối, đọc lại để xác nhận dữ liệu nghiệp vụ giữ nguyên.
+
+**Mong đợi:** Lượt lỗi trả 500 có mã đối chiếu, không báo đã thoát. Lượt sau trả 204 và phiên bị vô hiệu, không lộ thông tin trong lỗi.
+
+**Kết quả:** Not Run.
 
 ## TC-IAM-03-01 — Quyền phù hợp
 
-FR:FR-IAM-03; AC:AC-IAM-03-01.
+**Yêu cầu kiểm:** FR-IAM-03 · AC-IAM-03-01
 
-Preconditions:Có phiên; vai trò và phạm vi mẫu được quản lý phía máy chủ.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Nạp các phiên SV-A, SV-B, NV-A, NV-B, DP-All, DP-A, QL-A và QL-All theo tình huống.
 
-Dữ liệu:SV đọc hồ sơ mình; NV đọc/sửa được giao; điều phối phân công trong phạm vi; quản lý xem báo cáo trong phạm vi.
+1. Dùng phiên và quyền của tình huống: SV đọc hồ sơ mình; NV đọc/sửa được giao; điều phối phân công trong phạm vi; quản lý xem báo cáo trong phạm vi.
+2. Chọn API của hành vi: GET /api/student/requests/310 để đọc theo chủ, POST /api/staff/requests/315/progress để ghi, GET /api/dispatch/requests cho điều phối hoặc GET /api/reports/01 cho phạm vi báo cáo.
+3. Gọi bằng từng phiên tách riêng. Đối chiếu mã HTTP, phạm vi JSON và trạng thái DB trước/sau; lưu response đã loại thông tin phiên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-IAM-03.
-2. Thiết lập chính xác dữ liệu: SV đọc hồ sơ mình; NV đọc/sửa được giao; điều phối phân công trong phạm vi; quản lý xem báo cáo trong phạm vi.
-3. Thực hiện Middleware Tất cả protected endpoints theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Mỗi hành động hợp lệ thành công theo ma trận; vai trò không được cấp không có hành động đó.
+**Mong đợi:** Mỗi hành động hợp lệ thành công theo ma trận; vai trò không được cấp không có hành động đó.
 
-Expected:Mỗi hành động hợp lệ thành công theo ma trận; vai trò không được cấp không có hành động đó.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-IAM-03-02 — Vai trò giả
 
-FR:FR-IAM-03; AC:AC-IAM-03-02.
+**Yêu cầu kiểm:** FR-IAM-03 · AC-IAM-03-02
 
-Preconditions:Có phiên; vai trò và phạm vi mẫu được quản lý phía máy chủ.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Nạp các phiên SV-A, SV-B, NV-A, NV-B, DP-All, DP-A, QL-A và QL-All theo tình huống.
 
-Dữ liệu:Gửi role=manager hoặc scope=all trong dữ liệu.
+1. Dùng phiên và quyền của tình huống: Gửi role=manager hoặc scope=all trong dữ liệu.
+2. Chọn API của hành vi: GET /api/student/requests/310 để đọc theo chủ, POST /api/staff/requests/315/progress để ghi, GET /api/dispatch/requests cho điều phối hoặc GET /api/reports/01 cho phạm vi báo cáo.
+3. Gọi bằng từng phiên tách riêng. Đối chiếu mã HTTP, phạm vi JSON và trạng thái DB trước/sau; lưu response đã loại thông tin phiên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-IAM-03.
-2. Thiết lập chính xác dữ liệu: Gửi role=manager hoặc scope=all trong dữ liệu.
-3. Thực hiện Middleware Tất cả protected endpoints theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Máy chủ bỏ qua; không nâng quyền từ dữ liệu trình duyệt.
+**Mong đợi:** Máy chủ bỏ qua; không nâng quyền từ dữ liệu trình duyệt.
 
-Expected:Máy chủ bỏ qua; không nâng quyền từ dữ liệu trình duyệt.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-IAM-03-03 — Đối tượng của người khác
 
-FR:FR-IAM-03; AC:AC-IAM-03-03.
+**Yêu cầu kiểm:** FR-IAM-03 · AC-IAM-03-03
 
-Preconditions:Có phiên; vai trò và phạm vi mẫu được quản lý phía máy chủ.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Nạp các phiên SV-A, SV-B, NV-A, NV-B, DP-All, DP-A, QL-A và QL-All theo tình huống.
 
-Dữ liệu:SV thay request_id; NV đọc ngoài trách nhiệm; quản lý đổi department ngoài phạm vi.
+1. Dùng phiên và quyền của tình huống: SV thay request_id; NV đọc ngoài trách nhiệm; quản lý đổi department ngoài phạm vi.
+2. Chọn API của hành vi: GET /api/student/requests/310 để đọc theo chủ, POST /api/staff/requests/315/progress để ghi, GET /api/dispatch/requests cho điều phối hoặc GET /api/reports/01 cho phạm vi báo cáo.
+3. Gọi bằng từng phiên tách riêng. Đối chiếu mã HTTP, phạm vi JSON và trạng thái DB trước/sau; lưu response đã loại thông tin phiên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-IAM-03.
-2. Thiết lập chính xác dữ liệu: SV thay request_id; NV đọc ngoài trách nhiệm; quản lý đổi department ngoài phạm vi.
-3. Thực hiện Middleware Tất cả protected endpoints theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: Đều bị chặn; không lộ nội dung, số liệu hoặc tài liệu liên quan.
+**Mong đợi:** Đều bị chặn; không lộ nội dung, số liệu hoặc tài liệu liên quan.
 
-Expected:Đều bị chặn; không lộ nội dung, số liệu hoặc tài liệu liên quan.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-IAM-03-04 — Thay trách nhiệm / dữ liệu nội bộ
 
-FR:FR-IAM-03; AC:AC-IAM-03-04.
+**Yêu cầu kiểm:** FR-IAM-03 · AC-IAM-03-04
 
-Preconditions:Có phiên; vai trò và phạm vi mẫu được quản lý phía máy chủ.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Nạp các phiên SV-A, SV-B, NV-A, NV-B, DP-All, DP-A, QL-A và QL-All theo tình huống.
 
-Dữ liệu:Giao lại hồ sơ, thử từ phiên NV cũ; SV đọc nội bộ trực tiếp.
+1. Dùng phiên và quyền của tình huống: Giao lại hồ sơ, thử từ phiên NV cũ; SV đọc nội bộ trực tiếp.
+2. Chọn API của hành vi: GET /api/student/requests/310 để đọc theo chủ, POST /api/staff/requests/315/progress để ghi, GET /api/dispatch/requests cho điều phối hoặc GET /api/reports/01 cho phạm vi báo cáo.
+3. Gọi bằng từng phiên tách riêng. Đối chiếu mã HTTP, phạm vi JSON và trạng thái DB trước/sau; lưu response đã loại thông tin phiên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-IAM-03.
-2. Thiết lập chính xác dữ liệu: Giao lại hồ sơ, thử từ phiên NV cũ; SV đọc nội bộ trực tiếp.
-3. Thực hiện Middleware Tất cả protected endpoints theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: NV cũ không sửa được; SV không nhận ghi chú nội bộ trong HTML/JSON hay tài liệu nếu sau này được bổ sung.
+**Mong đợi:** NV cũ không sửa được; SV không nhận ghi chú nội bộ trong HTML/JSON hay tài liệu nếu sau này được bổ sung.
 
-Expected:NV cũ không sửa được; SV không nhận ghi chú nội bộ trong HTML/JSON hay tài liệu nếu sau này được bổ sung.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-IAM-03-05 — CSRF thiếu/sai
 
-FR:FR-IAM-03; AC:AC-IAM-03-05.
+**Yêu cầu kiểm:** FR-IAM-03 · AC-IAM-03-05
 
-Preconditions:Có phiên; vai trò và phạm vi mẫu được quản lý phía máy chủ.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Nạp các phiên SV-A, SV-B, NV-A, NV-B, DP-All, DP-A, QL-A và QL-All theo tình huống.
 
-Dữ liệu:Đăng nhập hợp lệ rồi gửi POST protected không CSRF hoặc CSRF của phiên khác.
+1. Dùng phiên và quyền của tình huống: Đăng nhập hợp lệ rồi gửi POST protected không CSRF hoặc CSRF của phiên khác.
+2. Chọn API của hành vi: GET /api/student/requests/310 để đọc theo chủ, POST /api/staff/requests/315/progress để ghi, GET /api/dispatch/requests cho điều phối hoặc GET /api/reports/01 cho phạm vi báo cáo.
+3. Gọi bằng từng phiên tách riêng. Đối chiếu mã HTTP, phạm vi JSON và trạng thái DB trước/sau; lưu response đã loại thông tin phiên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-IAM-03.
-2. Thiết lập chính xác dữ liệu: Đăng nhập hợp lệ rồi gửi POST protected không CSRF hoặc CSRF của phiên khác.
-3. Thực hiện Middleware Tất cả protected endpoints theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: 403 CSRF_INVALID; không ghi dữ liệu. GET chỉ đọc không yêu cầu CSRF.
+**Mong đợi:** 403 CSRF_INVALID; không ghi dữ liệu. GET chỉ đọc không yêu cầu CSRF.
 
-Expected:403 CSRF_INVALID; không ghi dữ liệu. GET chỉ đọc không yêu cầu CSRF.
-
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+**Kết quả:** Not Run.
 
 ## TC-IAM-03-06 — Aggregate vượt scope
 
-FR:FR-IAM-03; AC:AC-IAM-03-06.
+**Yêu cầu kiểm:** FR-IAM-03 · AC-IAM-03-06
 
-Preconditions:Có phiên; vai trò và phạm vi mẫu được quản lý phía máy chủ.
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Nạp các phiên SV-A, SV-B, NV-A, NV-B, DP-All, DP-A, QL-A và QL-All theo tình huống.
 
-Dữ liệu:QL-A chỉ PB-A; gọi report PB-B hoặc scope=all.
+1. Dùng phiên và quyền của tình huống: QL-A chỉ PB-A; gọi report PB-B hoặc scope=all.
+2. Chọn API của hành vi: GET /api/student/requests/310 để đọc theo chủ, POST /api/staff/requests/315/progress để ghi, GET /api/dispatch/requests cho điều phối hoặc GET /api/reports/01 cho phạm vi báo cáo.
+3. Gọi bằng từng phiên tách riêng. Đối chiếu mã HTTP, phạm vi JSON và trạng thái DB trước/sau; lưu response đã loại thông tin phiên.
 
-1. Reset seed/fixture của case; đặt trạng thái và actor đúng Preconditions của FR-IAM-03.
-2. Thiết lập chính xác dữ liệu: QL-A chỉ PB-A; gọi report PB-B hoặc scope=all.
-3. Thực hiện Middleware Tất cả protected endpoints theo luồng FR. Case trái quyền gọi API trực tiếp, không chỉ kiểm nút UI.
-4. Đối chiếu HTTP/response và đọc lại UI; case ghi kiểm số bản ghi, version, history trước/sau. Case report đối chiếu tập nguồn theo tiêu chí kỳ của FR.
-5. Ghi actual, evidence, build, date, result. Expected: PB-B403; scope=all không mở rộng quyền; không có source/số liệu ngoài PB-A.
+**Mong đợi:** PB-B403; scope=all không mở rộng quyền; không có source/số liệu ngoài PB-A.
 
-Expected:PB-B403; scope=all không mở rộng quyền; không có source/số liệu ngoài PB-A.
+**Kết quả:** Not Run.
 
-Result:Not Run; Actual:; Build:; Evidence:; Bug:; Retest:
+## TC-IAM-03-07 — Phiên hết hạn hoặc tài khoản không hoạt động
 
+**Yêu cầu kiểm:** FR-IAM-03 · AC-IAM-03-07
+
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Nạp các phiên SV-A, SV-B, NV-A, NV-B, DP-All, DP-A, QL-A và QL-All theo tình huống.
+
+1. Dùng phiên và quyền của tình huống: Tạo phiên hợp lệ, sau đó đổi tài khoản seed sang không hoạt động ở DB hoặc đưa đồng hồ quá giới hạn phiên. Dùng cookie cũ gọi GET và POST hợp lệ.
+2. Chọn API của hành vi: GET /api/student/requests/310 để đọc theo chủ, POST /api/staff/requests/315/progress để ghi, GET /api/dispatch/requests cho điều phối hoặc GET /api/reports/01 cho phạm vi báo cáo.
+3. Gọi bằng từng phiên tách riêng. Đối chiếu mã HTTP, phạm vi JSON và trạng thái DB trước/sau; lưu response đã loại thông tin phiên.
+
+**Mong đợi:** 401 và không đọc/ghi dữ liệu. Middleware lấy trạng thái hiện hành từ máy chủ.
+
+**Kết quả:** Not Run.
+
+## TC-IAM-03-08 — Quyền điều phối và ID không tồn tại
+
+**Yêu cầu kiểm:** FR-IAM-03 · AC-IAM-03-08
+
+**Chuẩn bị:** Fixture độc lập. Actor chính SV-A. Nạp các phiên SV-A, SV-B, NV-A, NV-B, DP-All, DP-A, QL-A và QL-All theo tình huống.
+
+1. Dùng phiên và quyền của tình huống: Dùng DP-A và DP-All đọc hàng chờ có hồ sơ chưa giao. Dùng SV-B gọi chi tiết hồ sơ SV-A và một ID hợp lệ không tồn tại.
+2. Chọn API của hành vi: GET /api/student/requests/310 để đọc theo chủ, POST /api/staff/requests/315/progress để ghi, GET /api/dispatch/requests cho điều phối hoặc GET /api/reports/01 cho phạm vi báo cáo.
+3. Gọi bằng từng phiên tách riêng. Đối chiếu mã HTTP, phạm vi JSON và trạng thái DB trước/sau; lưu response đã loại thông tin phiên.
+
+**Mong đợi:** Chỉ DP-All thấy chưa giao. Hai phản hồi 404 cho SV-B có nội dung tương đương, không tiết lộ hồ sơ có tồn tại.
+
+**Kết quả:** Not Run.

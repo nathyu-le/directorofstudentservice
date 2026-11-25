@@ -2,11 +2,15 @@
 
 **Mô tả**
 
-Gán loại vấn đề để định tuyến và tổng hợp báo cáo. Đặc tả triển khai prototype thuộc Proposal §2.1 — phân nhóm, phân công, xử lý, trách nhiệm phòng ban, phối hợp và lịch sử; các chi tiết trường và quy tắc dưới đây là thiết kế đề xuất v5.0 để review, không phải thông tin vận hành đã được khách hàng xác nhận.
+Gán loại vấn đề để định tuyến và tổng hợp báo cáo. Phạm vi và mục tiêu xem [tổng quan sản phẩm](../../../01-overview/scope.md). Các chi tiết nghiệp vụ đang ở trạng thái đề xuất.
 
 **Actor**
 
 Điều phối viên. Quyền cụ thể kiểm ở máy chủ theo [ma trận quyền](../../../02-domain/permissions.md).
+
+**Priority**
+
+P1 theo [thang ưu tiên PRD](../../../01-overview/scope.md#ưu-tiên-yêu-cầu).
 
 **Preconditions**
 
@@ -28,19 +32,20 @@ Gán loại vấn đề để định tuyến và tổng hợp báo cáo. Đặc
 | reason | Khi đổi loại | Lý do không rỗng. |
 | record_version | Hệ thống | Kiểm tra phiên bản hiện hành. |
 
-- Cho phép Received/Processing/WaitingInfo. category_id là danh mục hoạt động; Chưa xác định được dùng lúc tiếp nhận, không dùng làm loại đích của thao tác phân loại.
-- reason trim 1–4000 bắt buộc khi đổi từ loại xác định sang loại khác. Gán lần đầu từ Chưa xác định không bắt buộc reason. Chọn lại cùng loại trả 200 no_change, không tăng version/lịch sử.
-- Kiểm quyền điều phối, version; transaction cập nhật category+version+history CATEGORY_CHANGED. Không đổi department/assignee/status/due_at. RPT-04 đọc loại hiện hành.
-- Resolved/Closed hoặc version cũ:409. ID ngừng dùng/không có hoặc thiếu reason cần thiết:422. Nhân viên không quyền dispatch:403.
+- Cho phép Received/Processing/WaitingInfo. category_id là danh mục hoạt động; Chưa xác định được dùng lúc tiếp nhận, không dùng làm loại đích của thao tác phân loại. **Kiểm bởi:** AC-DSP-03-01, AC-DSP-03-02, AC-DSP-03-09.
+- reason trim 1–4000 bắt buộc khi đổi từ loại xác định sang loại khác. Gán lần đầu từ Chưa xác định không bắt buộc reason. Chọn lại cùng loại trả 200 no_change, không tăng version/lịch sử. **Kiểm bởi:** AC-DSP-03-01, AC-DSP-03-05, AC-DSP-03-06, AC-DSP-03-09.
+- Kiểm quyền điều phối, version; transaction cập nhật category+version+history CATEGORY_CHANGED. Không đổi department/assignee/status/due_at. RPT-04 đọc loại hiện hành. **Kiểm bởi:** AC-DSP-03-04, AC-DSP-03-07, AC-DSP-03-08, AC-DSP-03-09.
+- Resolved/Closed hoặc version cũ:409. ID ngừng dùng/không có hoặc thiếu reason cần thiết:422. Nhân viên không quyền dispatch:403. **Kiểm bởi:** AC-DSP-03-02, AC-DSP-03-03, AC-DSP-03-06, AC-DSP-03-08, AC-DSP-03-09.
 
 **Alternative / Error Flows**
 
-- 401: phiên không hợp lệ; điều hướng đăng nhập, không gửi lại thao tác ghi tự động sau login.
-- 403: thiếu capability/CSRF hoặc bộ lọc ngoài scope; không trả dữ liệu trái quyền.
-- 404: request không tồn tại/ngoài quyền đối tượng; không tiết lộ hồ sơ có tồn tại hay không.
-- 422: sai trường/bộ lọc theo Business Rules; hiển thị lỗi tại trường, giữ dữ liệu đang nhập.
-- 409: trạng thái/phiên bản/khóa xung đột theo quy tắc của chức năng; không ghi một phần, yêu cầu tải lại dữ liệu hiện hành.
-- 500 hoặc mất mạng: không đánh thao tác thành công khi chưa có response xác nhận. Riêng STU-01 retry dùng cùng submission_key; các thao tác khác tải lại để xác định lần ghi đã commit, không gửi tự động vô điều kiện.
+- 401 khi phiên hết hiệu lực. Xem NFR-SEC-01 về xác thực lại và xử lý thao tác đang chờ.
+- 403 thiếu quyền điều phối hoặc CSRF. **Kiểm bởi:** AC-DSP-03-03, NFR-SEC-01.
+- 404 ngoài phạm vi hồ sơ. **Kiểm bởi:** NFR-SEC-01.
+- 422 loại/lý do không hợp lệ. **Kiểm bởi:** AC-DSP-03-02, AC-DSP-03-06, AC-DSP-03-09.
+- 409 hồ sơ kết thúc hoặc phiên bản cũ. **Kiểm bởi:** AC-DSP-03-08, AC-DSP-03-09.
+- 500 hoàn tác thay đổi phân loại. **Kiểm bởi:** AC-DSP-03-07.
+- Xử lý mất kết nối, thông báo lỗi biểu mẫu và mã đối chiếu theo [NFR-OBS-01](../../../01-overview/non-functional-requirements.md).
 
 **Acceptance Criteria**
 
@@ -51,13 +56,15 @@ Gán loại vấn đề để định tuyến và tổng hợp báo cáo. Đặc
 - **AC-DSP-03-05:** Khi Gửi lại cùng giá trị hiện hành với version mới nhất. → 200 no_change; version và số history không tăng.
 - **AC-DSP-03-06:** Khi Đã có giá trị xác định; đổi sang giá trị khác, reason chỉ khoảng trắng. → 422 reason; giá trị/version/history giữ nguyên.
 - **AC-DSP-03-07:** Khi Trên môi trường test, ép lỗi ghi history sau khi thao tác dữ liệu chính, không áp dụng vào production. → 500 INTERNAL_ERROR không chi tiết DB; dữ liệu/version/history rollback về trước thao tác, không có bản ghi mồ côi.
-- **AC-DSP-03-08:** Khi Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ. → TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại.
+- **AC-DSP-03-08:** Khi Hai tab đọc cùng version; tab A lưu hợp lệ, tab B gửi version cũ. → Tab B nhận 409 STALE_VERSION; không ghi đè dữ liệu/lịch sử của A; giao diện yêu cầu tải lại.
+
+- **AC-DSP-03-09:** Khi DP-All phân loại hồ sơ Resolved, Closed và hồ sơ Received với loại đích Chưa xác định. Thử đổi loại hợp lệ với lý do 4000 và 4001 ký tự. → Hồ sơ kết thúc trả 409, loại đích không hợp lệ hoặc lý do quá dài trả 422. Đổi hợp lệ ghi CATEGORY_CHANGED và giữ trách nhiệm, trạng thái, hạn.
 
 **Ví dụ Edge Case**
 
-Cập nhật phiên bản cũ: Hai tab đọc cùng version; tabA lưu hợp lệ, tabB gửi version cũ.
+Cập nhật phiên bản cũ: Hai tab đọc cùng version; tab A lưu hợp lệ, tab B gửi version cũ.
 
 **Expected Result**
 
-TabB409 STALE_VERSION; không ghi đè dữ liệu/lịch sử củaA; giao diện yêu cầu tải lại. Kiểm theo TC-DSP-03-08; kết quả thực thi ban đầu là Not Run.
+Tab B nhận 409 STALE_VERSION; không ghi đè dữ liệu/lịch sử của A; giao diện yêu cầu tải lại. Kiểm theo TC-DSP-03-08; kết quả thực thi ban đầu là Not Run.
 

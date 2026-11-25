@@ -2,11 +2,15 @@
 
 **Mô tả**
 
-Tổng hợp phản hồi kết quả để đánh giá chất lượng hỗ trợ. Đặc tả triển khai prototype thuộc Proposal §2.1 — trạng thái, thời gian, vấn đề phổ biến, khối lượng và hài lòng; các chi tiết trường và quy tắc dưới đây là thiết kế đề xuất v5.0 để review, không phải thông tin vận hành đã được khách hàng xác nhận.
+Tổng hợp phản hồi kết quả để đánh giá chất lượng hỗ trợ. Phạm vi và mục tiêu xem [tổng quan sản phẩm](../../../01-overview/scope.md). Các chi tiết nghiệp vụ đang ở trạng thái đề xuất.
 
 **Actor**
 
 Quản lý. Quyền cụ thể kiểm ở máy chủ theo [ma trận quyền](../../../02-domain/permissions.md).
+
+**Priority**
+
+P2 theo [thang ưu tiên PRD](../../../01-overview/scope.md#ưu-tiên-yêu-cầu).
 
 **Preconditions**
 
@@ -28,19 +32,19 @@ Quản lý. Quyền cụ thể kiểm ở máy chủ theo [ma trận quyền](..
 | department_id/category_id | Tùy chọn | ID nguyên dương, hợp lệ và trong reporting scope; omit=mọi đơn vị/loại trong scope. |
 | from_date/to_date | Tùy chọn | Hai ngày YYYY-MM-DD phải đi cùng nhau, from<=to. Omit cả hai=mọi thời gian. Lọc theo feedback.updated_at. |
 
-- Chỉ quản lý có report capability và reporting scope. Sinh viên/handler không quyền report:403. Chọn đơn vị ngoài scope:403, không trả một phần. Scope áp dụng TRƯỚC mọi COUNT/AVG.
-- Feedback hiện hành có updated_at trong kỳ. Một request một feedback; N số feedback, mean=sum(score)/N, phân bố 5 mức. Chưa đánh giá loại khỏi mẫu, không tính0. N=0 mean=null.
-- Kỳ ngày theo múi giờ Asia/Ho_Chi_Minh, từ 00:00 from inclusive đến00:00 ngày sau to exclusive; đổi sang UTC trước query. Omit cả hai không lọc kỳ; gửi một ngày hoặc định dạng sai:422.
-- Request, question, note và history join không được làm nhân bản dòng nguồn. Aggregate trên request_id/feedback_id duy nhất. Response trả filters, as_of, sample_count, metrics, source_references; không có nội dung sinh viên hoặc internal note.
-- Chỉ số được tính từ seed/prototype; không là kết quả vận hành toàn trường. N=0 count=0 là số thật; average=null là chưa có mẫu, không đổi thành0.
-- metrics={mean_score, score_counts:{1,2,3,4,5}}; sample_count=N. Tổng score_counts=N; mean_score hiển thị 2 chữ số thập phân, điểm chưa đánh giá không tính 0.
+- Chỉ quản lý có report capability và reporting scope. Sinh viên/handler không quyền report:403. Chọn đơn vị ngoài scope:403, không trả một phần. Phạm vi quyền áp dụng trước mọi COUNT/AVG. **Kiểm bởi:** AC-RPT-06-03.
+- Feedback hiện hành có updated_at trong kỳ. Một request một feedback; N số feedback, mean=sum(score)/N, phân bố 5 mức. Chưa đánh giá loại khỏi mẫu, không tính0. N=0 mean=null. **Kiểm bởi:** AC-RPT-06-01, AC-RPT-06-04, AC-RPT-06-05, AC-RPT-06-07, AC-RPT-06-08.
+- Kỳ ngày theo múi giờ Asia/Ho_Chi_Minh, từ 00:00 from inclusive đến00:00 ngày sau to exclusive; đổi sang UTC trước query. Omit cả hai không lọc kỳ; gửi một ngày hoặc định dạng sai:422. **Kiểm bởi:** AC-RPT-06-02, AC-RPT-06-05.
+- Request, question, note và history join không được làm nhân bản dòng nguồn. Aggregate trên request_id/feedback_id duy nhất. Response trả filters, as_of, sample_count, metrics, source_references; không có nội dung sinh viên hoặc internal note. **Kiểm bởi:** AC-RPT-06-03, AC-RPT-06-06.
+- Chỉ số được tính từ seed/prototype; không là kết quả vận hành toàn trường. N=0 count=0 là số thật; average=null là chưa có mẫu, không đổi thành 0. **Kiểm bởi:** AC-RPT-06-04, AC-RPT-06-08.
+- metrics={mean_score, score_counts:{1,2,3,4,5}}; sample_count=N. Tổng score_counts=N; mean_score hiển thị 2 chữ số thập phân, điểm chưa đánh giá không tính 0. **Kiểm bởi:** AC-RPT-06-01, AC-RPT-06-04, AC-RPT-06-08.
 
 **Alternative / Error Flows**
 
-- 401: phiên không hợp lệ, yêu cầu đăng nhập; không có số liệu trong response.
-- 403: thiếu report capability hoặc chọn đơn vị ngoài reporting scope; không trả số liệu một phần.
-- 422: sai hoặc dùng bộ lọc không hỗ trợ theo FR; hiển thị lỗi bộ lọc, không âm thầm thay kỳ.
-- 500/mất mạng: hiển thị Không tải được báo cáo, cho thử tải lại GET; không thay dữ liệu nghiệp vụ.
+- 401 khi phiên hết hiệu lực. Xem NFR-SEC-01 về xác thực lại và xử lý thao tác đang chờ.
+- 403 thiếu quyền báo cáo hoặc lọc ngoài phạm vi. **Kiểm bởi:** AC-RPT-06-03.
+- 422 kỳ hoặc bộ lọc không hợp lệ. **Kiểm bởi:** AC-RPT-06-02.
+- Xử lý mất kết nối, thông báo lỗi biểu mẫu và mã đối chiếu theo [NFR-OBS-01](../../../01-overview/non-functional-requirements.md).
 
 **Acceptance Criteria**
 
@@ -49,8 +53,10 @@ Quản lý. Quyền cụ thể kiểm ở máy chủ theo [ma trận quyền](..
 - **AC-RPT-06-03:** Khi Sinh viên gọi báo cáo hoặc quản lý gửi đơn vị ngoài phạm vi. → Từ chối; không trả số liệu, tên sinh viên hoặc yêu cầu ngoài phạm vi.
 - **AC-RPT-06-04:** Khi Chưa có phản hồi hoặc đổi điểm → Không phản hồi: Không có dữ liệu; đổi điểm: số mẫu giữ nguyên, tổng điểm đổi.
 - **AC-RPT-06-05:** Khi Hai record có feedback.updated_at lần lượt đúng00:00 from và đúng00:00 ngày sau to theo giờ Việt Nam. → Chỉ record tại biên đầu được tính; biên cuối bị loại. Không lệch múi giờ.
-- **AC-RPT-06-06:** Khi Một request có 3 notes,2 questions và 5 history events. → Chỉ tính feedback hiện hành của request đó một lần, không nhân bản bởi dữ liệu con.
+- **AC-RPT-06-06:** Khi Một request có 3 notes, 2 questions và 5 history events. → Chỉ tính feedback hiện hành của request đó một lần, không nhân bản bởi dữ liệu con.
 - **AC-RPT-06-07:** Khi Feedback4 tại kỳA đổi thành3 tại kỳB không trùng A. → Cùng feedback_id/request_id; kỳA không còn dòng này, kỳB có điểm3; mẫu toàn thời gian vẫn1.
+
+- **AC-RPT-06-08:** Khi Tạo phản hồi 1 và 5, một hồ sơ không có phản hồi, rồi lọc bộ dữ liệu không có mẫu. → Mẫu là 2, mean_score=3.00, có đủ năm nhóm điểm, tổng nhóm là 2. Không tính hồ sơ chưa đánh giá. Không mẫu thì mean_score=null.
 
 **Ví dụ Edge Case**
 

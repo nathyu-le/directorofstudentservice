@@ -1,21 +1,21 @@
 # UniSupport — Kế hoạch kiểm soát chất lượng QC
 
-**Phiên bản 3.0 · 04/11/2026 · Kế hoạch thực hiện, chờ review; kết quả chỉ ghi khi có kiểm thử thật.**
+**Phiên bản 3.1 · 25/11/2026 · Kế hoạch thực hiện, chờ review; kết quả chỉ ghi khi có kiểm thử thật.**
 
 ## 1. Phạm vi và điều kiện thực thi
 
-QC kiểm tra sản phẩm theo PRD/Master Plan v6.0, ghi expected/actual, bằng chứng, defect và kết quả kiểm lại. [QA.md](QA.md) giữ quy tắc quy trình, quản lý sản phẩm và cổng chất lượng. Phạm vi kiểm chứng gồm bốn module, 24 FR, 149 TC chức năng, tám E2E, sáu NFR và bốn MET.
+QC kiểm tra sản phẩm theo PRD/Master Plan v6.1, ghi expected/actual, bằng chứng, defect và kết quả kiểm lại. [QA.md](QA.md) giữ quy tắc quy trình, quản lý sản phẩm và cổng chất lượng. Phạm vi kiểm chứng gồm bốn module, 24 FR, 187 TC chức năng, tám E2E, sáu NFR và bốn MET.
 
 | Module | FR | TC chức năng |
 | --- | --- | --- |
-| STU — Cổng hỗ trợ sinh viên | 5 | 32 |
-| DSP — Điều phối và xử lý yêu cầu | 10 | 64 |
-| RPT — Quản lý và báo cáo | 6 | 37 |
-| IAM — Tài khoản và quyền truy cập | 3 | 16 |
+| STU — Cổng hỗ trợ sinh viên | 5 | 43 |
+| DSP — Điều phối và xử lý yêu cầu | 10 | 79 |
+| RPT — Quản lý và báo cáo | 6 | 43 |
+| IAM — Tài khoản và quyền truy cập | 3 | 22 |
 
 Sử dụng bộ case và expected trong repo. Không thêm upload, email/SMS, xuất dữ liệu, tài khoản mới, module hoặc rule tính hạn không có trong baseline. Các rule gắn OQ cần được xác nhận; đạt expected của thiết kế đề xuất không thay quyết định nghiệp vụ.
 
-Repo tham chiếu tại commit `12329e10ebeba603cd84152cc8c662680757aef0` chưa chứa mã ứng dụng/test tự động/CI; 167 kiểm tra nguồn còn `Not Run`. Tài liệu không khẳng định đã có build chạy được. Bản UI chỉ cho phép kết luận phần điều hướng, hiển thị và trạng thái đã kiểm; API, phân quyền server, transaction, dữ liệu lưu và báo cáo thật cần build tích hợp.
+Repo tham chiếu theo [baseline 6.1](../docs/05-project/requirements.json) chưa chứa mã ứng dụng/test tự động/CI; 205 kiểm tra nguồn còn `Not Run`. Tài liệu không khẳng định đã có build chạy được. Bản UI chỉ cho phép kết luận phần điều hướng, hiển thị và trạng thái đã kiểm; API, phân quyền server, transaction, dữ liệu lưu và báo cáo thật cần build tích hợp.
 
 ### 1.1. Người thực hiện
 
@@ -40,36 +40,36 @@ Các nhãn A/B là fixture, không phải người hoặc đơn vị thật. Res
 
 ## 2. Danh mục chức năng và liên kết test
 
-Mỗi FR dưới đây dẫn tới đặc tả gốc; các Test ID nằm trong [149 TC chi tiết](../docs/04-acceptance/test-cases.md). Ma trận [FR–AC–TC](../docs/04-acceptance/traceability-matrix.md) là nguồn mapping. Không sao chép toàn bộ test thành một bản đặc tả thứ hai.
+Mỗi FR dưới đây dẫn tới đặc tả gốc; các Test ID nằm trong [187 TC chi tiết](../docs/04-acceptance/test-cases.md). Ma trận [FR–AC–TC](../docs/04-acceptance/traceability-matrix.md) là nguồn mapping. Không sao chép toàn bộ test thành một bản đặc tả thứ hai.
 
 | FR và hành vi | TC theo traceability | Mốc |
 | --- | --- | --- |
-| [FR-STU-01](../docs/03-modules/01-student-support/requirements/FR-STU-01.md) Gửi yêu cầu hỗ trợ | 8 — TC-STU-01-01…TC-STU-01-08 | [MS-02](https://github.com/nathyu-le/directorofstudentservice/milestone/2) |
-| [FR-STU-02](../docs/03-modules/01-student-support/requirements/FR-STU-02.md) Xem danh sách yêu cầu của tôi | 5 — TC-STU-02-01…TC-STU-02-05 | [MS-02](https://github.com/nathyu-le/directorofstudentservice/milestone/2) |
-| [FR-STU-03](../docs/03-modules/01-student-support/requirements/FR-STU-03.md) Xem chi tiết và tiến độ yêu cầu | 5 — TC-STU-03-01…TC-STU-03-05 | [MS-02](https://github.com/nathyu-le/directorofstudentservice/milestone/2) |
-| [FR-STU-04](../docs/03-modules/01-student-support/requirements/FR-STU-04.md) Bổ sung thông tin được yêu cầu | 7 — TC-STU-04-01…TC-STU-04-07 | [MS-03](https://github.com/nathyu-le/directorofstudentservice/milestone/3) |
-| [FR-STU-05](../docs/03-modules/01-student-support/requirements/FR-STU-05.md) Phản hồi kết quả hỗ trợ | 7 — TC-STU-05-01…TC-STU-05-07 | [MS-04](https://github.com/nathyu-le/directorofstudentservice/milestone/4) |
-| [FR-DSP-01](../docs/03-modules/02-dispatch-processing/requirements/FR-DSP-01.md) Xem hàng chờ điều phối | 4 — TC-DSP-01-01…TC-DSP-01-04 | [MS-02](https://github.com/nathyu-le/directorofstudentservice/milestone/2) |
-| [FR-DSP-02](../docs/03-modules/02-dispatch-processing/requirements/FR-DSP-02.md) Xem hồ sơ xử lý và lịch sử nghiệp vụ | 4 — TC-DSP-02-01…TC-DSP-02-04 | [MS-02](https://github.com/nathyu-le/directorofstudentservice/milestone/2) |
-| [FR-DSP-03](../docs/03-modules/02-dispatch-processing/requirements/FR-DSP-03.md) Phân loại yêu cầu | 8 — TC-DSP-03-01…TC-DSP-03-08 | [MS-03](https://github.com/nathyu-le/directorofstudentservice/milestone/3) |
-| [FR-DSP-04](../docs/03-modules/02-dispatch-processing/requirements/FR-DSP-04.md) Phân công trách nhiệm xử lý | 8 — TC-DSP-04-01…TC-DSP-04-08 | [MS-03](https://github.com/nathyu-le/directorofstudentservice/milestone/3) |
-| [FR-DSP-05](../docs/03-modules/02-dispatch-processing/requirements/FR-DSP-05.md) Đặt hạn xử lý dự kiến | 8 — TC-DSP-05-01…TC-DSP-05-08 | [MS-03](https://github.com/nathyu-le/directorofstudentservice/milestone/3) |
-| [FR-DSP-06](../docs/03-modules/02-dispatch-processing/requirements/FR-DSP-06.md) Bắt đầu xử lý yêu cầu | 6 — TC-DSP-06-01…TC-DSP-06-06 | [MS-03](https://github.com/nathyu-le/directorofstudentservice/milestone/3) |
-| [FR-DSP-07](../docs/03-modules/02-dispatch-processing/requirements/FR-DSP-07.md) Yêu cầu sinh viên bổ sung thông tin | 7 — TC-DSP-07-01…TC-DSP-07-07 | [MS-03](https://github.com/nathyu-le/directorofstudentservice/milestone/3) |
-| [FR-DSP-08](../docs/03-modules/02-dispatch-processing/requirements/FR-DSP-08.md) Ghi cập nhật tiến độ xử lý | 6 — TC-DSP-08-01…TC-DSP-08-06 | [MS-03](https://github.com/nathyu-le/directorofstudentservice/milestone/3) |
-| [FR-DSP-09](../docs/03-modules/02-dispatch-processing/requirements/FR-DSP-09.md) Ghi kết quả giải quyết | 7 — TC-DSP-09-01…TC-DSP-09-07 | [MS-04](https://github.com/nathyu-le/directorofstudentservice/milestone/4) |
-| [FR-DSP-10](../docs/03-modules/02-dispatch-processing/requirements/FR-DSP-10.md) Đóng yêu cầu đã giải quyết | 6 — TC-DSP-10-01…TC-DSP-10-06 | [MS-04](https://github.com/nathyu-le/directorofstudentservice/milestone/4) |
-| [FR-RPT-01](../docs/03-modules/03-management-reporting/requirements/FR-RPT-01.md) Tổng hợp trạng thái yêu cầu | 6 — TC-RPT-01-01…TC-RPT-01-06 | [MS-05](https://github.com/nathyu-le/directorofstudentservice/milestone/5) |
-| [FR-RPT-02](../docs/03-modules/03-management-reporting/requirements/FR-RPT-02.md) Theo dõi yêu cầu quá hạn | 6 — TC-RPT-02-01…TC-RPT-02-06 | [MS-05](https://github.com/nathyu-le/directorofstudentservice/milestone/5) |
-| [FR-RPT-03](../docs/03-modules/03-management-reporting/requirements/FR-RPT-03.md) Thống kê thời gian xử lý | 6 — TC-RPT-03-01…TC-RPT-03-06 | [MS-05](https://github.com/nathyu-le/directorofstudentservice/milestone/5) |
-| [FR-RPT-04](../docs/03-modules/03-management-reporting/requirements/FR-RPT-04.md) Thống kê vấn đề phổ biến | 6 — TC-RPT-04-01…TC-RPT-04-06 | [MS-05](https://github.com/nathyu-le/directorofstudentservice/milestone/5) |
-| [FR-RPT-05](../docs/03-modules/03-management-reporting/requirements/FR-RPT-05.md) Thống kê khối lượng theo phòng ban | 6 — TC-RPT-05-01…TC-RPT-05-06 | [MS-05](https://github.com/nathyu-le/directorofstudentservice/milestone/5) |
-| [FR-RPT-06](../docs/03-modules/03-management-reporting/requirements/FR-RPT-06.md) Tổng hợp mức hài lòng | 7 — TC-RPT-06-01…TC-RPT-06-07 | [MS-05](https://github.com/nathyu-le/directorofstudentservice/milestone/5) |
-| [FR-IAM-01](../docs/03-modules/04-accounts-permissions/requirements/FR-IAM-01.md) Đăng nhập | 6 — TC-IAM-01-01…TC-IAM-01-06 | [MS-01](https://github.com/nathyu-le/directorofstudentservice/milestone/1) |
-| [FR-IAM-02](../docs/03-modules/04-accounts-permissions/requirements/FR-IAM-02.md) Đăng xuất | 4 — TC-IAM-02-01…TC-IAM-02-04 | [MS-01](https://github.com/nathyu-le/directorofstudentservice/milestone/1) |
-| [FR-IAM-03](../docs/03-modules/04-accounts-permissions/requirements/FR-IAM-03.md) Kiểm soát quyền theo vai trò và hồ sơ | 6 — TC-IAM-03-01…TC-IAM-03-06 | [MS-01](https://github.com/nathyu-le/directorofstudentservice/milestone/1) |
+| [FR-STU-01](../docs/03-modules/01-student-support/requirements/FR-STU-01.md) Gửi yêu cầu hỗ trợ | 11 — TC-STU-01-01…TC-STU-01-11 | [MS-02](https://github.com/nathyu-le/directorofstudentservice/milestone/2) |
+| [FR-STU-02](../docs/03-modules/01-student-support/requirements/FR-STU-02.md) Xem danh sách yêu cầu của tôi | 7 — TC-STU-02-01…TC-STU-02-07 | [MS-02](https://github.com/nathyu-le/directorofstudentservice/milestone/2) |
+| [FR-STU-03](../docs/03-modules/01-student-support/requirements/FR-STU-03.md) Xem chi tiết và tiến độ yêu cầu | 7 — TC-STU-03-01…TC-STU-03-07 | [MS-02](https://github.com/nathyu-le/directorofstudentservice/milestone/2) |
+| [FR-STU-04](../docs/03-modules/01-student-support/requirements/FR-STU-04.md) Bổ sung thông tin được yêu cầu | 9 — TC-STU-04-01…TC-STU-04-09 | [MS-03](https://github.com/nathyu-le/directorofstudentservice/milestone/3) |
+| [FR-STU-05](../docs/03-modules/01-student-support/requirements/FR-STU-05.md) Phản hồi kết quả hỗ trợ | 9 — TC-STU-05-01…TC-STU-05-09 | [MS-04](https://github.com/nathyu-le/directorofstudentservice/milestone/4) |
+| [FR-DSP-01](../docs/03-modules/02-dispatch-processing/requirements/FR-DSP-01.md) Xem hàng chờ điều phối | 6 — TC-DSP-01-01…TC-DSP-01-06 | [MS-02](https://github.com/nathyu-le/directorofstudentservice/milestone/2) |
+| [FR-DSP-02](../docs/03-modules/02-dispatch-processing/requirements/FR-DSP-02.md) Xem hồ sơ xử lý và lịch sử nghiệp vụ | 6 — TC-DSP-02-01…TC-DSP-02-06 | [MS-02](https://github.com/nathyu-le/directorofstudentservice/milestone/2) |
+| [FR-DSP-03](../docs/03-modules/02-dispatch-processing/requirements/FR-DSP-03.md) Phân loại yêu cầu | 9 — TC-DSP-03-01…TC-DSP-03-09 | [MS-03](https://github.com/nathyu-le/directorofstudentservice/milestone/3) |
+| [FR-DSP-04](../docs/03-modules/02-dispatch-processing/requirements/FR-DSP-04.md) Phân công trách nhiệm xử lý | 11 — TC-DSP-04-01…TC-DSP-04-11 | [MS-03](https://github.com/nathyu-le/directorofstudentservice/milestone/3) |
+| [FR-DSP-05](../docs/03-modules/02-dispatch-processing/requirements/FR-DSP-05.md) Đặt hạn xử lý dự kiến | 10 — TC-DSP-05-01…TC-DSP-05-10 | [MS-03](https://github.com/nathyu-le/directorofstudentservice/milestone/3) |
+| [FR-DSP-06](../docs/03-modules/02-dispatch-processing/requirements/FR-DSP-06.md) Bắt đầu xử lý yêu cầu | 7 — TC-DSP-06-01…TC-DSP-06-07 | [MS-03](https://github.com/nathyu-le/directorofstudentservice/milestone/3) |
+| [FR-DSP-07](../docs/03-modules/02-dispatch-processing/requirements/FR-DSP-07.md) Yêu cầu sinh viên bổ sung thông tin | 8 — TC-DSP-07-01…TC-DSP-07-08 | [MS-03](https://github.com/nathyu-le/directorofstudentservice/milestone/3) |
+| [FR-DSP-08](../docs/03-modules/02-dispatch-processing/requirements/FR-DSP-08.md) Ghi cập nhật tiến độ xử lý | 7 — TC-DSP-08-01…TC-DSP-08-07 | [MS-03](https://github.com/nathyu-le/directorofstudentservice/milestone/3) |
+| [FR-DSP-09](../docs/03-modules/02-dispatch-processing/requirements/FR-DSP-09.md) Ghi kết quả giải quyết | 8 — TC-DSP-09-01…TC-DSP-09-08 | [MS-04](https://github.com/nathyu-le/directorofstudentservice/milestone/4) |
+| [FR-DSP-10](../docs/03-modules/02-dispatch-processing/requirements/FR-DSP-10.md) Đóng yêu cầu đã giải quyết | 7 — TC-DSP-10-01…TC-DSP-10-07 | [MS-04](https://github.com/nathyu-le/directorofstudentservice/milestone/4) |
+| [FR-RPT-01](../docs/03-modules/03-management-reporting/requirements/FR-RPT-01.md) Tổng hợp trạng thái yêu cầu | 7 — TC-RPT-01-01…TC-RPT-01-07 | [MS-05](https://github.com/nathyu-le/directorofstudentservice/milestone/5) |
+| [FR-RPT-02](../docs/03-modules/03-management-reporting/requirements/FR-RPT-02.md) Theo dõi yêu cầu quá hạn | 7 — TC-RPT-02-01…TC-RPT-02-07 | [MS-05](https://github.com/nathyu-le/directorofstudentservice/milestone/5) |
+| [FR-RPT-03](../docs/03-modules/03-management-reporting/requirements/FR-RPT-03.md) Thống kê thời gian xử lý | 7 — TC-RPT-03-01…TC-RPT-03-07 | [MS-05](https://github.com/nathyu-le/directorofstudentservice/milestone/5) |
+| [FR-RPT-04](../docs/03-modules/03-management-reporting/requirements/FR-RPT-04.md) Thống kê vấn đề phổ biến | 7 — TC-RPT-04-01…TC-RPT-04-07 | [MS-05](https://github.com/nathyu-le/directorofstudentservice/milestone/5) |
+| [FR-RPT-05](../docs/03-modules/03-management-reporting/requirements/FR-RPT-05.md) Thống kê khối lượng theo phòng ban | 7 — TC-RPT-05-01…TC-RPT-05-07 | [MS-05](https://github.com/nathyu-le/directorofstudentservice/milestone/5) |
+| [FR-RPT-06](../docs/03-modules/03-management-reporting/requirements/FR-RPT-06.md) Tổng hợp mức hài lòng | 8 — TC-RPT-06-01…TC-RPT-06-08 | [MS-05](https://github.com/nathyu-le/directorofstudentservice/milestone/5) |
+| [FR-IAM-01](../docs/03-modules/04-accounts-permissions/requirements/FR-IAM-01.md) Đăng nhập | 8 — TC-IAM-01-01…TC-IAM-01-08 | [MS-01](https://github.com/nathyu-le/directorofstudentservice/milestone/1) |
+| [FR-IAM-02](../docs/03-modules/04-accounts-permissions/requirements/FR-IAM-02.md) Đăng xuất | 6 — TC-IAM-02-01…TC-IAM-02-06 | [MS-01](https://github.com/nathyu-le/directorofstudentservice/milestone/1) |
+| [FR-IAM-03](../docs/03-modules/04-accounts-permissions/requirements/FR-IAM-03.md) Kiểm soát quyền theo vai trò và hồ sơ | 8 — TC-IAM-03-01…TC-IAM-03-08 | [MS-01](https://github.com/nathyu-le/directorofstudentservice/milestone/1) |
 
-Tổng 24 FR / 149 TC. Mỗi FR giữ một milestone hoàn tất chính; task `.QA.01/.QA.02/.QA.03` lần lượt chuẩn bị fixture, thực thi và báo cáo/theo dõi bug. Lịch từng task lấy từ Master, không tính giờ hoặc số chức năng thêm vì có ba task QC.
+Tổng 24 FR / 187 TC. Mỗi FR giữ một milestone hoàn tất chính; task `.QA.01/.QA.02/.QA.03` lần lượt chuẩn bị fixture, thực thi và báo cáo/theo dõi bug. Lịch từng task lấy từ Master, không tính giờ hoặc số chức năng thêm vì có ba task QC.
 
 ## 3. Thực hiện kiểm thử theo tiến trình dự án
 
@@ -90,7 +90,7 @@ Cuối mốc, chạy đủ case của FR thuộc mốc và regression phần tr�
 
 ### 3.2. Toàn hệ thống trước bàn giao — MS-06
 
-Trên bản tích hợp, đối chiếu đầy đủ 149 TC chức năng và thực hiện 18 kiểm tra hệ thống. Kiểm lại case trên build mới nếu chưa có bằng chứng còn hiệu lực cho bản đó; khi thay đổi có tác động rộng hoặc không chứng minh được phạm vi ảnh hưởng thì chạy lại toàn bộ tập liên quan. Hồ sơ cuối phải truy được kết quả hợp lệ của toàn bộ scope, không ghép Pass từ các bản không tương thích.
+Trên bản tích hợp, đối chiếu đầy đủ 187 TC chức năng và thực hiện 18 kiểm tra hệ thống. Kiểm lại case trên build mới nếu chưa có bằng chứng còn hiệu lực cho bản đó; khi thay đổi có tác động rộng hoặc không chứng minh được phạm vi ảnh hưởng thì chạy lại toàn bộ tập liên quan. Hồ sơ cuối phải truy được kết quả hợp lệ của toàn bộ scope, không ghép Pass từ các bản không tương thích.
 
 | Nhóm | Mã và trọng tâm | Task thực hiện |
 | --- | --- | --- |
@@ -108,20 +108,11 @@ Kết quả QC kỹ thuật và quyết định UAT/nghiệm thu là hai hồ s�
 
 ## 4. Yêu cầu phi chức năng và mục tiêu đo lường
 
-### 4.1. Sáu NFR theo nguồn
+### 4.1. NFR và điểm kiểm sớm
 
-| Mã | Nội dung kiểm và expected chính | Task |
-| --- | --- | --- |
-| NFR-SEC-01 | Kiểm phiên, capability/object scope, CSRF, SQL injection/XSS, mật khẩu băm và dữ liệu/log không lộ secret; hành vi trái quyền bị chặn theo expected. | [QA-05](https://github.com/nathyu-le/directorofstudentservice/issues/53) |
-| NFR-REL-01 | Giả lỗi trước commit, gửi lặp và cập nhật version cũ/đồng thời; rollback hoặc một kết quả hợp lệ, không ghi đè/lưu dở dang. | [QA-05](https://github.com/nathyu-le/directorofstudentservice/issues/53) |
-| NFR-USAB-01 | Gửi/theo dõi/bổ sung thao tác được ở 1366×768 và 390×844; nhãn/lỗi rõ, bàn phím dùng được, không mất dữ liệu do validation. | [QA-05](https://github.com/nathyu-le/directorofstudentservice/issues/53) |
-| NFR-PERF-01 | 1.000 yêu cầu tổng hợp, 20 lần đo theo nguồn; target đề xuất p95 ≤3 giây trên môi trường demo ghi cấu hình. | [QA-05](https://github.com/nathyu-le/directorofstudentservice/issues/53) |
-| NFR-OBS-01 | Lỗi có request/correlation ID; history có tác nhân/thời gian/hành động; không lưu mật khẩu/token trong log. | [QA-05](https://github.com/nathyu-le/directorofstudentservice/issues/53) |
-| NFR-DEP-01 | Người khác cài môi trường sạch từ source/README/env mẫu/schema/seed và chạy E2E-01; ghi thiếu sót và bằng chứng chạy lại. | [QA-10](https://github.com/nathyu-le/directorofstudentservice/issues/58) |
+Phạm vi, cách đo, ngưỡng và task từng mốc nằm trong [NFR của PRD](../docs/01-overview/non-functional-requirements.md). QA dùng [bảng kiểm hệ thống](../docs/04-acceptance/system-tests.md) để lưu kết quả. Ở MS-01 đến MS-05, dùng task QA ghi trong NFR để kiểm các FR khả dụng và hồi quy luồng liên quan. QA-05 kiểm lại trên bản tích hợp, QA-10 chạy bàn giao sạch.
 
-Viewport và target hiệu năng đang là mục tiêu thử prototype, cần review môi trường theo OQ-07. NFR-PERF-01 dùng 1.000 **yêu cầu mẫu**, không phải 1.000 người dùng đồng thời. Lưu 20 thời gian đo cho từng trang được kiểm, điều kiện máy/dữ liệu và phương pháp p95 đã thống nhất; đối chiếu target nguồn 95% lần đo ≤3 giây. Không công bố kết quả cho môi trường khác hoặc SLA production. Chưa có môi trường/phương pháp thống nhất thì ghi thiếu điều kiện, không kết luận đạt. Kiểm an toàn theo case không phải chứng nhận/pentest toàn diện.
-
-### 4.2. Bốn MET theo PRD
+### 4.2. Bốn MET (Mô phỏng)
 
 | Mã và mục tiêu | Điều kiện nguồn |
 | --- | --- |
@@ -169,18 +160,18 @@ Sự cố môi trường/quyền/dữ liệu xử lý theo QA mục 6: báo và 
 
 ## 6. Lịch và điều kiện mốc
 
-Ngày dưới đây giữ theo Master v6.0; là target, không phải actual.
+Ngày dưới đây giữ theo Master v6.1; là target, không phải actual.
 
 | Mốc và đầu ra | Ngày dự kiến | Phạm vi kiểm chứng |
 | --- | --- | --- |
-| [MS-01](https://github.com/nathyu-le/directorofstudentservice/milestone/1) Truy cập hệ thống đúng quyền | 06/11/2026 | FR-IAM-01, FR-IAM-02, FR-IAM-03 — 16 TC |
-| [MS-02](https://github.com/nathyu-le/directorofstudentservice/milestone/2) Tiếp nhận và theo dõi yêu cầu | 16/11/2026 | FR-STU-01, FR-STU-02, FR-STU-03, FR-DSP-01, FR-DSP-02 — 26 TC |
-| [MS-03](https://github.com/nathyu-le/directorofstudentservice/milestone/3) Điều phối và phối hợp xử lý | 04/12/2026 | FR-DSP-03, FR-DSP-04, FR-DSP-05, FR-DSP-06, FR-DSP-07, FR-DSP-08, FR-STU-04 — 50 TC |
-| [MS-04](https://github.com/nathyu-le/directorofstudentservice/milestone/4) Trả kết quả và hoàn tất hỗ trợ | 09/12/2026 | FR-DSP-09, FR-STU-05, FR-DSP-10 — 20 TC |
-| [MS-05](https://github.com/nathyu-le/directorofstudentservice/milestone/5) Theo dõi và báo cáo đúng dữ liệu | 18/12/2026 | FR-RPT-01, FR-RPT-02, FR-RPT-03, FR-RPT-04, FR-RPT-05, FR-RPT-06 — 37 TC |
-| [MS-06](https://github.com/nathyu-le/directorofstudentservice/milestone/6) Kiểm chứng và bàn giao chạy lại được | 22/01/2027 | 24 FR / 149 TC + 18 kiểm tra; đủ hồ sơ, chạy lại và quyết định bàn giao |
+| [MS-01](https://github.com/nathyu-le/directorofstudentservice/milestone/1) Truy cập hệ thống đúng quyền | 06/11/2026 | FR-IAM-01, FR-IAM-02, FR-IAM-03 — 22 TC |
+| [MS-02](https://github.com/nathyu-le/directorofstudentservice/milestone/2) Tiếp nhận và theo dõi yêu cầu | 16/11/2026 | FR-STU-01, FR-STU-02, FR-STU-03, FR-DSP-01, FR-DSP-02 — 37 TC |
+| [MS-03](https://github.com/nathyu-le/directorofstudentservice/milestone/3) Điều phối và phối hợp xử lý | 04/12/2026 | FR-DSP-03, FR-DSP-04, FR-DSP-05, FR-DSP-06, FR-DSP-07, FR-DSP-08, FR-STU-04 — 61 TC |
+| [MS-04](https://github.com/nathyu-le/directorofstudentservice/milestone/4) Trả kết quả và hoàn tất hỗ trợ | 09/12/2026 | FR-DSP-09, FR-STU-05, FR-DSP-10 — 24 TC |
+| [MS-05](https://github.com/nathyu-le/directorofstudentservice/milestone/5) Theo dõi và báo cáo đúng dữ liệu | 18/12/2026 | FR-RPT-01, FR-RPT-02, FR-RPT-03, FR-RPT-04, FR-RPT-05, FR-RPT-06 — 43 TC |
+| [MS-06](https://github.com/nathyu-le/directorofstudentservice/milestone/6) Kiểm chứng và bàn giao chạy lại được | 22/01/2027 | 24 FR / 187 TC + 18 kiểm tra; đủ hồ sơ, chạy lại và quyết định bàn giao |
 
-MS-01…05 phân bổ đủ 149 TC chức năng. MS-06 kiểm chứng toàn bộ scope và tích hợp/bàn giao; không cộng thêm 149 case mới. Đủ ngày hoặc đóng issue báo cáo không thay đủ AC/TC, review, defect/retest và quyết định.
+MS-01…05 phân bổ đủ 187 TC chức năng. MS-06 kiểm chứng toàn bộ scope và tích hợp/bàn giao; không cộng thêm 187 case mới. Đủ ngày hoặc đóng issue báo cáo không thay đủ AC/TC, review, defect/retest và quyết định.
 
 | Task kiểm chứng | Lịch dự kiến | Đầu ra |
 | --- | --- | --- |
@@ -212,11 +203,11 @@ Giữ lịch sử từng lần chạy; ảnh phải chỉ ra thao tác/actor/ph�
 
 Báo cáo tại `.QA.03`, QA-09 và review mốc gồm phạm vi/build/môi trường; AC và kết quả theo từng nhóm; defect/retest/regression; số đo NFR/MET; phần thiếu/OQ; tác động tới cổng; hành động–owner–hạn và link bằng chứng. QA/PM review báo cáo trước quyết định; chưa có người/ngày thực tế thì không tự điền.
 
-Luôn tách số Pass/Fail/Blocked/Not Run của **149 TC chức năng, 8 E2E, 6 NFR và 4 MET**. Tỷ lệ thực thi = (Pass + Fail) / tổng case thuộc scope; tỷ lệ đạt trong số đã thực thi = Pass / (Pass + Fail). Báo kèm số đếm/mẫu số và thời điểm, mẫu số 0 ghi N/A. Đây không phải code coverage; chưa có dữ liệu test/bug thì không kết luận “0 lỗi”. AC coverage tính riêng theo QA mục 5.
+Luôn tách số Pass/Fail/Blocked/Not Run của **187 TC chức năng, 8 E2E, 6 NFR và 4 MET**. Tỷ lệ thực thi = (Pass + Fail) / tổng case thuộc scope; tỷ lệ đạt trong số đã thực thi = Pass / (Pass + Fail). Báo kèm số đếm/mẫu số và thời điểm, mẫu số 0 ghi N/A. Đây không phải code coverage; chưa có dữ liệu test/bug thì không kết luận “0 lỗi”. AC coverage tính riêng theo QA mục 5.
 
 ## 8. Nguồn áp dụng
 
-- [PRD và kế hoạch v6.0](../docs/05-project/requirements.json); [scope](../docs/01-overview/scope.md).
+- [PRD và kế hoạch v6.1](../docs/05-project/requirements.json); [scope](../docs/01-overview/scope.md).
 - [Quyền](../docs/02-domain/permissions.md), [vòng đời](../docs/02-domain/lifecycle.md), [API](../docs/02-domain/api-contract.md), [từ điển dữ liệu](../docs/02-domain/data-dictionary.md).
 - [FR–AC–TC](../docs/04-acceptance/traceability-matrix.md); [test chức năng](../docs/04-acceptance/test-cases.md); [test hệ thống](../docs/04-acceptance/system-tests.md).
 - [Master Gantt](../UniSupport_Master_Plan.xlsx); [milestone](../docs/05-project/master-alignment.md); [Team Charter](../TeamCharter.md); [câu hỏi mở](../docs/05-project/open-questions.md).
