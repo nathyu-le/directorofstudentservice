@@ -1,6 +1,6 @@
 # Đề xuất dự án UniSupport
 
-**Phiên bản 6.1 · 25/11/2026 · Bản dự kiến gửi duyệt (Mô phỏng)**
+**Phiên bản 6.2 · 25/11/2026 · Bản công bố để review trong repo (Mô phỏng)**
 
 **Bên đề xuất:** Nhóm Solo Leveling. **Khách hàng:** Aurora University (Mô phỏng).
 
@@ -36,7 +36,7 @@ Lịch dự kiến 15 tuần từ 12/10/2026 đến 22/01/2027. Đội thực th
 
 ## 4. Báo giá và thanh toán
 
-Giá chào đề xuất **300.000.000 đồng** theo [bảng tính Q-01 đến Q-06](docs/05-project/quotation.xlsx). Đơn giá quy đổi là 937.500 đồng/giờ, suy từ giá chào hiện có chia cho 320 giờ gồm 288 giờ kế hoạch và 32 giờ dự phòng. Báo giá bao gồm phân tích, phát triển, tích hợp, kiểm thử, sửa lỗi và bàn giao. Dự phòng tính một lần. Giá dựa trên phạm vi bốn module, dữ liệu mô phỏng, PHP/MySQL và lịch nguồn lực dự kiến. Thuế và chi phí bên ngoài cần xác nhận khi duyệt. Nếu phạm vi hoặc lịch thay đổi, áp dụng [quy trình CR](docs/05-project/change-control.md) để tính lại trước khi cam kết.
+Giá chào đề xuất **300.000.000 đồng** theo [bảng tính Q-01 đến Q-06](docs/05-project/quotation.xlsx). Đơn giá chào dùng để lập dự toán là 937.500 đồng/giờ. Mức này được xác lập theo giá và effort của bản 6.1, sau đó giữ cố định làm đầu vào tính giá của bản 6.2. Dự toán gồm 288 giờ kế hoạch và 32 giờ dự phòng. Khi effort thay đổi, nhân số giờ thay đổi với đơn giá ghi trong báo giá. Mọi đề nghị đổi đơn giá được xem xét riêng trong CR. Báo giá bao gồm phân tích, phát triển, tích hợp, kiểm thử, sửa lỗi và bàn giao. Dự phòng tính một lần. Giá dựa trên phạm vi bốn module, dữ liệu mô phỏng, PHP/MySQL và lịch nguồn lực dự kiến. Thuế và chi phí bên ngoài cần xác nhận khi duyệt. Nếu phạm vi hoặc lịch thay đổi, áp dụng [quy trình CR](docs/05-project/change-control.md) để tính lại trước khi cam kết.
 
 | Đợt | Điều kiện đề xuất | Tỷ lệ | VNĐ |
 | --- | --- | --- | --- |
@@ -53,4 +53,4 @@ Giá chào đề xuất **300.000.000 đồng** theo [bảng tính Q-01 đến Q
 
 Từng mốc dùng bản dựng có mã phiên bản, tài khoản mô phỏng, kịch bản dùng thử và [tiêu chí Master Plan](docs/05-project/master-alignment.md). Đại diện nghiệp vụ thử và ghi phản hồi, QA lưu kết quả thực thi và bằng chứng. Sai quyền, sai/mất dữ liệu hoặc luồng chính bị chặn cần sửa và kiểm lại. Lỗi còn lại cần quyết định chấp nhận có ghi rõ tác động.
 
-Tại MS-06 người tiếp nhận cài môi trường sạch từ mã nguồn, cấu hình mẫu, dữ liệu khởi tạo và hướng dẫn, rồi lưu kết quả E2E-08. PM/BA trình bằng chứng kỹ thuật và hồ sơ bàn giao để đại diện được ủy quyền quyết định nghiệm thu. Nếu MET dưới mục tiêu hoặc thiếu mẫu, QA ghi số đo, mẫu và đề xuất xử lý để đại diện quyết định trước khi ký. Hồ sơ này chưa có ngày gửi thật, xác nhận hoặc chữ ký.
+Tại MS-06 người tiếp nhận cài môi trường sạch từ mã nguồn, cấu hình mẫu, dữ liệu khởi tạo và hướng dẫn, rồi lưu kết quả E2E-08. PM/BA trình bằng chứng kỹ thuật và hồ sơ bàn giao để đại diện được ủy quyền quyết định nghiệm thu. Nếu MET dưới mục tiêu hoặc thiếu mẫu, QA ghi số đo, mẫu và đề xuất xử lý để đại diện quyết định trước khi ký. Hồ sơ này được công bố trong repo để rà soát (Mô phỏng). Chưa có gửi khách thật, xác nhận hoặc chữ ký.
